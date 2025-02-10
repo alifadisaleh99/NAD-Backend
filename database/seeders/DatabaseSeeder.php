@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             CountrySeeder::class,            
             PermissionSeeder::class,
             UserSeeder::class,
+            AnimalTypeSeeder::class,
         ]);
     }
 }

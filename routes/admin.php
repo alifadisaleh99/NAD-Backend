@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AnimalTypeController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
@@ -26,3 +27,6 @@ Route::apiResource('roles', RoleController::class);
 
 // users
 Route::apiResource('users' , UserController::class);
+
+// animal types
+Route::apiResource('animal-types', AnimalTypeController::class);
