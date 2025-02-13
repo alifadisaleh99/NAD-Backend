@@ -125,7 +125,7 @@ class EntityController extends Controller
             'email'             => ['required', 'string'],
             'contact_number'    => ['required', 'string'],
             'founding_date'     => ['required', 'date_format:Y-m-d'],
-            'price_per_pet'     => ['required', 'flaot'],
+            'price_per_pet'     => ['required', 'float'],
             'allowed_branches'  => ['required', 'integer'],
             'allowed_users'     => ['required', 'integer'],
         ]);
@@ -223,7 +223,7 @@ class EntityController extends Controller
             'email'             => ['required', 'string'],
             'contact_number'    => ['required', 'string'],
             'founding_date'     => ['required', 'date_format:Y-m-d'],
-            'price_per_pet'     => ['required', 'flaot'],
+            'price_per_pet'     => ['required', 'float'],
             'allowed_branches'  => ['required', 'integer'],
             'allowed_users'     => ['required', 'integer'],
         ]);

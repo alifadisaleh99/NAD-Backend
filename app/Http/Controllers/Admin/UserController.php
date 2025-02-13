@@ -197,8 +197,8 @@ class UserController extends Controller
             'summary'           => ['string'],
             'image'             => ['image'],
             'role_id'           => ['required', 'integer', 'exists:roles,id'],
-            'entity_id'         => ['required', 'integer', 'exists:entities,id'],
-            'branch_id'         => ['required', 'integer', 'exists:branches,id'],
+            'entity_id'         => ['integer', 'exists:entities,id'],
+            'branch_id'         => ['integer', 'exists:branches,id'],
         ]);
 
         $entity = Entity::find($request->entity_id);
