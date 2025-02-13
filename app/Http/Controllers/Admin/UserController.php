@@ -16,12 +16,14 @@ use Spatie\Permission\Models\Role;
 
 use App\Http\Resources\UserResource;
 use App\Models\Address;
+use App\Models\Entity;
 use App\Models\Favorite;
 use App\Models\FCMToken;
 use App\Models\Product;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class UserController extends Controller
 {
@@ -107,7 +109,7 @@ class UserController extends Controller
             'per_page'            => ['integer', 'min:1']
         ]);
 
-        $q = User::query();
+        $q = User::with('entity', 'branch');
 
         if($request->status === '0'){
             $q->where('status', false);
@@ -172,6 +174,8 @@ class UserController extends Controller
      *              @OA\Property(property="summary", type="string"),
      *              @OA\Property(property="image", type="file"),
      *              @OA\Property(property="role_id", type="integer"),
+     *              @OA\Property(property="entity_id", type="integer"),
+     *              @OA\Property(property="branch_id", type="integer"),
      *           )
      *       )
      *   ),
@@ -192,9 +196,20 @@ class UserController extends Controller
             'country_id'        => ['integer', 'exists:countries,id'],
             'summary'           => ['string'],
             'image'             => ['image'],
-            'role_id'           => ['required', 'integer', 'exists:roles,id']
+            'role_id'           => ['required', 'integer', 'exists:roles,id'],
+            'entity_id'         => ['required', 'integer', 'exists:entities,id'],
+            'branch_id'         => ['required', 'integer', 'exists:branches,id'],
         ]);
 
+        $entity = Entity::find($request->entity_id);
+        if($entity){
+            if($entity->used_branches == 0)
+                throw new BadRequestHttpException(__('error_messages.Sorry'));
+
+            $entity->used_users = $entity->used_users -1;
+            $entity->save();
+        }
+        
         $verified = null;
         if($request->role_id != 2)
             $verified = now();
@@ -209,6 +224,8 @@ class UserController extends Controller
             'phone_country_id'   => $request->phone_country_id,
             'phone'              => $request->phone,
             'country_id'         => $request->country_id,
+            'entity_id'          => $request->entity_id,
+            'branch_id'          => $request->branch_id,
             'summary'            => $request->summary,
             'password'           => Hash::make($request->password),
             'email_verified_at'  => $verified,
@@ -241,6 +258,7 @@ class UserController extends Controller
     */
     public function show(User $user)
     {
+        $user->load(['nationality', 'phone_country', 'entity', 'branch']);
         return response()->json(new UserResource($user));
     }
 

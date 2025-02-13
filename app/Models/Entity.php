@@ -19,10 +19,16 @@ class Entity extends TranslatableModel
         'allowed_branches',
         'allowed_users',
         'used_users',
+        'used_branches',
     ];
 
     protected $translatable = [
         'name',
     ];
+
+    public function branches()
+    {
+        return $this->hasMany(Branch::class);
+    }
 
 }

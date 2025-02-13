@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AnimalTypeController;
+use App\Http\Controllers\Admin\BranchController;
+use App\Http\Controllers\Admin\EntityController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
@@ -30,3 +32,9 @@ Route::apiResource('users' , UserController::class);
 
 // animal types
 Route::apiResource('animal-types', AnimalTypeController::class);
+
+// entities
+Route::apiResource('entities', EntityController::class);
+
+// branches
+Route::apiResource('branches', BranchController::class);

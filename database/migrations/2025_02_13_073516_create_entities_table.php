@@ -18,10 +18,11 @@ return new class extends Migration
             $table->string('email');
             $table->string('contact_number');
             $table->date('founding_date');
-            $table->float('price_per_pet');
-            $table->integer('allowed_branches');
-            $table->integer('allowed_users');
-            $table->integer('used_users');
+            $table->float('price_per_pet')->default(0);
+            $table->integer('allowed_branches')->default(0);
+            $table->integer('allowed_users')->default(0);
+            $table->integer('used_branches')->default(0);
+            $table->integer('used_users')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

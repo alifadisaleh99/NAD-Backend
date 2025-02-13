@@ -20,6 +20,8 @@ class UserResource extends JsonResource
             'name'              => $this->name, 
             'email'             => $this->email, 
             'phone_country'     => new CountryResource($this->whenLoaded('phone_country')), 
+            'entity'            => new EntityResource($this->whenLoaded('entity')), 
+            'branch'            => new BranchResource($this->whenLoaded('branch')), 
             'phone'             => $this->phone, 
             'image'             => $this->image, 
             'summary'           => $this->summary, 

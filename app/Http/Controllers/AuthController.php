@@ -106,6 +106,8 @@ class AuthController extends Controller
             $user = to_user(Auth::user());
             $token = $user->createToken('Sanctum', [])->plainTextToken;
             
+            $user->load(['entity', 'branch']);
+
             return response()->json([
                 'user' => new UserResource($user),
                 'token' => $token,
