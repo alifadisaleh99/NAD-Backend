@@ -25,6 +25,8 @@ class User extends Authenticatable
         'phone_country_id',
         'phone',
         'country_id',
+        'entity_id',
+        'branch_id',
         'summary',
         'image',
         'password',
@@ -63,5 +65,15 @@ class User extends Authenticatable
     public function phone_country()
     {
         return $this->hasOne(Country::class, 'id', 'phone_country_id');
+    }
+
+    public function entity()
+    {
+        return $this->belongsTo(Entity::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 }
