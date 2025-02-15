@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('entity_id')->nullable()->constrained('entities');
             $table->string('address');
             $table->softDeletes();
             $table->timestamps();
