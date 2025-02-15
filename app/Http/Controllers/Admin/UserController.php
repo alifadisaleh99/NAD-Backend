@@ -59,6 +59,12 @@ class UserController extends Controller
      *   ),
      * @OA\Parameter(
      *     in="query",
+     *     name="user_is",
+     *     required=false,
+     *     @OA\Schema(type="string",enum={"single_user", "entity_user"})
+     *   ),
+     * @OA\Parameter(
+     *     in="query",
      *     name="start_date",
      *     required=false,
      *     @OA\Schema(type="date")
@@ -105,6 +111,7 @@ class UserController extends Controller
             'start_date'          => ['date_format:Y-m-d'],
             'end_date'            => ['date_format:Y-m-d'],
             'type'                => ['in:employee'],
+            'user_is'             => ['in:single_user,entity_user'],
             'with_paginate'       => ['integer', 'in:0,1'],
             'per_page'            => ['integer', 'min:1']
         ]);
@@ -141,6 +148,19 @@ class UserController extends Controller
             $user_ids = DB::table('model_has_roles')->where('model_type', User::class)
                         ->where('role_id', '!=', 2)->pluck('model_id');
             $q->whereIn('id', $user_ids);
+        }
+
+        if($request->user_is == 'entity_user'){
+            $user_ids = DB::table('model_has_roles')->where('model_type', User::class)
+                            ->where('role_id', 2)->pluck('model_id');
+            $q->whereIn('id', $user_ids);
+            $q->where('entity_id', '!=', null);
+        }
+        if($request->user_is == 'single_user'){
+            $user_ids = DB::table('model_has_roles')->where('model_type', User::class)
+                            ->where('role_id', 2)->pluck('model_id');
+            $q->whereIn('id', $user_ids);
+            $q->where('entity_id', null);
         }
 
         if ($request->with_paginate === '0')

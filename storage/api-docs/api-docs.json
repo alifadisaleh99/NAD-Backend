@@ -1064,6 +1064,18 @@
                         }
                     },
                     {
+                        "name": "user_is",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "single_user",
+                                "entity_user"
+                            ]
+                        }
+                    },
+                    {
                         "name": "start_date",
                         "in": "query",
                         "required": false,
