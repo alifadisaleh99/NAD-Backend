@@ -59,7 +59,7 @@ class BranchController extends Controller
             'q'                  => ['string']
         ]);
 
-        $q = Branch::query()->latest();
+        $q = Branch::with('entity')->latest();
 
         if($request->q)
         {

@@ -11,7 +11,12 @@ class Branch extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'entity_id',
         'address',
     ];
 
+    public function entity()
+    {
+        return $this->belongsTo(Entity::class);
+    }
 }

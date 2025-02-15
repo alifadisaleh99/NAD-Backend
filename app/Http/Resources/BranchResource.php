@@ -17,6 +17,7 @@ class BranchResource extends JsonResource
         return [
             'id'        => $this->id,
             'address'   => $this->address,
+            'entity'    => new EntityResource($this->whenLoaded('entity')),
         ];
     }
 }
