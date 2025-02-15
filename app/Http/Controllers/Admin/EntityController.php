@@ -122,7 +122,7 @@ class EntityController extends Controller
         $request->validate([
             'name'              => ['required', 'array', translation_rule()],
             'address'           => ['required', 'string'],
-            'email'             => ['required', 'string'],
+            'email'             => ['required', 'string', 'unique:users,email'],
             'contact_number'    => ['required', 'string'],
             'founding_date'     => ['required', 'date_format:Y-m-d'],
             'price_per_pet'     => ['required', 'numeric'],
@@ -143,11 +143,12 @@ class EntityController extends Controller
 
         $user = User::create([
             'entity_id'          => $entity->id,
-            'name'               => $request->name,
+            'name'               => $request->name['ar'],
             'email'              => $request->email,
             'phone'              => $request->contact_number,
-            'password'           => Hash::make($request->name.'@123'),
+            'password'           => Hash::make('admin@123'),
         ]);
+        $user->assignRole('user');
 
         return response()->json(new UserResource($user), 200);
     }
