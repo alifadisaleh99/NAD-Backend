@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AnimalTypeController;
+use App\Http\Controllers\Admin\AnimalSpecieController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\EntityController;
@@ -31,14 +32,15 @@ Route::apiResource('roles', RoleController::class);
 // users
 Route::apiResource('users' , UserController::class);
 
-// animal types
-Route::apiResource('animal-types', AnimalTypeController::class);
-
 // entities
 Route::apiResource('entities', EntityController::class);
 
 // branches
 Route::apiResource('branches', BranchController::class);
 
-//categories
+// animal resources
 Route::apiResource('categories', CategoryController::class);
+Route::apiResource('animal-types', AnimalTypeController::class);
+Route::apiResource('animal-species', AnimalSpecieController::class);
+
+// animal
