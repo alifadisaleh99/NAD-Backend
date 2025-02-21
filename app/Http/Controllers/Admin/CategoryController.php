@@ -7,6 +7,7 @@ use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Mosab\Translation\Models\Translation;
+use Illuminate\Validation\ValidationException;
 
 class CategoryController extends Controller
 {
@@ -97,6 +98,9 @@ class CategoryController extends Controller
      *              required={"name[ar]"},
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
+     *              @OA\Property(property="description[en]", type="string"),
+     *              @OA\Property(property="description[ar]", type="string"),
+     *              @OA\Property(property="image", type="file"),
      *          )
      *       )
      *   ),
@@ -111,10 +115,16 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name'           => ['required', 'array', translation_rule()],
+            'description'           => ['required', 'array', translation_rule()],
+            'image'             => ['required', 'image']
         ]);
+
+        $image = upload_file($request->image, 'categories', 'category');
      
         $category = Category::create([
             'name'          => $request->name,
+            'description'   => $request->description,
+            'image'         => $image,
         ]);
 
         return response()->json(new CategoryResource($category), 200);
@@ -165,6 +175,9 @@ class CategoryController extends Controller
      *           @OA\Schema(
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
+     *              @OA\Property(property="description[en]", type="string"),
+     *              @OA\Property(property="description[ar]", type="string"),
+     *              @OA\Property(property="image", type="file"),
      *              @OA\Property(property="_method", type="string", format="string", example="PUT"),
      *           )
      *       )
@@ -179,11 +192,26 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $request->validate([
-            'name'           => ['required', 'array', translation_rule()],
+            'name'              => ['required', 'array', translation_rule()],
+            'description'       => ['required', 'array', translation_rule()],
+            'image'             => ['required'],
         ]);
 
+        $image = null;
+        if($request->image){
+            if($request->image == $category->image){
+                $image = $category->image;
+            }else{
+                if(!is_file($request->image))
+                    throw ValidationException::withMessages(['image' => __('error_messages.Image should be a file')]);
+                $image = upload_file($request->image, 'categories', 'category');
+            }
+        }
+
         $category->update([
-            'name'         => $request->name,
+            'name'          => $request->name,
+            'description'   => $request->description,
+            'image'         => $image,
         ]);
 
         return response()->json(new CategoryResource($category), 200);
