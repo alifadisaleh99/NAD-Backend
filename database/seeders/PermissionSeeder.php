@@ -43,6 +43,13 @@ class PermissionSeeder extends Seeder
             Permission::create(['name' => 'entities.write']);
         if(!in_array('entities.delete', $permissions))
             Permission::create(['name' => 'entities.delete']);
+        
+        if (!in_array('categories.read', $permissions))
+            Permission::create(['name' => 'categories.read']);
+        if (!in_array('categories.write', $permissions))
+            Permission::create(['name' => 'categories.write']);
+        if (!in_array('categories.delete', $permissions))
+            Permission::create(['name' => 'categories.delete']);
 
         if(!Role::where('name', 'admin')->exists())
             Role::create([

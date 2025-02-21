@@ -76,6 +76,9 @@
                                     "name[ar]"
                                 ],
                                 "properties": {
+                                    "category_id": {
+                                        "type": "integer"
+                                    },
                                     "name[en]": {
                                         "type": "string"
                                     },
@@ -150,6 +153,9 @@
                         "multipart/form-data": {
                             "schema": {
                                 "properties": {
+                                    "category_id": {
+                                        "type": "integer"
+                                    },
                                     "name[en]": {
                                         "type": "string"
                                     },
@@ -380,6 +386,205 @@
                 ],
                 "description": "Delete entered Branch.",
                 "operationId": "delete_branch",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "examples": {
+                            "int": {
+                                "summary": "An int value.",
+                                "value": "1"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/admin/categories": {
+            "get": {
+                "tags": [
+                    "Admin - Categories"
+                ],
+                "description": "Get all categories",
+                "operationId": "get_all_categories",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Categories"
+                ],
+                "description": "Add new category.",
+                "operationId": "a533ff285fab1552a0e830b3d4e76d82",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name[ar]"
+                                ],
+                                "properties": {
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/admin/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Categories"
+                ],
+                "description": "Get category information.",
+                "operationId": "show_category",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Categories"
+                ],
+                "description": "Edit category.",
+                "operationId": "9e23a7f4760a9b72457b181d53a07ec5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "PUT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin - Categories"
+                ],
+                "description": "Delete entered category.",
+                "operationId": "delete_category",
                 "parameters": [
                     {
                         "name": "id",
@@ -1617,6 +1822,10 @@
         {
             "name": "Admin - Branches",
             "description": "Admin - Branches"
+        },
+        {
+            "name": "Admin - Categories",
+            "description": "Admin - Categories"
         },
         {
             "name": "Admin - Entities",

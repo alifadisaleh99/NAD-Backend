@@ -3,27 +3,27 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\AnimalTypeResource;
-use App\Models\AnimalType;
+use App\Http\Resources\CategoryResource;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Mosab\Translation\Models\Translation;
 
-class AnimalTypeController extends Controller
+class CategoryController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth:sanctum');
-        $this->middleware('permission:animalTypes.read|animalTypes.write|animalTypes.delete')->only('index', 'show');
-        $this->middleware('permission:animalTypes.write')->only('store', 'update');
-        $this->middleware('permission:animalTypes.delete')->only('destroy');
+        $this->middleware('permission:categories.read|categories.write|categories.delete')->only('index', 'show');
+        $this->middleware('permission:categories.write')->only('store', 'update');
+        $this->middleware('permission:categories.delete')->only('destroy');
     }
 
     /**
      * @OA\Get(
-     * path="/admin/animal-types",
-     * description="Get all animal types",
-     * operationId="get_all_animal_types",
-     * tags={"Admin - Animal Types"},
+     * path="/admin/categories",
+     * description="Get all categories",
+     * operationId="get_all_categories",
+     * tags={"Admin - Categories"},
      *   security={{"bearer_token": {} }},
      * @OA\Parameter(
      *     in="query",
@@ -57,37 +57,37 @@ class AnimalTypeController extends Controller
             'q'                  => ['string']
         ]);
 
-        $q = AnimalType::query()->latest();
+        $q = Category::query()->latest();
 
         if($request->q)
         {
-            $animal_types_ids = Translation::where('translatable_type', AnimalType::class)
+            $categories_ids = Translation::where('translatable_type', Category::class)
                                         ->where('attribute', 'name')
                                         ->where('value', 'LIKE', '%'.$request->q.'%')
                                         ->groupBy('translatable_id')
                                         ->pluck('translatable_id');
 
-            $q->where(function($query) use ($request, $animal_types_ids) {
+            $q->where(function($query) use ($request, $categories_ids) {
                 if (is_numeric($request->q))
                     $query->where('id', $request->q);
         
-                $query->orWhereIn('id', $animal_types_ids);
+                $query->orWhereIn('id', $categories_ids);
             });
         }
 
         if($request->with_paginate === '0')
-            $animal_types = $q->get();
+            $categories = $q->get();
         else
-            $animal_types = $q->paginate($request->per_page ?? 10);
+            $categories = $q->paginate($request->per_page ?? 10);
 
-        return AnimalTypeResource::collection($animal_types);
+        return CategoryResource::collection($categories);
     }
 
     /**
      * @OA\Post(
-     * path="/admin/animal-types",
-     * description="Add new animal type.",
-     * tags={"Admin - Animal Types"},
+     * path="/admin/categories",
+     * description="Add new category.",
+     * tags={"Admin - Categories"},
      * security={{"bearer_token": {} }},
      *   @OA\RequestBody(
      *       required=true,
@@ -95,7 +95,6 @@ class AnimalTypeController extends Controller
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
      *              required={"name[ar]"},
-     *              @OA\Property(property="category_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
      *          )
@@ -111,30 +110,28 @@ class AnimalTypeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'category_id'         => ['required', 'integer', 'exists:categories,id'],
             'name'           => ['required', 'array', translation_rule()],
         ]);
      
-        $animal_type = AnimalType::create([
-            'category_id'   => $request->category_id,
+        $category = Category::create([
             'name'          => $request->name,
         ]);
 
-        return response()->json(new AnimalTypeResource($animal_type), 200);
+        return response()->json(new CategoryResource($category), 200);
     }
 
     /**
      * @OA\Get(
-     * path="/admin/animal-types/{id}",
-     * description="Get animal type information.",
+     * path="/admin/categories/{id}",
+     * description="Get category information.",
      *     @OA\Parameter(
      *         in="path",
      *         name="id",
      *         required=true,
      *         @OA\Schema(type="string"),
      *      ),
-     * operationId="show_animal_type",
-     * tags={"Admin - Animal Types"},
+     * operationId="show_category",
+     * tags={"Admin - Categories"},
      * security={{"bearer_token": {} }},
      * @OA\Response(
      *    response=200,
@@ -143,30 +140,29 @@ class AnimalTypeController extends Controller
      * )
      *)
     */
-    public function show(AnimalType $animal_type)
+    public function show(Category $category)
     {
-        $animal_type->load(['category']);
-        return response()->json(new AnimalTypeResource($animal_type), 200);
+        $category->load(['animalTypes']);
+        return response()->json(new CategoryResource($category), 200);
     }
 
     /**
      * @OA\Post(
-     * path="/admin/animal-types/{id}",
-     * description="Edit animal type.",
+     * path="/admin/categories/{id}",
+     * description="Edit category.",
      *   @OA\Parameter(
      *     in="path",
      *     name="id",
      *     required=true,
      *     @OA\Schema(type="string"),
      *   ),
-     *  tags={"Admin - Animal Types"},
+     *  tags={"Admin - Categories"},
      *  security={{"bearer_token": {} }},
      *   @OA\RequestBody(
      *       required=true,
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              @OA\Property(property="category_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="_method", type="string", format="string", example="PUT"),
@@ -180,25 +176,23 @@ class AnimalTypeController extends Controller
      * )
      * )
     */
-    public function update(Request $request, AnimalType $animal_type)
+    public function update(Request $request, Category $category)
     {
         $request->validate([
-            'category_id'    => ['required', 'integer', 'exists:categories,id'],
             'name'           => ['required', 'array', translation_rule()],
         ]);
 
-        $animal_type->update([
-            'category_id' => $request->category_id,
+        $category->update([
             'name'         => $request->name,
         ]);
 
-        return response()->json(new AnimalTypeResource($animal_type), 200);
+        return response()->json(new CategoryResource($category), 200);
     }
 
     /**
      * @OA\Delete(
-     * path="/admin/animal-types/{id}",
-     * description="Delete entered animal type.",
+     * path="/admin/categories/{id}",
+     * description="Delete entered category.",
      *     @OA\Parameter(
      *         in="path",
      *         name="id",
@@ -206,8 +200,8 @@ class AnimalTypeController extends Controller
      *         @OA\Schema(type="string"),
      *         @OA\Examples(example="int", value="1", summary="An int value."),
      *      ),
-     * operationId="delete_animal_type",
-     * tags={"Admin - Animal Types"},
+     * operationId="delete_category",
+     * tags={"Admin - Categories"},
      * security={{"bearer_token":{}}},
      * @OA\Response(
      *    response=200,
@@ -216,9 +210,9 @@ class AnimalTypeController extends Controller
      * )
      *)
     */
-    public function destroy(AnimalType $animal_type)
+    public function destroy(Category $category)
     {
-        $animal_type->delete();
-        return response()->json(null, 204);
+        $category->delete();
+        return response()->json(null, 204); 
     }
 }

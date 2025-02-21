@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AnimalTypeResource extends JsonResource
+class CategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,7 +17,7 @@ class AnimalTypeResource extends JsonResource
         return [
             'id'            => $this->id,
             'name'          => $this->name,
-            'category'    => new CategoryResource($this->whenLoaded('category')),
+            'animalTypes'   => AnimalTypeResource::collection($this->whenLoaded('animalTypes')),
             'translations'  => $this->translations,
         ];
     }

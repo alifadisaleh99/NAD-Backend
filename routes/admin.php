@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AnimalTypeController;
 use App\Http\Controllers\Admin\BranchController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\EntityController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\PermissionController;
@@ -38,3 +39,6 @@ Route::apiResource('entities', EntityController::class);
 
 // branches
 Route::apiResource('branches', BranchController::class);
+
+//categories
+Route::apiResource('categories', CategoryController::class);
