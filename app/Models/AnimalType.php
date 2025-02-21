@@ -9,6 +9,10 @@ class AnimalType extends TranslatableModel
 {
     use HasFactory;
 
+    protected $fillabe = [
+        'category_id',
+    ];
+
     protected $translatable = [
         'name',
     ];
