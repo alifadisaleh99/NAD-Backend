@@ -1,15 +1,16 @@
 <?php
 
+use App\Http\Controllers\Admin\AnimalBreedController;
 use App\Http\Controllers\Admin\AnimalTypeController;
 use App\Http\Controllers\Admin\AnimalSpecieController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\EntityController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\AnimalBreedController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,6 +45,7 @@ Route::apiResource('categories', CategoryController::class);
 Route::apiResource('animal-types', AnimalTypeController::class);
 Route::apiResource('animal-species', AnimalSpecieController::class);
 Route::apiResource('animal-breeds', AnimalBreedController::class);
+Route::apiResource('colors', ColorController::class);
 
 
 // animal

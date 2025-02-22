@@ -13,9 +13,9 @@ class AnimalBreedController extends Controller
     public function __construct()
     {
         $this->middleware('auth:sanctum');
-        $this->middleware('permission:animalbreed.read|animalbreed.write|animalbreed.delete')->only('index', 'show');
-        $this->middleware('permission:animalbreed.write')->only('store', 'update');
-        $this->middleware('permission:animalbreed.delete')->only('destroy');
+        $this->middleware('permission:animalBreeds.read|animalBreeds.write|animalBreeds.delete')->only('index', 'show');
+        $this->middleware('permission:animalBreeds.write')->only('store', 'update');
+        $this->middleware('permission:animalBreeds.delete')->only('destroy');
     }
 
     /**
