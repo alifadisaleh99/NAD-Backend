@@ -13,6 +13,223 @@
         }
     ],
     "paths": {
+        "/admin/animal-breeds": {
+            "get": {
+                "tags": [
+                    "Admin - Animal Breeds"
+                ],
+                "description": "Get all animal breeds",
+                "operationId": "get_all_animal_breeds",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Animal Breeds"
+                ],
+                "description": "Add new animal breed.",
+                "operationId": "4111f3489b13ceae79a698edd453a620",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name[ar]"
+                                ],
+                                "properties": {
+                                    "category_id": {
+                                        "type": "integer"
+                                    },
+                                    "animal_type_id": {
+                                        "type": "integer"
+                                    },
+                                    "animal_specie_id": {
+                                        "type": "integer"
+                                    },
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/admin/animal-breeds/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Animal Breeds"
+                ],
+                "description": "Get animal breed information.",
+                "operationId": "show_animal_breed",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Animal Breeds"
+                ],
+                "description": "Edit animal breed.",
+                "operationId": "05e02264be608d5bb6658101f695e797",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "category_id": {
+                                        "type": "integer"
+                                    },
+                                    "animal_type_id": {
+                                        "type": "integer"
+                                    },
+                                    "animal_specie_id": {
+                                        "type": "integer"
+                                    },
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "PUT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin - Animal Breeds"
+                ],
+                "description": "Delete entered animal breed.",
+                "operationId": "delete_animal_breed",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "examples": {
+                            "int": {
+                                "summary": "An int value.",
+                                "value": "1"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/admin/animal-species": {
             "get": {
                 "tags": [
@@ -65,7 +282,7 @@
                 "tags": [
                     "Admin - Animal Species"
                 ],
-                "description": "Add new animal type.",
+                "description": "Add new animal specie.",
                 "operationId": "308fe8b8f1468ca36b49cff1469b5cc5",
                 "requestBody": {
                     "required": true,
@@ -111,7 +328,7 @@
                 "tags": [
                     "Admin - Animal Species"
                 ],
-                "description": "Get animal type information.",
+                "description": "Get animal specie information.",
                 "operationId": "show_animal_specie",
                 "parameters": [
                     {
@@ -138,7 +355,7 @@
                 "tags": [
                     "Admin - Animal Species"
                 ],
-                "description": "Edit animal type.",
+                "description": "Edit animal specie.",
                 "operationId": "bd5b1fb23c84acf5fe9c51aa2a30a7ef",
                 "parameters": [
                     {
@@ -194,7 +411,7 @@
                 "tags": [
                     "Admin - Animal Species"
                 ],
-                "description": "Delete entered animal type.",
+                "description": "Delete entered animal specie.",
                 "operationId": "delete_animal_specie",
                 "parameters": [
                     {
@@ -2044,6 +2261,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Admin - Animal Breeds",
+            "description": "Admin - Animal Breeds"
+        },
         {
             "name": "Admin - Animal Species",
             "description": "Admin - Animal Species"

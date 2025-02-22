@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AnimalBreedController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,5 +43,7 @@ Route::apiResource('branches', BranchController::class);
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('animal-types', AnimalTypeController::class);
 Route::apiResource('animal-species', AnimalSpecieController::class);
+Route::apiResource('animal-breeds', AnimalBreedController::class);
+
 
 // animal
