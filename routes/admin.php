@@ -43,7 +43,7 @@ Route::apiResource('branches', BranchController::class);
 // animal resources
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('animal-types', AnimalTypeController::class);
-Route::apiResource('animal-species', AnimalSpecieController::class);
+Route::apiResource('animal-species', AnimalSpecieController::class)->parameters(['animal-species' => 'animal_specie']);
 Route::apiResource('animal-breeds', AnimalBreedController::class);
 Route::apiResource('colors', ColorController::class);
 

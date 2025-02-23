@@ -78,7 +78,7 @@ class AnimalBreedController extends Controller
             'q'                  => ['string']
         ]);
 
-        $q = AnimalBreed::query()->latest();
+        $q = AnimalBreed::query()->with(['category', 'animal_type', 'animal_specie'])->latest();
 
         if($request->category_id)
            $q->where('category_id', $request->category_id);
@@ -147,14 +147,14 @@ class AnimalBreedController extends Controller
             'name'                => ['required', 'array', translation_rule()],
         ]);
      
-        $animal_specie = AnimalBreed::create([
+        $animal_breed = AnimalBreed::create([
             'category_id'       => $request->category_id,
             'animal_type_id'    => $request->animal_type_id,
             'animal_specie_id'  => $request->animal_specie_id,
             'name'              => $request->name,
         ]);
 
-        return response()->json(new AnimalBreedResource($animal_specie), 200);
+        return response()->json(new AnimalBreedResource($animal_breed), 200);
     }
 
     /**

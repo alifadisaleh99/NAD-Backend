@@ -64,7 +64,7 @@ class AnimalTypeController extends Controller
             'q'                  => ['string']
         ]);
 
-        $q = AnimalType::query()->latest();
+        $q = AnimalType::query()->with('category')->latest();
 
         if($request->category_id)
            $q->where('category_id', $request->category_id);

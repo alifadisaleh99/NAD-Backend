@@ -67,11 +67,11 @@ class AnimalSpecieController extends Controller
             'with_paginate'      => ['integer', 'in:0,1'],
             'per_page'           => ['integer', 'min:1'],
             'category_id'        => ['integer', 'exists:categories,id'],
-            'animal_type_id'  => ['integer', 'exists:animal_types,id'],
+            'animal_type_id'     => ['integer', 'exists:animal_types,id'],
             'q'                  => ['string']
         ]);
 
-        $q = AnimalSpecie::query()->latest();
+        $q = AnimalSpecie::query()->with(['category', 'animal_type'])->latest();
 
         if($request->category_id)
             $q->where('category_id', $request->category_id);

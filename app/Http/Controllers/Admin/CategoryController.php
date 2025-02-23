@@ -152,7 +152,6 @@ class CategoryController extends Controller
     */
     public function show(Category $category)
     {
-        $category->load(['animalTypes']);
         return response()->json(new CategoryResource($category), 200);
     }
 

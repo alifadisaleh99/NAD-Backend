@@ -19,7 +19,6 @@ class CategoryResource extends JsonResource
             'name'          => $this->name,
             'description'   => $this->description,
             'image'         => $this->image,
-            'animalTypes'   => AnimalTypeResource::collection($this->whenLoaded('animalTypes')),
             'translations'  => $this->translations,
         ];
     }
