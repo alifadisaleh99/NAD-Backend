@@ -39,6 +39,24 @@ class AnimalBreedController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
+     *    name="category_id",
+     *    required=false,
+     *    @OA\Schema(type="integer"),
+     * ),
+     * @OA\Parameter(
+     *    in="query",
+     *    name="animal_type_id",
+     *    required=false,
+     *    @OA\Schema(type="integer"),
+     * ),
+     * @OA\Parameter(
+     *    in="query",
+     *    name="animal_specie_id",
+     *    required=false,
+     *    @OA\Schema(type="integer"),
+     * ),
+     * @OA\Parameter(
+     *    in="query",
      *    name="q",
      *    required=false,
      *    @OA\Schema(type="string"),
@@ -54,10 +72,20 @@ class AnimalBreedController extends Controller
         $request->validate([
             'with_paginate'      => ['integer', 'in:0,1'],
             'per_page'           => ['integer', 'min:1'],
+            'category_id'        => ['integer', 'exists:categories,id'],
+            'animal_type_id'     => ['integer', 'exists:animal_types,id'],
+            'animal_specie_id'   => ['integer', 'exists:animal_species,id'],
             'q'                  => ['string']
         ]);
 
         $q = AnimalBreed::query()->latest();
+
+        if($request->category_id)
+           $q->where('category_id', $request->category_id);
+        if($request->animal_type_id)
+           $q->where('animal_type_id', $request->animal_type_id);
+        if($request->animal_specie_id)
+           $q->where('animal_specie_id', $request->animal_specie_id);
 
         if($request->q)
         {

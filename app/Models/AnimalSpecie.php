@@ -10,7 +10,7 @@ class AnimalSpecie extends TranslatableModel
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillabe = [
+    protected $fillable = [
         'category_id',
         'animal_type_id',
     ];

@@ -39,6 +39,12 @@ class AnimalTypeController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
+     *    name="category_id",
+     *    required=false,
+     *    @OA\Schema(type="integer"),
+     * ),
+     * @OA\Parameter(
+     *    in="query",
      *    name="q",
      *    required=false,
      *    @OA\Schema(type="string"),
@@ -54,10 +60,15 @@ class AnimalTypeController extends Controller
         $request->validate([
             'with_paginate'      => ['integer', 'in:0,1'],
             'per_page'           => ['integer', 'min:1'],
+            'category_id'        => ['integer', 'exists:categories,id'],
             'q'                  => ['string']
         ]);
 
         $q = AnimalType::query()->latest();
+
+        if($request->category_id)
+           $q->where('category_id', $request->category_id);
+        
 
         if($request->q)
         {

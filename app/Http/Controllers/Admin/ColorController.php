@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ColorResource;
 use App\Models\Color;
 use Illuminate\Http\Request;
+use Mosab\Translation\Models\Translation;
 
 class ColorController extends Controller
 {
@@ -58,9 +59,21 @@ class ColorController extends Controller
 
         $q = Color::query()->latest();
 
-        if($request->q && is_numeric($request->q))
-            $q->where('id', $request->q);
-    
+        if($request->q)
+        {
+            $colors_ids = Translation::where('translatable_type', Color::class)
+                                        ->where('attribute', 'name')
+                                        ->where('value', 'LIKE', '%'.$request->q.'%')
+                                        ->groupBy('translatable_id')
+                                        ->pluck('translatable_id');
+
+            $q->where(function($query) use ($request, $colors_ids) {
+                if (is_numeric($request->q))
+                    $query->where('id', $request->q);
+        
+                $query->orWhereIn('id', $colors_ids);
+            });
+        }    
 
         if($request->with_paginate === '0')
             $colors = $q->get();
@@ -81,8 +94,9 @@ class ColorController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"name"},
-     *              @OA\Property(property="name", type="string"),
+     *              required={"name[ar]"},
+     *              @OA\Property(property="name[en]", type="string"),
+     *              @OA\Property(property="name[ar]", type="string"),
      *          )
      *       )
      *   ),
@@ -96,7 +110,7 @@ class ColorController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'           => ['required', 'string'],
+            'name'           => ['required', 'array', translation_rule()],
         ]);
      
         $color = Color::create([
@@ -148,7 +162,8 @@ class ColorController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              @OA\Property(property="name", type="string"),
+     *              @OA\Property(property="name[en]", type="string"),
+     *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="_method", type="string", format="string", example="PUT"),
      *           )
      *       )
@@ -163,7 +178,7 @@ class ColorController extends Controller
     public function update(Request $request, Color $color)
     {
         $request->validate([
-            'name'              => ['required', 'string'],
+            'name'           => ['required', 'array', translation_rule()],
         ]);
 
         $color->update([
