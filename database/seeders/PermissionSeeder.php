@@ -72,6 +72,14 @@ class PermissionSeeder extends Seeder
         if (!in_array('colors.delete', $permissions))
             Permission::create(['name' => 'colors.delete']);
 
+        if (!in_array('animals.read', $permissions))
+            Permission::create(['name' => 'animals.read']);
+        if (!in_array('animals.write', $permissions))
+            Permission::create(['name' => 'animals.write']);
+        if (!in_array('animals.delete', $permissions))
+            Permission::create(['name' => 'animals.delete']);
+
+
         if(!Role::where('name', 'admin')->exists())
             Role::create([
                 'id'         => 1,

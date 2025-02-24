@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AnimalBreedController;
+use App\Http\Controllers\Admin\AnimalController;
 use App\Http\Controllers\Admin\AnimalTypeController;
 use App\Http\Controllers\Admin\AnimalSpecieController;
 use App\Http\Controllers\Admin\BranchController;
@@ -47,5 +48,5 @@ Route::apiResource('animal-species', AnimalSpecieController::class)->parameters(
 Route::apiResource('animal-breeds', AnimalBreedController::class);
 Route::apiResource('colors', ColorController::class);
 
-
 // animal
+Route::apiResource('animals', AnimalController::class);

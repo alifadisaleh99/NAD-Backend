@@ -254,6 +254,437 @@
                 ]
             }
         },
+        "/admin/animals": {
+            "get": {
+                "tags": [
+                    "Admin - Animals"
+                ],
+                "description": "Get all animals",
+                "operationId": "get_all_animals",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "animal_type_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "animal_specie_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "animal_breed_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "entity_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Animals"
+                ],
+                "description": "Add new animal.",
+                "operationId": "0de0d02348196c31ed257284dbe0cd96",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name[ar]",
+                                    "description[ar]",
+                                    "owner_type"
+                                ],
+                                "properties": {
+                                    "owner_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "user",
+                                            "entity"
+                                        ]
+                                    },
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "entity_id": {
+                                        "type": "integer"
+                                    },
+                                    "branch_id": {
+                                        "type": "integer"
+                                    },
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    },
+                                    "description[en]": {
+                                        "type": "string"
+                                    },
+                                    "description[ar]": {
+                                        "type": "string"
+                                    },
+                                    "link": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "boolean",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "photos": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "file"
+                                        }
+                                    },
+                                    "category_id": {
+                                        "type": "integer"
+                                    },
+                                    "animal_type_id": {
+                                        "type": "integer"
+                                    },
+                                    "animal_specie_id": {
+                                        "type": "integer"
+                                    },
+                                    "animal_breed_id": {
+                                        "type": "integer"
+                                    },
+                                    "primary_color_id": {
+                                        "type": "integer"
+                                    },
+                                    "primary_color": {
+                                        "type": "string"
+                                    },
+                                    "secondary_color_id": {
+                                        "type": "integer"
+                                    },
+                                    "secondary_color": {
+                                        "type": "string"
+                                    },
+                                    "tertiary_color_id": {
+                                        "type": "integer"
+                                    },
+                                    "tertiary_color": {
+                                        "type": "string"
+                                    },
+                                    "age": {
+                                        "type": "string",
+                                        "enum": [
+                                            "young",
+                                            "adult",
+                                            "senior"
+                                        ]
+                                    },
+                                    "gender": {
+                                        "type": "string",
+                                        "enum": [
+                                            "male",
+                                            "female"
+                                        ]
+                                    },
+                                    "size": {
+                                        "type": "string",
+                                        "enum": [
+                                            "small",
+                                            "medium",
+                                            "large"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/admin/animals/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Animals"
+                ],
+                "description": "Get animal information.",
+                "operationId": "show_animal",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Animals"
+                ],
+                "description": "Edit animal.",
+                "operationId": "47b4cf587d33e77e2314876da504a183",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "owner_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "user",
+                                            "entity"
+                                        ]
+                                    },
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "entity_id": {
+                                        "type": "integer"
+                                    },
+                                    "branch_id": {
+                                        "type": "integer"
+                                    },
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    },
+                                    "description[en]": {
+                                        "type": "string"
+                                    },
+                                    "description[ar]": {
+                                        "type": "string"
+                                    },
+                                    "link": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "boolean",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "photos": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "file"
+                                        }
+                                    },
+                                    "category_id": {
+                                        "type": "integer"
+                                    },
+                                    "animal_type_id": {
+                                        "type": "integer"
+                                    },
+                                    "animal_specie_id": {
+                                        "type": "integer"
+                                    },
+                                    "animal_breed_id": {
+                                        "type": "integer"
+                                    },
+                                    "primary_color_id": {
+                                        "type": "integer"
+                                    },
+                                    "primary_color": {
+                                        "type": "string"
+                                    },
+                                    "secondary_color_id": {
+                                        "type": "integer"
+                                    },
+                                    "secondary_color": {
+                                        "type": "string"
+                                    },
+                                    "tertiary_color_id": {
+                                        "type": "integer"
+                                    },
+                                    "tertiary_color": {
+                                        "type": "string"
+                                    },
+                                    "age": {
+                                        "type": "string",
+                                        "enum": [
+                                            "young",
+                                            "adult",
+                                            "senior"
+                                        ]
+                                    },
+                                    "gender": {
+                                        "type": "string",
+                                        "enum": [
+                                            "male",
+                                            "female"
+                                        ]
+                                    },
+                                    "size": {
+                                        "type": "string",
+                                        "enum": [
+                                            "small",
+                                            "medium",
+                                            "large"
+                                        ]
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "PUT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin - Animals"
+                ],
+                "description": "Delete entered animal.",
+                "operationId": "delete_animal",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "examples": {
+                            "int": {
+                                "summary": "An int value.",
+                                "value": "1"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/admin/animal-species": {
             "get": {
                 "tags": [
@@ -2511,6 +2942,10 @@
         {
             "name": "Admin - Animal Breeds",
             "description": "Admin - Animal Breeds"
+        },
+        {
+            "name": "Admin - Animals",
+            "description": "Admin - Animals"
         },
         {
             "name": "Admin - Animal Species",
