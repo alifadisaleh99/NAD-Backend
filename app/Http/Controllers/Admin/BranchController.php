@@ -41,6 +41,12 @@ class BranchController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
+     *    name="entity_id",
+     *    required=false,
+     *    @OA\Schema(type="integer"),
+     * ),
+     * @OA\Parameter(
+     *    in="query",
      *    name="q",
      *    required=false,
      *    @OA\Schema(type="string"),
@@ -56,10 +62,14 @@ class BranchController extends Controller
         $request->validate([
             'with_paginate'      => ['integer', 'in:0,1'],
             'per_page'           => ['integer', 'min:1'],
+            'entity_id'          => ['integer', 'exists:entities,id'],
             'q'                  => ['string']
         ]);
 
         $q = Branch::with('entity')->latest();
+
+        if ($request->entity_id)
+            $q->where('entity_id', $request->entity_id);
 
         if($request->q)
         {

@@ -576,6 +576,12 @@
                                             "type": "file"
                                         }
                                     },
+                                    "deleted_media_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    },
                                     "category_id": {
                                         "type": "integer"
                                     },
@@ -1147,6 +1153,14 @@
                     },
                     {
                         "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "entity_id",
                         "in": "query",
                         "required": false,
                         "schema": {

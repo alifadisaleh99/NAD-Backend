@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AnimalResource;
 use App\Models\Animal;
+use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Mosab\Translation\Models\Translation;
 use Illuminate\Validation\ValidationException;
+use Mosab\Translation\Models\Translation;
 
 class AnimalController extends Controller
 {
@@ -101,7 +102,7 @@ class AnimalController extends Controller
             'q'                  => ['string']
         ]);
 
-        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor'])->latest();
+        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor'])->latest();
 
         if ($request->category_id)
             $q->where('category_id', $request->category_id);
@@ -192,10 +193,10 @@ class AnimalController extends Controller
             'description'    => ['required', 'array', translation_rule()],
             'photos'         => ['required', 'array'],
             'photos.*'       => ['image'],
-            'owner_type'     => ['required', Rule::in(['user', 'entity'])],
-            'user_id'         => ['integer', 'exists:users,id'],
-            'entity_id'         => ['integer', 'exists:entities,id'],
-            'branch_id'         => ['integer', 'exists:branches,id'],
+            'owner_type'     => ['required', 'in:user,entity'],
+            'user_id'         => ['required_if:owner_type,user', 'integer', 'exists:users,id'],
+            'entity_id'         => ['required_if:owner_type,entity', 'integer', 'exists:entities,id'],
+            'branch_id'         => ['required_if:owner_type,entity', 'integer', 'exists:branches,id'],
             'category_id'         => ['required', 'integer', 'exists:categories,id'],
             'animal_type_id'      => ['required', 'integer', 'exists:animal_types,id'],
             'animal_specie_id'    => ['required', 'integer', 'exists:animal_species,id'],
@@ -206,11 +207,11 @@ class AnimalController extends Controller
             'primary_color'    => ['required', 'string'],
             'secondary_color'  => ['required', 'string'],
             'tertiary_color'   => ['required', 'string'],
-            'age' => ['required',  Rule::in(['young', 'adult', 'senior'])],
-            'gender' => ['required', Rule::in(["male", "female"])],
-            'size' => ['required',  Rule::in(["small", "medium", "large"])],
+            'age' => ['required', 'in:young,adult,senior'],
+            'gender' => ['required', 'in:male,female'],
+            'size' => ['required', 'in:small,medium,large'],
             'link' => ['string'],
-            'status' => ['required', Rule::in([1, 0])],
+            'status' => ['required', 'in:1,0'],
         ]);
 
         $animal = Animal::create([
@@ -271,7 +272,7 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor']);
+        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor']);
         return response()->json(new AnimalResource($animal), 200);
     }
 
@@ -303,6 +304,7 @@ class AnimalController extends Controller
      *              @OA\Property(property="link", type="string"),
      *              @OA\Property(property="status", type="boolean", enum={0, 1}),
      *              @OA\Property(property="photos", type="array", @OA\Items(type="file")),
+     *              @OA\Property(property="deleted_media_ids", type="array", @OA\Items(type="integer")),
      *              @OA\Property(property="category_id", type="integer"),
      *              @OA\Property(property="animal_type_id", type="integer"),
      *              @OA\Property(property="animal_specie_id", type="integer"),
@@ -331,12 +333,10 @@ class AnimalController extends Controller
         $request->validate([
             'name'           => ['required', 'array', translation_rule()],
             'description'    => ['required', 'array', translation_rule()],
-            'photos'         => ['required', 'array'],
-            'photos.*'       => ['image'],
-            'owner_type'     => ['required', Rule::in(['user', 'entity'])],
-            'user_id'         => ['integer', 'exists:users,id'],
-            'entity_id'         => ['integer', 'exists:entities,id'],
-            'branch_id'         => ['integer', 'exists:branches,id'],
+            'owner_type'     => ['required', 'in:user,entity'],
+            'user_id'         => ['required_if:owner_type,user', 'integer', 'exists:users,id'],
+            'entity_id'         => ['required_if:owner_type,entity', 'integer', 'exists:entities,id'],
+            'branch_id'         => ['required_if:owner_type,entity', 'integer', 'exists:branches,id'],
             'category_id'         => ['required', 'integer', 'exists:categories,id'],
             'animal_type_id'      => ['required', 'integer', 'exists:animal_types,id'],
             'animal_specie_id'    => ['required', 'integer', 'exists:animal_species,id'],
@@ -347,30 +347,52 @@ class AnimalController extends Controller
             'primary_color'    => ['required', 'string'],
             'secondary_color'  => ['required', 'string'],
             'tertiary_color'   => ['required', 'string'],
-            'age' => ['required',  Rule::in(['young', 'adult', 'senior'])],
-            'gender' => ['required', Rule::in(["male", "female"])],
-            'size' => ['required',  Rule::in(["small", "medium", "large"])],
+            'age' => ['required', 'in:young,adult,senior'],
+            'gender' => ['required', 'in:male,female'],
+            'size' => ['required', 'in:small,medium,large'],
             'link' => ['string'],
-            'status' => ['required', Rule::in([1, 0])],
+            'status' => ['required', 'in:1,0'],
+            'deleted_media_ids' => ['array'],
+            'deleted_media_ids.*' => ['integer', 'exists:media,id'],
+            'photos' => ['array'],
+            'photos.*' => ['required'],
         ]);
 
-        $animal_photos = $animal->media()->pluck('link')->toArray();
+        if($request->deleted_media_ids)
+        {
+            $photos = $animal->media()->whereIn('id', $request->deleted_media_ids)->get();
 
-        if ($request->has('photos') && is_array($request->photos)) {
-
-            $photos = array_diff($request->photos, $animal_photos);
-
-            foreach ($photos as $photo) {
-                if (!is_file($photo))
-                    throw ValidationException::withMessages(['photo' => __('error_messages.Image should be a file')]);
-
-                $uploadedphoto = upload_file($photo, 'animals', 'animal');
-                $mediaData[] = ['link' => $uploadedphoto];
+            foreach($photos as $photo)
+            {
+                delete_file_if_exist($photo->link);
             }
-
-            $animal->media()->createMany($mediaData);
+            
+            $animal->media()->whereIn('id', $request->deleted_media_ids)->delete();
         }
-        $animal->update([
+
+        foreach($request->photos as $photo){
+            
+            $media = $animal->media()->where('link', $photo)->first();
+        
+            if($media)
+            {
+                $media->link = $photo;
+                $media->save();
+            }
+            else{
+                if(is_file($photo))
+                 {
+                  $uploadedphoto = upload_file($photo, 'animals', 'animal');
+                  $animal->media()->create([
+                    'link' => $uploadedphoto,
+                  ]);
+                }
+                else
+                    throw ValidationException::withMessages(['image' => __('error_messages.Image should be a file')]);
+            }
+        }
+
+          $animal->update([
             'name'          => $request->name,
             'description'   => $request->description,
             'owner_type'     => $request->owner_type,
@@ -391,7 +413,7 @@ class AnimalController extends Controller
             'gender' => $request->gender,
             'size' => $request->size,
             'link' => $request->link ?? null,
-            'status' => $request->stuts,
+            'status' => $request->status,
         ]);
 
         return response()->json(new AnimalResource($animal), 200);
@@ -420,6 +442,13 @@ class AnimalController extends Controller
      */
     public function destroy(Animal $animal)
     {
+        $photos = $animal->media()->get();
+
+        foreach($photos as $photo)
+        {
+            delete_file_if_exist($photo->link);
+        }
+
         $animal->media()->delete();
         $animal->delete();
         return response()->json(null, 204);
