@@ -26,7 +26,8 @@ class UserResource extends JsonResource
             'image'             => $this->image, 
             'summary'           => $this->summary, 
             'status'            => $this->status,
-            'role'                  => $this->roleModel(),
+            'role'              => $this->roleModel(),
+            'plan'              =>  new PlanResource($this->whenLoaded('plan')),
         ];
     }
 }

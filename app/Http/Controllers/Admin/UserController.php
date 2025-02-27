@@ -116,7 +116,7 @@ class UserController extends Controller
             'per_page'            => ['integer', 'min:1']
         ]);
 
-        $q = User::with('entity', 'branch');
+        $q = User::with('entity', 'branch', 'plan');
 
         if($request->status === '0'){
             $q->where('status', false);
@@ -196,6 +196,7 @@ class UserController extends Controller
      *              @OA\Property(property="role_id", type="integer"),
      *              @OA\Property(property="entity_id", type="integer"),
      *              @OA\Property(property="branch_id", type="integer"),
+     *              @OA\Property(property="plan_id", type="integer"),
      *           )
      *       )
      *   ),
@@ -219,6 +220,7 @@ class UserController extends Controller
             'role_id'           => ['required', 'integer', 'exists:roles,id'],
             'entity_id'         => ['integer', 'exists:entities,id'],
             'branch_id'         => ['integer', 'exists:branches,id'],
+            'plan_id'           => ['integer', 'exists:plans,id'],
         ]);
 
         $entity = Entity::find($request->entity_id);
@@ -250,6 +252,7 @@ class UserController extends Controller
             'password'           => Hash::make($request->password),
             'email_verified_at'  => $verified,
             'image'              => $image,
+            'plan_id'            => $request->plan_id??null,
         ]);
         $role_name = Role::find($request->role_id)->name;
         $user->assignRole($role_name);
@@ -278,7 +281,7 @@ class UserController extends Controller
     */
     public function show(User $user)
     {
-        $user->load(['nationality', 'phone_country', 'entity', 'branch']);
+        $user->load(['nationality', 'phone_country', 'entity', 'branch', 'plan']);
         return response()->json(new UserResource($user));
     }
 
@@ -309,7 +312,8 @@ class UserController extends Controller
      *              @OA\Property(property="summary", type="string"),
      *              @OA\Property(property="image", type="file"),
      *              @OA\Property(property="role_id", type="integer"),
-     *         @OA\Property(property="_method", type="string", format="string", example="PUT"),
+     *              @OA\Property(property="plan_id", type="integer"),
+     *              @OA\Property(property="_method", type="string", format="string", example="PUT"),
      *       )
      *     )
      *   ),
@@ -330,6 +334,7 @@ class UserController extends Controller
             'summary'               => ['string'],
             'image'                 => [''],
             'role_id'               => ['exists:roles,id'],
+            'plan_id'               => ['integer', 'exists:plans,id'],
         ]);
 
         $role_name = $request->role_id?Role::find($request->role_id)->name:$user->role();
@@ -352,7 +357,7 @@ class UserController extends Controller
         $user->country_id = $request->country_id;
         $user->summary = $request->summary;
         $user->image = $image;
-
+        $user->plan_id = $request->plan_id??null;
         if($request->password){
             $user->password = Hash::make($request->password);
         }

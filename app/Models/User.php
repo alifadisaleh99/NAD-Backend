@@ -76,4 +76,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Branch::class);
     }
+
+    public function plan()
+    {
+        return $this->belongsTo(plan::class);
+    }
+
+    public function animals()
+    {
+        return $this->hasMany(Animal::class);
+    }
 }

@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AnimalResource;
 use App\Models\Animal;
-use App\Models\Media;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Mosab\Translation\Models\Translation;
 
@@ -214,6 +213,21 @@ class AnimalController extends Controller
             'status' => ['required', 'in:1,0'],
         ]);
 
+        if ($request->user_id) {
+            $user = User::with(['plan', 'animals'])->find($request->user_id);
+
+            if ($user && $user->plan) {
+                $currentAnimalsCount = $user->animals->count();
+                $maxAllowedAnimals = $user->plan->addition_count;
+
+                if ($currentAnimalsCount >= $maxAllowedAnimals)
+                    return response()->json(['message' => __('error_messages.max_animals_reached')], 422);
+            }
+            else
+                return response()->json(['message' => __('error_messages.user_must_have_plan')], 422);
+        }
+
+
         $animal = Animal::create([
             'name'          => $request->name,
             'description'   => $request->description,
@@ -358,41 +372,35 @@ class AnimalController extends Controller
             'photos.*' => ['required'],
         ]);
 
-        if($request->deleted_media_ids)
-        {
+        if ($request->deleted_media_ids) {
             $photos = $animal->media()->whereIn('id', $request->deleted_media_ids)->get();
 
-            foreach($photos as $photo)
-            {
+            foreach ($photos as $photo) {
                 delete_file_if_exist($photo->link);
             }
-            
+
             $animal->media()->whereIn('id', $request->deleted_media_ids)->delete();
         }
 
-        foreach($request->photos as $photo){
-            
+        foreach ($request->photos as $photo) {
+
             $media = $animal->media()->where('link', $photo)->first();
-        
-            if($media)
-            {
+
+            if ($media) {
                 $media->link = $photo;
                 $media->save();
-            }
-            else{
-                if(is_file($photo))
-                 {
-                  $uploadedphoto = upload_file($photo, 'animals', 'animal');
-                  $animal->media()->create([
-                    'link' => $uploadedphoto,
-                  ]);
-                }
-                else
+            } else {
+                if (is_file($photo)) {
+                    $uploadedphoto = upload_file($photo, 'animals', 'animal');
+                    $animal->media()->create([
+                        'link' => $uploadedphoto,
+                    ]);
+                } else
                     throw ValidationException::withMessages(['image' => __('error_messages.Image should be a file')]);
             }
         }
 
-          $animal->update([
+        $animal->update([
             'name'          => $request->name,
             'description'   => $request->description,
             'owner_type'     => $request->owner_type,
@@ -444,8 +452,7 @@ class AnimalController extends Controller
     {
         $photos = $animal->media()->get();
 
-        foreach($photos as $photo)
-        {
+        foreach ($photos as $photo) {
             delete_file_if_exist($photo->link);
         }
 

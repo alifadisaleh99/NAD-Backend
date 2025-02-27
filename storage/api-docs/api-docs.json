@@ -918,6 +918,231 @@
                 ]
             }
         },
+        "/admin/animal-statuses": {
+            "get": {
+                "tags": [
+                    "Admin - Animal Statuses"
+                ],
+                "description": "Get all animal statuses",
+                "operationId": "get_all_animal_statuses",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "animal_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Animal Statuses"
+                ],
+                "description": "Add new animal status.",
+                "operationId": "73aa8083fa5b1dbc8defe65d2478b65d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "description[ar]"
+                                ],
+                                "properties": {
+                                    "animal_id": {
+                                        "type": "integer"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "lost, found, adopt, dead, transfer"
+                                        ]
+                                    },
+                                    "description[en]": {
+                                        "type": "string"
+                                    },
+                                    "description[ar]": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/admin/animal-statuses/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Animal Statuses"
+                ],
+                "description": "Get animal status information.",
+                "operationId": "show_animal_status",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Animal Statuses"
+                ],
+                "description": "Edit animal status.",
+                "operationId": "edit_animal_status",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "animal_id": {
+                                        "type": "integer"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "lost, found, adopt, dead, transfer"
+                                        ]
+                                    },
+                                    "description[en]": {
+                                        "type": "string"
+                                    },
+                                    "description[ar]": {
+                                        "type": "string"
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "PUT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin - Animal Statuses"
+                ],
+                "description": "Delete entered animal status.",
+                "operationId": "delete_animal_status",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "examples": {
+                            "int": {
+                                "summary": "An int value.",
+                                "value": "1"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/admin/animal-types": {
             "get": {
                 "tags": [
@@ -2140,6 +2365,228 @@
                 ]
             }
         },
+        "/admin/plans": {
+            "get": {
+                "tags": [
+                    "Admin - Plans"
+                ],
+                "description": "Get all plans",
+                "operationId": "get_all_plans",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Plans"
+                ],
+                "description": "Add new plan.",
+                "operationId": "4785aa6e7f9e999a3e6431dd66cb801c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "price",
+                                    "status",
+                                    "addition_count"
+                                ],
+                                "properties": {
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 25.5
+                                    },
+                                    "status": {
+                                        "type": "boolean",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "addition_count": {
+                                        "type": "integer"
+                                    },
+                                    "image": {
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/admin/plans/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Plans"
+                ],
+                "description": "Get plan information.",
+                "operationId": "show_plan",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Plans"
+                ],
+                "description": "Edit plan.",
+                "operationId": "c6e88d87096da577235c7b16bbe439ab",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "price",
+                                    "status",
+                                    "addition_count"
+                                ],
+                                "properties": {
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 25.5
+                                    },
+                                    "status": {
+                                        "type": "boolean",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "addition_count": {
+                                        "type": "integer"
+                                    },
+                                    "image": {
+                                        "type": "file"
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "PUT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin - Plans"
+                ],
+                "description": "Delete entered plan.",
+                "operationId": "delete_plan",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "examples": {
+                            "int": {
+                                "summary": "An int value.",
+                                "value": "1"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/admin/roles": {
             "get": {
                 "tags": [
@@ -2207,12 +2654,20 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "name"
+                                    "name",
+                                    "name_en",
+                                    "name_ar"
                                 ],
                                 "properties": {
                                     "name": {
                                         "type": "string",
                                         "example": ""
+                                    },
+                                    "name_en": {
+                                        "type": "string"
+                                    },
+                                    "name_ar": {
+                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
@@ -2296,12 +2751,19 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "name"
+                                    "name",
+                                    "name_en",
+                                    "name_ar"
                                 ],
                                 "properties": {
                                     "name": {
-                                        "type": "string",
-                                        "example": ""
+                                        "type": "string"
+                                    },
+                                    "name_en": {
+                                        "type": "string"
+                                    },
+                                    "name_ar": {
+                                        "type": "string"
                                     },
                                     "_method": {
                                         "type": "string",
@@ -2531,6 +2993,9 @@
                                     },
                                     "branch_id": {
                                         "type": "integer"
+                                    },
+                                    "plan_id": {
+                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"
@@ -2629,6 +3094,9 @@
                                         "type": "file"
                                     },
                                     "role_id": {
+                                        "type": "integer"
+                                    },
+                                    "plan_id": {
                                         "type": "integer"
                                     },
                                     "_method": {
@@ -2966,6 +3434,10 @@
             "description": "Admin - Animal Species"
         },
         {
+            "name": "Admin - Animal Statuses",
+            "description": "Admin - Animal Statuses"
+        },
+        {
             "name": "Admin - Animal Types",
             "description": "Admin - Animal Types"
         },
@@ -2988,6 +3460,10 @@
         {
             "name": "Permissions",
             "description": "Permissions"
+        },
+        {
+            "name": "Admin - Plans",
+            "description": "Admin - Plans"
         },
         {
             "name": "Roles",

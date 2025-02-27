@@ -79,19 +79,36 @@ class PermissionSeeder extends Seeder
         if (!in_array('animals.delete', $permissions))
             Permission::create(['name' => 'animals.delete']);
 
+        if (!in_array('animalStatuses.read', $permissions))
+            Permission::create(['name' => 'animalStatuses.read']);
+        if (!in_array('animalStatuses.write', $permissions))
+            Permission::create(['name' => 'animalStatuses.write']);
+        if (!in_array('animalStatuses.delete', $permissions))
+            Permission::create(['name' => 'animalStatuses.delete']);
+
+        if (!in_array('plans.read', $permissions))
+            Permission::create(['name' => 'plans.read']);
+        if (!in_array('plans.write', $permissions))
+            Permission::create(['name' => 'plans.write']);
+        if (!in_array('plans.delete', $permissions))
+            Permission::create(['name' => 'plans.delete']);
 
         if(!Role::where('name', 'admin')->exists())
             Role::create([
                 'id'         => 1,
                 'name'       => 'admin',
+                'name_en'    => 'admin',
+                'name_ar'    =>  'مشرف',
                 'guard_name' => 'web',
             ]);
         if(!Role::where('name', 'user')->exists())
-            Role::create([
+             Role::create([
                 'id'         => 2,
                 'name'       => 'user',
+                'name_en'    => 'user',
+                'name_ar'    => 'مستخدم',
                 'guard_name' => 'web',
-            ]);
+             ]);
 
         $admin_role = Role::where('name', 'admin')->first();
         $admin_permissions = Permission::pluck('id')->toArray();

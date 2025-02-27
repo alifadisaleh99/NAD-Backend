@@ -98,8 +98,10 @@ class RoleController extends Controller
      *     @OA\MediaType(
      *       mediaType="multipart/form-data",
      *       @OA\Schema(
-     *         required={"name"},
-     *         @OA\Property(property="name", type="string", example=""),
+     *         required={"name", "name_en", "name_ar"},
+     *              @OA\Property(property="name", type="string", example=""),
+     *              @OA\Property(property="name_en", type="string"),
+     *              @OA\Property(property="name_ar", type="string"),
      *       )
      *     )
      *   ),
@@ -122,10 +124,14 @@ class RoleController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string'],
+            'name_en' => ['required', 'string'],
+            'name_ar' => ['required', 'string'],
         ]);
 
         $role = Role::create([
             'name' => $request->name,
+            'name_en' => $request->name_en,
+            'name_ar' => $request->name_ar,
             'guard_name' => 'web'
         ]);
 
@@ -148,9 +154,11 @@ class RoleController extends Controller
      *     @OA\MediaType(
      *       mediaType="multipart/form-data",
      *       @OA\Schema(
-     *         required={"name"},
-     *         @OA\Property(property="name", type="string", example=""),
-     *         @OA\Property(property="_method", type="string", format="string", example="PUT"),
+     *         required={"name", "name_en", "name_ar"},
+     *              @OA\Property(property="name", type="string"),
+     *              @OA\Property(property="name_en", type="string"),
+     *              @OA\Property(property="name_ar", type="string"),
+     *              @OA\Property(property="_method", type="string", format="string", example="PUT"),
      *       )
      *     )
      *   ),
@@ -178,10 +186,14 @@ class RoleController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string'],
+            'name_en' => ['required', 'string'],
+            'name_ar' => ['required', 'string'],
         ]);
 
-        $role->update([
+        $role = Role::create([
             'name' => $request->name,
+            'name_en' => $request->name_en,
+            'name_ar' => $request->name_ar,
             'guard_name' => 'web'
         ]);
 

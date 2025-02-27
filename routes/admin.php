@@ -4,12 +4,13 @@ use App\Http\Controllers\Admin\AnimalBreedController;
 use App\Http\Controllers\Admin\AnimalController;
 use App\Http\Controllers\Admin\AnimalTypeController;
 use App\Http\Controllers\Admin\AnimalSpecieController;
+use App\Http\Controllers\Admin\AnimalStatusController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\EntityController;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -50,3 +51,7 @@ Route::apiResource('colors', ColorController::class);
 
 // animal
 Route::apiResource('animals', AnimalController::class);
+Route::apiResource('animal-statuses', AnimalStatusController::class);
+
+//plan
+Route::apiResource('plans', PlanController::class);
