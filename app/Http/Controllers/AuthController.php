@@ -59,7 +59,7 @@ class AuthController extends Controller
             'phone'            => $request->phone,
             'password'         => Hash::make($request->password),
         ]);
-        $user->assignRole('user');
+        $user->assignRole('مستخدم');
 
         $token = $user->createToken('Sanctum', [])->plainTextToken;
         return response()->json([

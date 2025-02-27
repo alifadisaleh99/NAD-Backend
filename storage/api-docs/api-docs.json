@@ -2654,15 +2654,10 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "name",
                                     "name_en",
                                     "name_ar"
                                 ],
                                 "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": ""
-                                    },
                                     "name_en": {
                                         "type": "string"
                                     },
@@ -2751,7 +2746,6 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "name",
                                     "name_en",
                                     "name_ar"
                                 ],

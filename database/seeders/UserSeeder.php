@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
             'password'          => Hash::make('password'),
             'email_verified_at' => now(),
         ]);
-        $admin->assignRole('admin');
+        $admin->assignRole('مشرف');
 
         $user_1 = User::create([
             'id'                => 2,
@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
             'password'          => Hash::make('password'),
             'email_verified_at' => now(),
         ]);
-        $user_1->assignRole('user');
+        $user_1->assignRole('مستخدم');
 
         $user_2 = User::create([
             'id'                => 3,
@@ -44,6 +44,6 @@ class UserSeeder extends Seeder
             'password'          => Hash::make('password'),
             'email_verified_at' => now(),
         ]);
-        $user_2->assignRole('user');
+        $user_2->assignRole('مستخدم');
     }
 }

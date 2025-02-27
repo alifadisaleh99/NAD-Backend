@@ -75,7 +75,7 @@ class RoleController extends Controller
 
         if ($searchTerm) {
             $query->where(function($query) use ($searchTerm) {
-                $query->where('name', 'like', '%' . $searchTerm . '%');
+                $query->where('name_en', 'like', '%' . $searchTerm . '%')->orWhere('name_ar', 'like', '%' . $searchTerm . '%');
             });
         }
 
@@ -98,8 +98,7 @@ class RoleController extends Controller
      *     @OA\MediaType(
      *       mediaType="multipart/form-data",
      *       @OA\Schema(
-     *         required={"name", "name_en", "name_ar"},
-     *              @OA\Property(property="name", type="string", example=""),
+     *         required={"name_en", "name_ar"},
      *              @OA\Property(property="name_en", type="string"),
      *              @OA\Property(property="name_ar", type="string"),
      *       )
@@ -123,13 +122,12 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string'],
             'name_en' => ['required', 'string'],
             'name_ar' => ['required', 'string'],
         ]);
 
         $role = Role::create([
-            'name' => $request->name,
+            'name' => $request->name_ar,
             'name_en' => $request->name_en,
             'name_ar' => $request->name_ar,
             'guard_name' => 'web'
@@ -154,8 +152,7 @@ class RoleController extends Controller
      *     @OA\MediaType(
      *       mediaType="multipart/form-data",
      *       @OA\Schema(
-     *         required={"name", "name_en", "name_ar"},
-     *              @OA\Property(property="name", type="string"),
+     *         required={"name_en", "name_ar"},
      *              @OA\Property(property="name_en", type="string"),
      *              @OA\Property(property="name_ar", type="string"),
      *              @OA\Property(property="_method", type="string", format="string", example="PUT"),
@@ -184,14 +181,16 @@ class RoleController extends Controller
 
     public function update(Request $request, Role $role)
     {
+        if ($role->name_en == 'admin' || $role->name_en == 'user' || $role->name_en == 'poet')
+                 throw new BadRequestHttpException(__('error_messages.Sorry, You can not update this role'));
+
         $request->validate([
-            'name' => ['required', 'string'],
             'name_en' => ['required', 'string'],
             'name_ar' => ['required', 'string'],
         ]);
 
         $role = Role::create([
-            'name' => $request->name,
+            'name' => $request->name_ar,
             'name_en' => $request->name_en,
             'name_ar' => $request->name_ar,
             'guard_name' => 'web'
@@ -237,7 +236,7 @@ class RoleController extends Controller
         return response()->json(new RoleResource($role), 200);
     }
 
-    /**
+    /** 
      * @OA\Delete(
      *   path="/admin/roles/{role}",
      *   description="Delete a role by ID",
@@ -270,7 +269,7 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
-        if ($role->name == 'admin' || $role->name == 'user' || $role->name == 'poet')
+        if ($role->name_en == 'admin' || $role->name_en == 'user' || $role->name_en == 'poet')
             throw new BadRequestHttpException(__('error_messages.Sorry, You can not delete this role'));
 
         $role_employees = DB::table('model_has_roles')->where('role_id', $role->id)->exists();

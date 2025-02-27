@@ -93,24 +93,24 @@ class PermissionSeeder extends Seeder
         if (!in_array('plans.delete', $permissions))
             Permission::create(['name' => 'plans.delete']);
 
-        if(!Role::where('name', 'admin')->exists())
+        if(!Role::where('name', 'مشرف')->exists())
             Role::create([
                 'id'         => 1,
-                'name'       => 'admin',
+                'name'       => 'مشرف',
                 'name_en'    => 'admin',
                 'name_ar'    =>  'مشرف',
                 'guard_name' => 'web',
             ]);
-        if(!Role::where('name', 'user')->exists())
+        if(!Role::where('name', 'مستخدم')->exists())
              Role::create([
                 'id'         => 2,
-                'name'       => 'user',
+                'name'       => 'مستخدم',
                 'name_en'    => 'user',
                 'name_ar'    => 'مستخدم',
                 'guard_name' => 'web',
              ]);
 
-        $admin_role = Role::where('name', 'admin')->first();
+        $admin_role = Role::where('name_en', 'admin')->first();
         $admin_permissions = Permission::pluck('id')->toArray();
         $admin_role->syncPermissions($admin_permissions);
     }
