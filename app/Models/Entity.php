@@ -31,4 +31,8 @@ class Entity extends TranslatableModel
         return $this->hasMany(Branch::class);
     }
 
+    public function animals()
+    {
+        return $this->hasMany(Animal::class);
+    }
 }

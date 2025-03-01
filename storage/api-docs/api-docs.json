@@ -2392,6 +2392,14 @@
                         "schema": {
                             "type": "integer"
                         }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -2419,9 +2427,16 @@
                                 "required": [
                                     "price",
                                     "status",
-                                    "addition_count"
+                                    "addition_count",
+                                    "name[ar]"
                                 ],
                                 "properties": {
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    },
                                     "price": {
                                         "type": "number",
                                         "format": "float",
@@ -2510,9 +2525,16 @@
                                 "required": [
                                     "price",
                                     "status",
-                                    "addition_count"
+                                    "addition_count",
+                                    "name[ar]"
                                 ],
                                 "properties": {
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    },
                                     "price": {
                                         "type": "number",
                                         "format": "float",
@@ -2750,9 +2772,6 @@
                                     "name_ar"
                                 ],
                                 "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
                                     "name_en": {
                                         "type": "string"
                                     },
@@ -2915,6 +2934,14 @@
                     },
                     {
                         "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "entity_id",
                         "in": "query",
                         "required": false,
                         "schema": {

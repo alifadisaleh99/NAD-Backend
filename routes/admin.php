@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\EntityController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,3 +56,8 @@ Route::apiResource('animal-statuses', AnimalStatusController::class);
 
 //plan
 Route::apiResource('plans', PlanController::class);
+
+//Statistics
+Route::get('statistics/overview', [StatisticsController::class,'getCategoryPlanAnimalStatistics']);
+Route::get('statistics/entity-earnings', [StatisticsController::class,'getEntityEarnings']);
+
