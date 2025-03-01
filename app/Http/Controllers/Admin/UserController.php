@@ -93,6 +93,12 @@ class UserController extends Controller
      *     required=false,
      *     @OA\Schema(type="integer"),
      *   ),
+     *   @OA\Parameter(
+     *     in="query",
+     *     name="entity_id",
+     *     required=false,
+     *     @OA\Schema(type="integer"),
+     *   ),
      *   operationId="get_users",
      *   security={{"bearer_token": {} }},
      *   tags={"Admin - Users"},
@@ -113,7 +119,8 @@ class UserController extends Controller
             'type'                => ['in:employee'],
             'user_is'             => ['in:single_user,entity_user'],
             'with_paginate'       => ['integer', 'in:0,1'],
-            'per_page'            => ['integer', 'min:1']
+            'per_page'            => ['integer', 'min:1'],
+            'entity_id'           => ['integer', 'exists:entities,id']
         ]);
 
         $q = User::with('entity', 'branch', 'plan');
@@ -128,6 +135,10 @@ class UserController extends Controller
             $q->where('created_at','>=', $request->start_date);
         if($request->end_date)
             $q->where('created_at','<=', $request->end_date);
+        
+        if($request->entity_id)
+            $q->where('entity_id', $request->entity_id);
+
 
         if ($request->q) {
             $q->where(function ($query) use ($request) {

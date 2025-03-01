@@ -66,7 +66,7 @@ class AnimalStatusController extends Controller
         $q = AnimalStatus::query()->with(['animal', 'user'])->latest();
 
         if($request->animal_id)
-            $q->where('animal_id', $request->animal_type_id);
+            $q->where('animal_id', $request->animal_id);
 
      /*   if($request->q)
         {

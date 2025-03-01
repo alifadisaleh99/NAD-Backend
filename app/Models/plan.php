@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Mosab\Translation\Database\TranslatableModel;
 
-class plan extends Model
+class plan extends TranslatableModel
 {
     use HasFactory;
 
@@ -15,4 +15,13 @@ class plan extends Model
         'status',
         'image',
     ];
+
+    protected $translatable = [
+        'name',
+    ];
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }

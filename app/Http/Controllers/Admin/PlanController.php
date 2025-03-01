@@ -7,6 +7,7 @@ use App\Http\Resources\PlanResource;
 use App\Models\plan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Mosab\Translation\Models\Translation;
 
 class PlanController extends Controller
 {
@@ -37,6 +38,12 @@ class PlanController extends Controller
      *    required=false,
      *    @OA\Schema(type="integer"),
      * ),
+     * @OA\Parameter(
+     *    in="query",
+     *    name="q",
+     *    required=false,
+     *    @OA\Schema(type="string"),
+     * ),
      * @OA\Response(
      *     response=200,
      *     description="Success",
@@ -48,9 +55,26 @@ class PlanController extends Controller
         $request->validate([
             'with_paginate'      => ['integer', 'in:0,1'],
             'per_page'           => ['integer', 'min:1'],
+            'q'                   => ['string'],
         ]);
 
         $q = plan::query()->latest();
+
+        if($request->q)
+        {
+            $plans_ids = Translation::where('translatable_type', Plan::class)
+                                        ->where('attribute', 'name')
+                                        ->where('value', 'LIKE', '%'.$request->q.'%')
+                                        ->groupBy('translatable_id')
+                                        ->pluck('translatable_id');
+
+            $q->where(function($query) use ($request, $plans_ids) {
+                if (is_numeric($request->q))
+                    $query->where('id', $request->q);
+        
+                $query->orWhereIn('id', $plans_ids);
+            });
+        }
 
         if ($request->with_paginate === '0')
             $plans = $q->get();
@@ -71,7 +95,9 @@ class PlanController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"price", "status", "addition_count"},
+     *            required={"price", "status", "addition_count","name[ar]"},
+     *              @OA\Property(property="name[en]", type="string"),
+     *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="price", type="number", format="float", example=25.50,),
      *              @OA\Property(property="status", type="boolean", enum={0, 1}),
      *              @OA\Property(property="addition_count", type="integer"),
@@ -89,6 +115,7 @@ class PlanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'name'           => ['required', 'array', translation_rule()],
             'price'     => ['required', 'numeric', 'min:0'],
             'status'    => ['required', 'in:1,0'],
             'addition_count' => ['required', 'integer'],
@@ -98,6 +125,7 @@ class PlanController extends Controller
         $image = upload_file($request->image, 'plans', 'plan');
 
         $plan = plan::create([
+            'name'          => $request->name,
             'price'          => $request->price,
             'status'   => $request->status,
             'addition_count' => $request->addition_count,
@@ -149,7 +177,9 @@ class PlanController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"price", "status", "addition_count"},
+     *              required={"price", "status", "addition_count", "name[ar]"},
+     *              @OA\Property(property="name[en]", type="string"),
+     *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="price", type="number", format="float", example=25.50,),
      *              @OA\Property(property="status", type="boolean", enum={0, 1}),
      *              @OA\Property(property="addition_count", type="integer"),
@@ -168,6 +198,7 @@ class PlanController extends Controller
     public function update(Request $request, Plan $plan)
     {
         $request->validate([
+            'name'      => ['required', 'array', translation_rule()],
             'price'     => ['required', 'numeric', 'min:0'],
             'status'    => ['required', 'in:1,0'],
             'addition_count' => ['required', 'integer'],
@@ -186,6 +217,7 @@ class PlanController extends Controller
         }
 
         $plan->update([
+            'name'           => $request->name,
             'price'          => $request->price,
             'status'   => $request->status,
             'addition_count' => $request->addition_count,
