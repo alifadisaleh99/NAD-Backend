@@ -345,10 +345,10 @@ class UserController extends Controller
             'summary'               => ['string'],
             'image'                 => [''],
             'role_id'               => ['exists:roles,id'],
-            'plan_id'               => ['integer', 'exists:plans,id'],
+            'plan_id'               => ['integer','exists:plans,id'],
         ]);
 
-        $role_name = $request->role_id?Role::find($request->role_id)->name:$user->role();
+        $role_name = $request->role_id?Role::find($request->role_id)->name:$user->roles();
 
         $image = null;
         if($request->image){
@@ -368,7 +368,7 @@ class UserController extends Controller
         $user->country_id = $request->country_id;
         $user->summary = $request->summary;
         $user->image = $image;
-        $user->plan_id = $request->plan_id??null;
+        $user->plan_id = $request->plan_id ?? null;
         if($request->password){
             $user->password = Hash::make($request->password);
         }
@@ -376,7 +376,7 @@ class UserController extends Controller
         $user->save();
 
         if($request->role_id){
-            $user->syncRoles($role_name);
+              $user->syncRoles($role_name);
         }
 
         return response()->json(new UserResource($user));
@@ -441,7 +441,7 @@ class UserController extends Controller
     public function reset_password(Request $request, User $user)
     {
         $request->validate([
-            'password'         => ['required', 'string', 'min:6', 'confirmed'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
         $user->update(['password'  => Hash::make($request->password),]);
         return response()->json(new UserResource($user), 200);
