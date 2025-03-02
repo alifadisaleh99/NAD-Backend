@@ -18,15 +18,13 @@ class StatisticsController extends Controller
         $this->middleware('permission:statistics.read');
     }
 
-    public function getCategoryPlanAnimalStatistics(Request $request)
-    {
-        /**
+            /**
          * @OA\Get(
          *   path="/admin/statistics/overview",
-         *   description="get statistics for categories, plans, and animals",
+         *   description="Get statistics for categories, plans, and animals",
+         *   operationId="getStatisticsOverview",
          *   tags={"Admin - Statistics"},
-         *   security={{"bearer_token": {} }},
-         *   ),
+         *   security={{"bearer_token": {}}},
          *   @OA\Parameter(
          *     name="with_paginate",
          *     in="query",
@@ -38,24 +36,36 @@ class StatisticsController extends Controller
          *     )
          *   ),
          *   @OA\Parameter(
-         *     in="query",
          *     name="per_page",
+         *     in="query",
+         *     description="Number of items per page",
          *     required=false,
-         *     @OA\Schema(type="integer"),
+         *     @OA\Schema(
+         *       type="integer"
+         *     )
          *   ),
          *   @OA\Response(
          *     response=200,
          *     description="Success",
-         *   ),
+         *   )
          * )
          */
 
-         $q = Category::with('animals');
-         
+    public function getCategoryPlanAnimalStatistics(Request $request)
+    {
+        $request->validate([
+            'with_paginate' => ['integer', 'in:0,1'],
+            'per_page'      => ['integer', 'min:1'],
+            'start_date'          => ['date_format:Y-m-d'],
+            'end_date'            => ['date_format:Y-m-d']
+        ]);
+
+        $q = Category::with('animals');
+
         if ($request->with_paginate === '0')
-           $categories = $q->with('animals')->get();
+            $categories = $q->with('animals')->get();
         else
-           $categories = $q->with('animals')->paginate($request->per_page ?? 10);
+            $categories = $q->with('animals')->paginate($request->per_page ?? 10);
 
         $categories = $categories->map(function ($category) {
             return [
@@ -88,15 +98,12 @@ class StatisticsController extends Controller
         ]);
     }
 
-    public function getEntityEarnings(Request $request)
-    {
-        /**
+            /**
          * @OA\Get(
          *   path="/admin/statistics/entity-earnings",
          *   description="get statistics for entity earnings",
          *   tags={"Admin - Statistics"},
-         *   security={{"bearer_token": {} }},
-         *   ),
+         *   security={{"bearer_token": {}}},
          *   @OA\Parameter(
          *     name="with_paginate",
          *     in="query",
@@ -108,31 +115,26 @@ class StatisticsController extends Controller
          *     )
          *   ),
          *   @OA\Parameter(
-         *     in="query",
          *     name="per_page",
-         *     required=false,
-         *     @OA\Schema(type="integer"),
-         *   ),
-         * @OA\Parameter(
          *     in="query",
-         *     name="start_date",
+         *     description="Number of items per page",
          *     required=false,
-         *     @OA\Schema(type="date")
-         *   ),
-         * @OA\Parameter(
-         *     in="query",
-         *     name="end_date",
-         *     required=false,
-         *     @OA\Schema(type="date")
+         *     @OA\Schema(
+         *       type="integer"
+         *     )
          *   ),
          *   @OA\Response(
          *     response=200,
          *     description="Success",
-         *   ),
+         *   )
          * )
          */
 
+    public function getEntityEarnings(Request $request)
+    {
         $request->validate([
+            'with_paginate' => ['integer', 'in:0,1'],
+            'per_page'      => ['integer', 'min:1'],
             'start_date'          => ['date_format:Y-m-d'],
             'end_date'            => ['date_format:Y-m-d']
         ]);

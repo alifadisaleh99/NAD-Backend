@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories');
             $table->foreignId('animal_type_id')->constrained('animal_types');
             $table->foreignId('animal_specie_id')->constrained('animal_species');
-            $table->foreignId('animal_breed_id')->constrained('animal_breeds');
+            $table->foreignId('animal_breed_id')->nullable()->constrained('animal_breeds');
             $table->foreignId('primary_color_id')->constrained('colors');
             $table->string('primary_color');
             $table->foreignId('secondary_color_id')->constrained('colors');

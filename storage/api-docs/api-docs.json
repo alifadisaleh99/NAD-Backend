@@ -2845,6 +2845,92 @@
                 ]
             }
         },
+        "/admin/statistics/overview": {
+            "get": {
+                "tags": [
+                    "Admin - Statistics"
+                ],
+                "description": "Get statistics for categories, plans, and animals",
+                "operationId": "getStatisticsOverview",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "description": "Enable pagination (0 = false, 1 = true)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/admin/statistics/entity-earnings": {
+            "get": {
+                "tags": [
+                    "Admin - Statistics"
+                ],
+                "description": "get statistics for entity earnings",
+                "operationId": "98216b090accc4d7f402a68fd4151aa7",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "description": "Enable pagination (0 = false, 1 = true)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/admin/users": {
             "get": {
                 "tags": [
@@ -3489,6 +3575,10 @@
         {
             "name": "Roles",
             "description": "Roles"
+        },
+        {
+            "name": "Admin - Statistics",
+            "description": "Admin - Statistics"
         },
         {
             "name": "Admin - Users",

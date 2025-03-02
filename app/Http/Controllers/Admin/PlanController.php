@@ -115,22 +115,28 @@ class PlanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'           => ['required', 'array', translation_rule()],
+            'name'      => ['required', 'array', translation_rule()],
             'price'     => ['required', 'numeric', 'min:0'],
             'status'    => ['required', 'in:1,0'],
             'addition_count' => ['required', 'integer'],
             'image'     => ['image'],
         ]);
 
-        $image = upload_file($request->image, 'plans', 'plan');
 
         $plan = plan::create([
             'name'          => $request->name,
             'price'          => $request->price,
-            'status'   => $request->status,
+            'status'         => $request->status,
             'addition_count' => $request->addition_count,
-            'image'         => $image,
         ]);
+
+        if($request->image)
+         { 
+            $image = upload_file($request->image, 'plans', 'plan');
+            $plan->image = $image;
+            $plan->save();
+
+        }
 
         return response()->json(new PlanResource($plan), 200);
     }
