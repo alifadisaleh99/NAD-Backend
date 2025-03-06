@@ -14,6 +14,8 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $subscription = $this->subscriptions()->with('plan')->where('is_active',1)->first();
+
         return [
             'id'                => $this->id, 
             'nationality'       => new CountryResource($this->whenLoaded('nationality')), 
@@ -27,7 +29,7 @@ class UserResource extends JsonResource
             'summary'           => $this->summary, 
             'status'            => $this->status,
             'role'              => $this->roleModel(),
-            'plan'              =>  new PlanResource($this->whenLoaded('plan')),
+            'plan'              =>  new PlanResource($subscription->plan),
         ];
     }
 }

@@ -20,8 +20,8 @@ class plan extends TranslatableModel
         'name',
     ];
 
-    public function users()
+    public function subscriptions()
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(Subscription::class);
     }
 }

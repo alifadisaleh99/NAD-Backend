@@ -2845,13 +2845,32 @@
                 ]
             }
         },
-        "/admin/statistics/overview": {
+        "/adminstatistics/count-animals": {
             "get": {
                 "tags": [
                     "Admin - Statistics"
                 ],
-                "description": "Get statistics for categories, plans, and animals",
-                "operationId": "getStatisticsOverview",
+                "description": "Get statistics for count animals by dates",
+                "operationId": "getStatisticsAnimalsCount",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/admin/statistics/plan-earnings": {
+            "get": {
+                "tags": [
+                    "Admin - Statistics"
+                ],
+                "description": "get statistics for plan earnings",
+                "operationId": "d5121769fe39f8bde3e9fc4357203a3f",
                 "parameters": [
                     {
                         "name": "with_paginate",
@@ -2888,13 +2907,13 @@
                 ]
             }
         },
-        "/admin/statistics/entity-earnings": {
+        "/admin/statistics/subscriptions": {
             "get": {
                 "tags": [
                     "Admin - Statistics"
                 ],
-                "description": "get statistics for entity earnings",
-                "operationId": "98216b090accc4d7f402a68fd4151aa7",
+                "description": "get statistics: all subscriptions",
+                "operationId": "2259ff1258ede7c1ae94f59721bcc463",
                 "parameters": [
                     {
                         "name": "with_paginate",
@@ -2916,6 +2935,14 @@
                         "required": false,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 ],

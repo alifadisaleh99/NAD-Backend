@@ -19,7 +19,9 @@ use App\Models\Address;
 use App\Models\Entity;
 use App\Models\Favorite;
 use App\Models\FCMToken;
+use App\Models\plan;
 use App\Models\Product;
+use App\Models\Subscription;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
@@ -34,7 +36,7 @@ class UserController extends Controller
         $this->middleware('permission:users.write')->only('store', 'update', 'reset_password', 'user_status_toggle');
         $this->middleware('permission:users.delete')->only('destroy');
     }
- 
+
     /**
      * @OA\Get(
      *   path="/admin/users",
@@ -107,7 +109,7 @@ class UserController extends Controller
      *     description="Success",
      *   ),
      * )
-    */
+     */
     public function index(Request $request)
     {
         $request->validate([
@@ -123,53 +125,53 @@ class UserController extends Controller
             'entity_id'           => ['integer', 'exists:entities,id']
         ]);
 
-        $q = User::with('entity', 'branch', 'plan');
+        $q = User::with(['entity', 'branch']);
 
-        if($request->status === '0'){
+        if ($request->status === '0') {
             $q->where('status', false);
-        }else if ($request->status === '1') {
+        } else if ($request->status === '1') {
             $q->where('status', true);
         }
 
-        if($request->start_date)
-            $q->where('created_at','>=', $request->start_date);
-        if($request->end_date)
-            $q->where('created_at','<=', $request->end_date);
-        
-        if($request->entity_id)
+        if ($request->start_date)
+            $q->where('created_at', '>=', $request->start_date);
+        if ($request->end_date)
+            $q->where('created_at', '<=', $request->end_date);
+
+        if ($request->entity_id)
             $q->where('entity_id', $request->entity_id);
 
 
         if ($request->q) {
             $q->where(function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->q . '%')
-                        ->orWhere('email', 'like', '%' . $request->q . '%')
-                        ->orWhere('phone', 'like', '%' . $request->q . '%')
-                        ->orWhere('id', $request->q);
+                    ->orWhere('email', 'like', '%' . $request->q . '%')
+                    ->orWhere('phone', 'like', '%' . $request->q . '%')
+                    ->orWhere('id', $request->q);
             });
         }
-        
-        if($request->role_id){
+
+        if ($request->role_id) {
             $user_ids = DB::table('model_has_roles')->where('model_type', User::class)
-                            ->where('role_id', $request->role_id)->pluck('model_id');
+                ->where('role_id', $request->role_id)->pluck('model_id');
             $q->whereIn('id', $user_ids);
         }
 
-        if($request->type == 'employee'){
+        if ($request->type == 'employee') {
             $user_ids = DB::table('model_has_roles')->where('model_type', User::class)
-                        ->where('role_id', '!=', 2)->pluck('model_id');
+                ->where('role_id', '!=', 2)->pluck('model_id');
             $q->whereIn('id', $user_ids);
         }
 
-        if($request->user_is == 'entity_user'){
+        if ($request->user_is == 'entity_user') {
             $user_ids = DB::table('model_has_roles')->where('model_type', User::class)
-                            ->where('role_id', 2)->pluck('model_id');
+                ->where('role_id', 2)->pluck('model_id');
             $q->whereIn('id', $user_ids);
             $q->where('entity_id', '!=', null);
         }
-        if($request->user_is == 'single_user'){
+        if ($request->user_is == 'single_user') {
             $user_ids = DB::table('model_has_roles')->where('model_type', User::class)
-                            ->where('role_id', 2)->pluck('model_id');
+                ->where('role_id', 2)->pluck('model_id');
             $q->whereIn('id', $user_ids);
             $q->where('entity_id', null);
         }
@@ -216,7 +218,7 @@ class UserController extends Controller
      *     description="successful operation",
      *  ),
      *  )
-    */
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -235,20 +237,20 @@ class UserController extends Controller
         ]);
 
         $entity = Entity::find($request->entity_id);
-        if($entity){
-            if($entity->used_branches == 0)
+        if ($entity) {
+            if ($entity->used_branches == 0)
                 throw new BadRequestHttpException(__('error_messages.Sorry'));
 
-            $entity->used_users = $entity->used_users -1;
+            $entity->used_users = $entity->used_users - 1;
             $entity->save();
         }
-        
+
         $verified = null;
-        if($request->role_id != 2)
+        if ($request->role_id != 2)
             $verified = now();
 
         $image = null;
-        if($request->image)
+        if ($request->image)
             $image = upload_file($request->image, 'users', 'user');
 
         $user = User::create([
@@ -263,14 +265,28 @@ class UserController extends Controller
             'password'           => Hash::make($request->password),
             'email_verified_at'  => $verified,
             'image'              => $image,
-            'plan_id'            => $request->plan_id??null,
         ]);
+
+        if ($request->plan_id) {
+            $plan = plan::find($request->plan_id);
+
+            if ($plan) {
+                Subscription::create([
+                    'user_id' => $user->id,
+                    'plan_id' => $plan->id,
+                    'user_name' => $user->name,
+                    'plan_price' => $plan->price,
+                    'is_active'  => 1,
+                ]);
+            }
+        }
+
         $role_name = Role::find($request->role_id)->name;
         $user->assignRole($role_name);
 
         return response()->json(new UserResource($user));
     }
-    
+
     /**
      * @OA\Get(
      *   path="/admin/users/{id}",
@@ -289,10 +305,10 @@ class UserController extends Controller
      *     description="Success"
      *   ),
      * )
-    */
+     */
     public function show(User $user)
     {
-        $user->load(['nationality', 'phone_country', 'entity', 'branch', 'plan']);
+        $user->load(['nationality', 'phone_country', 'entity', 'branch']);
         return response()->json(new UserResource($user));
     }
 
@@ -333,7 +349,7 @@ class UserController extends Controller
      *     description="Success"
      *   ),
      * )
-    */
+     */
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -345,43 +361,59 @@ class UserController extends Controller
             'summary'               => ['string'],
             'image'                 => [''],
             'role_id'               => ['exists:roles,id'],
-            'plan_id'               => ['integer','exists:plans,id'],
+            'plan_id'               => ['integer', 'exists:plans,id'],
         ]);
 
-        $role_name = $request->role_id?Role::find($request->role_id)->name:$user->roles();
+        $role_name = $request->role_id ? Role::find($request->role_id)->name : $user->roles();
 
         $image = null;
-        if($request->image){
-            if($request->image == $user->image){
+        if ($request->image) {
+            if ($request->image == $user->image) {
                 $image = $user->image;
-            }else{
-                if(!is_file($request->image))
+            } else {
+                if (!is_file($request->image))
                     throw ValidationException::withMessages(['image' => __('Image should be a file')]);
                 $image = upload_file($request->image, 'users', 'user');
             }
         }
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone_country_id = $request->phone_country_id;
-        $user->phone = $request->phone;
-        $user->country_id = $request->country_id;
-        $user->summary = $request->summary;
-        $user->image = $image;
-        $user->plan_id = $request->plan_id ?? null;
-        if($request->password){
-            $user->password = Hash::make($request->password);
+        if ($request->plan_id) {
+
+            $plan = Plan::find($request->plan_id);
+            $subscription = $user->subscriptions()->where('is_active', 1)->first();
+
+            if ($plan && $subscription && $subscription->plan_id != $request->plan_id) {
+                $subscription->is_active = 0;
+                $subscription->save();
+
+                    Subscription::create([
+                        'user_id'    => $user->id,
+                        'plan_id'    => $request->plan_id,
+                        'user_name'  => $user->name,
+                        'plan_price' => $plan->price,
+                        'is_active'  => 1,
+                    ]);
+            }
         }
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone_country_id = $request->phone_country_id;
+            $user->phone = $request->phone;
+            $user->country_id = $request->country_id;
+            $user->summary = $request->summary;
+            $user->image = $image;
+            if ($request->password) {
+                $user->password = Hash::make($request->password);
+            }
+            $user->save();
 
-        $user->save();
 
-        if($request->role_id){
-              $user->syncRoles($role_name);
-        }
+            if ($request->role_id) {
+                $user->syncRoles($role_name);
+            }
 
-        return response()->json(new UserResource($user));
+            return response()->json(new UserResource($user));
     }
-    
     /**
      * @OA\Delete(
      *   path="/admin/users/{id}",
@@ -400,12 +432,12 @@ class UserController extends Controller
      *     description="Success"
      *   )
      * )
-    */
+     */
     public function destroy(User $user)
     {
         $user->delete();
 
-        return response()->json(null,204);
+        return response()->json(null, 204);
     }
 
     /**
@@ -437,7 +469,7 @@ class UserController extends Controller
      *     ),
      * )
      * )
-    */
+     */
     public function reset_password(Request $request, User $user)
     {
         $request->validate([
@@ -465,10 +497,10 @@ class UserController extends Controller
      *     ),
      * )
      * )
-    */
+     */
     public function user_status_toggle(User $user)
     {
-        if($user->status)
+        if ($user->status)
             DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->delete();
 
         $user->update(['status' => !$user->status]);

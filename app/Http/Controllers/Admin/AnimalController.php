@@ -214,11 +214,14 @@ class AnimalController extends Controller
         ]);
 
         if ($request->user_id) {
-            $user = User::with(['plan', 'animals'])->find($request->user_id);
+            $user = User::with(['animals'])->find($request->user_id);
+            $subscription = $user->subscriptions()->where('is_active', 1)->first();
 
-            if ($user && $user->plan) {
+
+            if ($user && $subscription) {
                 $currentAnimalsCount = $user->animals->count();
-                $maxAllowedAnimals = $user->plan->addition_count;
+            
+                $maxAllowedAnimals = $subscription->plan->addition_count;
 
                 if ($currentAnimalsCount >= $maxAllowedAnimals)
                     return response()->json(['message' => __('error_messages.max_animals_reached')], 422);

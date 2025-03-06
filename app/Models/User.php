@@ -77,9 +77,9 @@ class User extends Authenticatable
         return $this->belongsTo(Branch::class);
     }
 
-    public function plan()
+    public function subscriptions()
     {
-        return $this->belongsTo(plan::class);
+        return $this->hasMany(Subscription::class);
     }
 
     public function animals()
