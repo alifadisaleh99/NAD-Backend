@@ -47,7 +47,7 @@ class StatisticsController extends Controller
         }
 
         for ($i = 0; $i < 7; $i++) {
-            $l_day = today()->subDays(7 + $i);
+            $l_day = Carbon::today()->subDays(7 + $i);
             $count_animals = Animal::whereDate('created_at', $l_day)->count();
             $last_week[$l_day->format('l')] =  $count_animals;
         }

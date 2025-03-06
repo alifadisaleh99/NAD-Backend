@@ -95,6 +95,13 @@ class PermissionSeeder extends Seeder
 
         if (!in_array('statistics.read', $permissions))
             Permission::create(['name' => 'statistics.read']);
+        
+        if (!in_array('petMarks.read', $permissions))
+            Permission::create(['name' => 'petMarks.read']);
+        if (!in_array('petMarks.write', $permissions))
+            Permission::create(['name' => 'petMarks.write']);
+        if (!in_array('petMarks.delete', $permissions))
+            Permission::create(['name' => 'petMarks.delete']);
 
 
         if(!Role::where('name', 'مشرف')->exists())

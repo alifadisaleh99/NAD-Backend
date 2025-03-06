@@ -101,7 +101,7 @@ class AnimalController extends Controller
             'q'                  => ['string']
         ]);
 
-        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor'])->latest();
+        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed','pet_mark', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor'])->latest();
 
         if ($request->category_id)
             $q->where('category_id', $request->category_id);
@@ -167,6 +167,7 @@ class AnimalController extends Controller
      *              @OA\Property(property="animal_type_id", type="integer"),
      *              @OA\Property(property="animal_specie_id", type="integer"),
      *              @OA\Property(property="animal_breed_id", type="integer"),
+     *              @OA\Property(property="pet_mark_id", type="integer"),
      *              @OA\Property(property="primary_color_id", type="integer"),
      *              @OA\Property(property="primary_color", type="string"),
      *              @OA\Property(property="secondary_color_id", type="integer"),
@@ -199,7 +200,8 @@ class AnimalController extends Controller
             'category_id'         => ['required', 'integer', 'exists:categories,id'],
             'animal_type_id'      => ['required', 'integer', 'exists:animal_types,id'],
             'animal_specie_id'    => ['required', 'integer', 'exists:animal_species,id'],
-            'animal_breed_id'     => ['required', 'integer', 'exists:animal_breeds,id'],
+            'animal_breed_id'     => ['integer', 'exists:animal_breeds,id'],
+            'pet_mark_id'         => ['integer', 'exists:pet_marks,id'],
             'primary_color_id'    => ['required', 'integer', 'exists:colors,id'],
             'secondary_color_id'  => ['required', 'integer', 'exists:colors,id'],
             'tertiary_color_id'   => ['required', 'integer', 'exists:colors,id'],
@@ -242,6 +244,7 @@ class AnimalController extends Controller
             'animal_type_id'      => $request->animal_type_id,
             'animal_specie_id'    => $request->animal_specie_id,
             'animal_breed_id'     => $request->animal_breed_id,
+            'pet_mark_id'         => $request->pet_mark_id,
             'primary_color_id'    => $request->primary_color_id,
             'secondary_color_id'  => $request->secondary_color_id,
             'tertiary_color_id'   => $request->tertiary_color_id,
@@ -254,7 +257,6 @@ class AnimalController extends Controller
             'link' => $request->link ?? null,
             'status' => $request->status,
         ]);
-
         if ($request->photos) {
             foreach ($request->photos as $photo) {
                 $uploadedphoto = upload_file($photo, 'animals', 'animal');
@@ -289,7 +291,7 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor']);
+        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed','pet_mark', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor']);
         return response()->json(new AnimalResource($animal), 200);
     }
 
@@ -326,6 +328,7 @@ class AnimalController extends Controller
      *              @OA\Property(property="animal_type_id", type="integer"),
      *              @OA\Property(property="animal_specie_id", type="integer"),
      *              @OA\Property(property="animal_breed_id", type="integer"),
+     *              @OA\Property(property="pet_mark_id", type="integer"),
      *              @OA\Property(property="primary_color_id", type="integer"),
      *              @OA\Property(property="primary_color", type="string"),
      *              @OA\Property(property="secondary_color_id", type="integer"),
@@ -358,6 +361,7 @@ class AnimalController extends Controller
             'animal_type_id'      => ['required', 'integer', 'exists:animal_types,id'],
             'animal_specie_id'    => ['required', 'integer', 'exists:animal_species,id'],
             'animal_breed_id'     => ['integer', 'exists:animal_breeds,id'],
+            'pet_mark_id'     => ['integer', 'exists:pet_marks,id'],
             'primary_color_id'    => ['required', 'integer', 'exists:colors,id'],
             'secondary_color_id'  => ['required', 'integer', 'exists:colors,id'],
             'tertiary_color_id'   => ['required', 'integer', 'exists:colors,id'],
@@ -414,6 +418,7 @@ class AnimalController extends Controller
             'animal_type_id'      => $request->animal_type_id,
             'animal_specie_id'    => $request->animal_specie_id,
             'animal_breed_id'     => $request->animal_breed_id ?? null,
+            'pet_mark_id'     => $request->pet_mark_id ?? null,
             'primary_color_id'    => $request->primary_color_id,
             'secondary_color_id'  => $request->secondary_color_id,
             'tertiary_color_id'   => $request->tertiary_color_id,

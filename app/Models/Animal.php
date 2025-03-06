@@ -20,6 +20,7 @@ class Animal extends TranslatableModel
         'animal_type_id',
         'animal_specie_id',
         'animal_breed_id',
+        'pet_mark_id',
         'primary_color_id',
         'primary_color',
         'secondary_color_id',
@@ -89,5 +90,10 @@ class Animal extends TranslatableModel
     public function tertiaryColor()
     {
         return $this->hasOne(Color::class, 'id', 'tertiary_color_id');
+    }
+
+    public function pet_mark()
+    {
+        return $this->belongsTo(PetMark::class);
     }
 }

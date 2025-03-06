@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\EntityController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\PetMarkController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\StatisticsController;
@@ -49,6 +50,8 @@ Route::apiResource('animal-types', AnimalTypeController::class);
 Route::apiResource('animal-species', AnimalSpecieController::class)->parameters(['animal-species' => 'animal_specie']);
 Route::apiResource('animal-breeds', AnimalBreedController::class);
 Route::apiResource('colors', ColorController::class);
+Route::apiResource('pet-marks', PetMarkController::class);
+
 
 // animal
 Route::apiResource('animals', AnimalController::class);

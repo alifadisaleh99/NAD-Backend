@@ -423,6 +423,9 @@
                                     "animal_breed_id": {
                                         "type": "integer"
                                     },
+                                    "pet_mark_id": {
+                                        "type": "integer"
+                                    },
                                     "primary_color_id": {
                                         "type": "integer"
                                     },
@@ -592,6 +595,9 @@
                                         "type": "integer"
                                     },
                                     "animal_breed_id": {
+                                        "type": "integer"
+                                    },
+                                    "pet_mark_id": {
                                         "type": "integer"
                                     },
                                     "primary_color_id": {
@@ -2365,6 +2371,205 @@
                 ]
             }
         },
+        "/admin/pet-marks": {
+            "get": {
+                "tags": [
+                    "Admin - Pet Marks"
+                ],
+                "description": "Get all pet marks",
+                "operationId": "get_all_pet_marks",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Pet Marks"
+                ],
+                "description": "Add new pet mark.",
+                "operationId": "f1b4ae71e87d3aa6655c547d888b2c67",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name[ar]"
+                                ],
+                                "properties": {
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/admin/pet-marks/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Pet Marks"
+                ],
+                "description": "Get pet mark information.",
+                "operationId": "show_pet_mark",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Pet Marks"
+                ],
+                "description": "Edit pet mark.",
+                "operationId": "9d55c392130f4dc99c04fc22d1423cc1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "PUT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin - Pet Marks"
+                ],
+                "description": "Delete entered pet mark.",
+                "operationId": "delete_pet_mark",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "examples": {
+                            "int": {
+                                "summary": "An int value.",
+                                "value": "1"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/admin/plans": {
             "get": {
                 "tags": [
@@ -3594,6 +3799,10 @@
         {
             "name": "Permissions",
             "description": "Permissions"
+        },
+        {
+            "name": "Admin - Pet Marks",
+            "description": "Admin - Pet Marks"
         },
         {
             "name": "Admin - Plans",
