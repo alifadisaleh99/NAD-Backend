@@ -58,7 +58,7 @@ class CategoryController extends Controller
             'q'                  => ['string']
         ]);
 
-        $q = Category::query()->latest();
+        $q = Category::query()->with('animals')->latest();
 
         if($request->q)
         {
@@ -152,6 +152,8 @@ class CategoryController extends Controller
     */
     public function show(Category $category)
     {
+        $category->load('animals');
+        
         return response()->json(new CategoryResource($category), 200);
     }
 

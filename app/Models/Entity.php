@@ -20,6 +20,7 @@ class Entity extends TranslatableModel
         'allowed_users',
         'used_users',
         'used_branches',
+        'image',
     ];
 
     protected $translatable = [

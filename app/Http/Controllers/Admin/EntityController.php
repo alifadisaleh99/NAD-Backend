@@ -7,6 +7,7 @@ use App\Http\Resources\EntityResource;
 use App\Http\Resources\UserResource;
 use App\Models\Entity;
 use App\Models\User;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Mosab\Translation\Models\Translation;
@@ -107,6 +108,7 @@ class EntityController extends Controller
      *              @OA\Property(property="price_per_pet", type="float"),
      *              @OA\Property(property="allowed_branches", type="integer"),
      *              @OA\Property(property="allowed_users", type="integer"),
+     *              @OA\Property(property="image", type="file"),
      *          )
      *       )
      *   ),
@@ -128,8 +130,11 @@ class EntityController extends Controller
             'price_per_pet'     => ['required', 'numeric'],
             'allowed_branches'  => ['required', 'integer'],
             'allowed_users'     => ['required', 'integer'],
+            'image'             => ['image'],
         ]);
      
+        $image = upload_file($request->image, 'entities', 'entity');
+
         $entity = Entity::create([
             'name'              => $request->name,
             'address'           => $request->address,
@@ -139,6 +144,7 @@ class EntityController extends Controller
             'price_per_pet'     => $request->price_per_pet,
             'allowed_branches'  => $request->allowed_branches,
             'allowed_users'     => $request->allowed_users,
+            'image'             => $image,
         ]);
 
         $user = User::create([
@@ -148,7 +154,7 @@ class EntityController extends Controller
             'phone'              => $request->contact_number,
             'password'           => Hash::make('admin@123'),
         ]);
-        $user->assignRole('user');
+        $user->assignRole('مستخدم');
 
         return response()->json(new UserResource($user), 200);
     }
@@ -205,6 +211,7 @@ class EntityController extends Controller
      *              @OA\Property(property="price_per_pet", type="string"),
      *              @OA\Property(property="allowed_branches", type="string"),
      *              @OA\Property(property="allowed_users", type="string"),
+     *              @OA\Property(property="image", type="file"),
      *              @OA\Property(property="_method", type="string", format="string", example="PUT"),
      *           )
      *       )
@@ -229,6 +236,19 @@ class EntityController extends Controller
             'allowed_users'     => ['required', 'integer'],
         ]);
 
+        $image = null;
+        if($request->image){
+            if($request->image == $entity->image){
+                $image = $entity->image;
+            }else{
+                if(!is_file($request->image))
+                    throw ValidationException::withMessages(['image' => __('error_messages.Image should be a file')]);
+
+                delete_file_if_exist($entity->image);
+                $image = upload_file($request->image, 'entities', 'entity');
+            }
+        }
+
         $entity->update([
             'name'         => $request->name,
             'address'           => $request->address,
@@ -238,6 +258,7 @@ class EntityController extends Controller
             'price_per_pet'     => $request->price_per_pet,
             'allowed_branches'  => $request->allowed_branches,
             'allowed_users'     => $request->allowed_users,
+            'image'         => $image,
         ]);
 
         return response()->json(new EntityResource($entity), 200);
@@ -266,6 +287,7 @@ class EntityController extends Controller
     */
     public function destroy(Entity $entity)
     {
+        delete_file_if_exist($entity->image);
         $entity->delete();
         return response()->json(null, 204);
     }
