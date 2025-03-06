@@ -58,6 +58,8 @@ Route::apiResource('animal-statuses', AnimalStatusController::class);
 Route::apiResource('plans', PlanController::class);
 
 //Statistics
-Route::get('statistics/overview', [StatisticsController::class,'getCategoryPlanAnimalStatistics']);
-Route::get('statistics/entity-earnings', [StatisticsController::class,'getEntityEarnings']);
+Route::get('statistics/count-animals', [StatisticsController::class,'getAnimalsCount']);
+Route::get('statistics/plan-earnings', [StatisticsController::class,'getPlanEarnings']);
+Route::get('statistics/subscriptions', [StatisticsController::class,'getsubscriptions']);
+
 

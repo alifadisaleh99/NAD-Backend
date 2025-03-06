@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PlanEarningsResource;
+use App\Http\Resources\SubscriptionResource;
 use App\Models\Animal;
 use App\Models\Category;
 use App\Models\Entity;
 use App\Models\plan;
+use App\Models\Subscription;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -18,152 +21,164 @@ class StatisticsController extends Controller
         $this->middleware('permission:statistics.read');
     }
 
-            /**
-         * @OA\Get(
-         *   path="/admin/statistics/overview",
-         *   description="Get statistics for categories, plans, and animals",
-         *   operationId="getStatisticsOverview",
-         *   tags={"Admin - Statistics"},
-         *   security={{"bearer_token": {}}},
-         *   @OA\Parameter(
-         *     name="with_paginate",
-         *     in="query",
-         *     description="Enable pagination (0 = false, 1 = true)",
-         *     required=false,
-         *     @OA\Schema(
-         *       type="integer",
-         *       enum={0, 1}
-         *     )
-         *   ),
-         *   @OA\Parameter(
-         *     name="per_page",
-         *     in="query",
-         *     description="Number of items per page",
-         *     required=false,
-         *     @OA\Schema(
-         *       type="integer"
-         *     )
-         *   ),
-         *   @OA\Response(
-         *     response=200,
-         *     description="Success",
-         *   )
-         * )
-         */
+    /**
+     * @OA\Get(
+     *   path="/adminstatistics/count-animals",
+     *   description="Get statistics for count animals by dates",
+     *   operationId="getStatisticsAnimalsCount",
+     *   tags={"Admin - Statistics"},
+     *   security={{"bearer_token": {}}},
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *   )
+     * )
+     */
 
-    public function getCategoryPlanAnimalStatistics(Request $request)
-    {
-        $request->validate([
-            'with_paginate' => ['integer', 'in:0,1'],
-            'per_page'      => ['integer', 'min:1'],
-            'start_date'          => ['date_format:Y-m-d'],
-            'end_date'            => ['date_format:Y-m-d']
-        ]);
+    public function getAnimalsCount(Request $request)
+    { 
+        $current_week = [];
+        $last_week = [];
 
-        $q = Category::with('animals');
+        for ($i = 0; $i < 7; $i++) {
+            $c_day = Carbon::today()->subDays($i);
+            $count_animals = Animal::whereDate('created_at', $c_day)->count();
+            $current_week[$c_day->format('l')] =  $count_animals;
+        }
 
-        if ($request->with_paginate === '0')
-            $categories = $q->with('animals')->get();
-        else
-            $categories = $q->with('animals')->paginate($request->per_page ?? 10);
+        for ($i = 0; $i < 7; $i++) {
+            $l_day = today()->subDays(7 + $i);
+            $count_animals = Animal::whereDate('created_at', $l_day)->count();
+            $last_week[$l_day->format('l')] =  $count_animals;
+        }
 
-        $categories = $categories->map(function ($category) {
-            return [
-                'category_id' => $category->id,
-                'category_name' => $category->name,
-                'animals_count' => $category->animals->count(),
-                'name_translations'  => $category->translations['name'],
-            ];
-        });
+        $start_current_week = Carbon::today()->startOfWeek(Carbon::SATURDAY);
+        $start_current_month = Carbon::today()->startOfMonth();
+        $start_last_month  = Carbon::today()->subMonth()->startOfMonth();
+        $end_last_month  = Carbon::today()->subMonth()->endOfMonth();
 
-        $sub7days = Carbon::now()->subDays(7);
-        $count_animal_created_last_7_days = Animal::where('created_at', '>=', $sub7days)->count();
+        $count_animals_current_week  = Animal::whereDate('created_at', '>=', $start_current_week)->count();
+        $count_animals_current_month  = Animal::whereDate('created_at', '>=', $start_current_month)->count();
+        $count_animals_last_month     = Animal::whereBetween('created_at', [$start_last_month, $end_last_month])->count();
 
-
-        $plans = Plan::with('users')->get()->map(function ($plan) {
-            $count_users = $plan->users->count();
-            return [
-                'plan_id' => $plan->id,
-                'plan_name' => $plan->name,
-                'users_count' => $count_users,
-                'plan_earnings' => $plan->price * $count_users,
-                'name_translations'  => $plan->translations['name'],
-            ];
-        });
 
         return response()->json([
-            'categories' => $categories,
-            'plans' => $plans,
-            'count_animals_created_last_7_days' => $count_animal_created_last_7_days,
+            'current_week' => $current_week,
+            'last_week'    => $last_week,
+            'count_animals_current_week'  => $count_animals_current_week,
+            'count_animals_current_month' => $count_animals_current_month,
+            'count_animals_last_month'    => $count_animals_last_month,
         ]);
     }
 
-            /**
-         * @OA\Get(
-         *   path="/admin/statistics/entity-earnings",
-         *   description="get statistics for entity earnings",
-         *   tags={"Admin - Statistics"},
-         *   security={{"bearer_token": {}}},
-         *   @OA\Parameter(
-         *     name="with_paginate",
-         *     in="query",
-         *     description="Enable pagination (0 = false, 1 = true)",
-         *     required=false,
-         *     @OA\Schema(
-         *       type="integer",
-         *       enum={0, 1}
-         *     )
-         *   ),
-         *   @OA\Parameter(
-         *     name="per_page",
-         *     in="query",
-         *     description="Number of items per page",
-         *     required=false,
-         *     @OA\Schema(
-         *       type="integer"
-         *     )
-         *   ),
-         *   @OA\Response(
-         *     response=200,
-         *     description="Success",
-         *   )
-         * )
-         */
+    /**
+     * @OA\Get(
+     *   path="/admin/statistics/plan-earnings",
+     *   description="get statistics for plan earnings",
+     *   tags={"Admin - Statistics"},
+     *   security={{"bearer_token": {}}},
+     *   @OA\Parameter(
+     *     name="with_paginate",
+     *     in="query",
+     *     description="Enable pagination (0 = false, 1 = true)",
+     *     required=false,
+     *     @OA\Schema(
+     *       type="integer",
+     *       enum={0, 1}
+     *     )
+     *   ),
+     *   @OA\Parameter(
+     *     name="per_page",
+     *     in="query",
+     *     description="Number of items per page",
+     *     required=false,
+     *     @OA\Schema(
+     *       type="integer"
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *   )
+     * )
+     */
 
-    public function getEntityEarnings(Request $request)
+    public function getPlanEarnings(Request $request)
     {
-        $request->validate([
-            'with_paginate' => ['integer', 'in:0,1'],
-            'per_page'      => ['integer', 'min:1'],
-            'start_date'          => ['date_format:Y-m-d'],
-            'end_date'            => ['date_format:Y-m-d']
-        ]);
-
-        $q = Entity::with('animals');
-
-        if ($request->start_date)
-            $q->where('created_at', '>=', $request->start_date);
-        if ($request->end_date)
-            $q->where('created_at', '<=', $request->end_date);
+        $q = plan::latest();
 
         if ($request->with_paginate === '0')
-            $entites = $q->with('animals')->get();
+            $plans = $q->get();
         else
-            $entites = $q->with('animals')->paginate($request->per_page ?? 10);
+            $plans = $q->paginate($request->per_page ?? 10);
 
-        $entites = $entites->map(function ($entity) {
-            $count_animals = $entity->animals->count();
-            return [
-                'entity_id' => $entity->id,
-                'entaity_name' => $entity->name,
-                'animals_count' => $count_animals,
-                'entity_earnings' => $count_animals * $entity->price_per_pet,
-                'name_translations'  => $entity->translations['name'],
-            ];
-        });
+        return PlanEarningsResource::collection($plans);
+    }
 
-        return response()->json([
-            'entites' => $entites,
+    /**
+     * @OA\Get(
+     *   path="/admin/statistics/subscriptions",
+     *   description="get statistics: all subscriptions",
+     *   tags={"Admin - Statistics"},
+     *   security={{"bearer_token": {}}},
+     *   @OA\Parameter(
+     *     name="with_paginate",
+     *     in="query",
+     *     description="Enable pagination (0 = false, 1 = true)",
+     *     required=false,
+     *     @OA\Schema(
+     *       type="integer",
+     *       enum={0, 1}
+     *     )
+     *   ),
+     *   @OA\Parameter(
+     *     name="per_page",
+     *     in="query",
+     *     description="Number of items per page",
+     *     required=false,
+     *     @OA\Schema(
+     *     type="integer"
+     *     )
+     *   ),
+     * @OA\Parameter(
+     *    in="query",
+     *    name="q",
+     *    required=false,
+     *    @OA\Schema(type="string"),
+     * ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *   )
+     * )
+     */
+
+    public function getsubscriptions(Request $request)
+    {
+        $request->validate([
+            'with_paginate'      => ['integer', 'in:0,1'],
+            'per_page'           => ['integer', 'min:1'],
+            'q'                  => ['string']
         ]);
+
+        $q = Subscription::with('plan')->latest();
+
+        if ($request->q) {
+            $subscriptions_ids = $q->where('user_name', 'LIKE', '%' . $request->q . '%')->pluck('id');
+
+            $q->where(function($query) use ($request,  $subscriptions_ids) {
+                if (is_numeric($request->q))
+                     $query->where('id', $request->q);
+                
+               $query->orWhereIn('id',  $subscriptions_ids);
+            });
+        }      
+
+        if ($request->with_paginate === '0')
+            $subscriptions = $q->get();
+        else
+            $subscriptions  = $q->paginate($request->per_page ?? 10);
+
+            return SubscriptionResource::collection($subscriptions);
     }
 }
