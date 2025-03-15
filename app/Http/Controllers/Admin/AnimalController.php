@@ -175,6 +175,7 @@ class AnimalController extends Controller
      *              @OA\Property(property="tertiary_color_id", type="integer"),
      *              @OA\Property(property="tertiary_color", type="string"),
      *              @OA\Property(property="age", type="string", enum={"young", "adult", "senior"}),
+     *              @OA\Property(property="birth_date", type="date"),
      *              @OA\Property(property="gender", type="string", enum={"male", "female"}),
      *              @OA\Property(property="size", type="string", enum={"small", "medium", "large"})
      *          )
@@ -208,11 +209,12 @@ class AnimalController extends Controller
             'primary_color'    => ['required', 'string'],
             'secondary_color'  => ['required', 'string'],
             'tertiary_color'   => ['required', 'string'],
-            'age' => ['required', 'in:young,adult,senior'],
+            'age' => ['in:young,adult,senior'],
             'gender' => ['required', 'in:male,female'],
             'size' => ['required', 'in:small,medium,large'],
             'link' => ['string'],
             'status' => ['required', 'in:1,0'],
+            'birth_date' => ['required', 'date']
         ]);
 
         if ($request->user_id) {
@@ -251,12 +253,14 @@ class AnimalController extends Controller
             'primary_color'    => $request->primary_color,
             'secondary_color'  => $request->secondary_color,
             'tertiary_color'   => $request->tertiary_color,
-            'age' => $request->age,
+            'age' => $request->age ?? null,
             'gender' => $request->gender,
             'size' => $request->size,
             'link' => $request->link ?? null,
             'status' => $request->status,
+            'birth_date' => $request->birth_date,
         ]);
+
         if ($request->photos) {
             foreach ($request->photos as $photo) {
                 $uploadedphoto = upload_file($photo, 'animals', 'animal');
@@ -336,6 +340,7 @@ class AnimalController extends Controller
      *              @OA\Property(property="tertiary_color_id", type="integer"),
      *              @OA\Property(property="tertiary_color", type="string"),
      *              @OA\Property(property="age", type="string", enum={"young", "adult", "senior"}),
+     *              @OA\Property(property="birth_date", type="date"),
      *              @OA\Property(property="gender", type="string", enum={"male", "female"}),
      *              @OA\Property(property="size", type="string", enum={"small", "medium", "large"}),
      *              @OA\Property(property="_method", type="string", format="string", example="PUT")
@@ -368,7 +373,8 @@ class AnimalController extends Controller
             'primary_color'    => ['required', 'string'],
             'secondary_color'  => ['required', 'string'],
             'tertiary_color'   => ['required', 'string'],
-            'age' => ['required', 'in:young,adult,senior'],
+            'age' => ['in:young,adult,senior'],
+            'birth_date' => ['required', 'date'],
             'gender' => ['required', 'in:male,female'],
             'size' => ['required', 'in:small,medium,large'],
             'link' => ['string'],
@@ -425,11 +431,12 @@ class AnimalController extends Controller
             'primary_color'    => $request->primary_color,
             'secondary_color'  => $request->secondary_color,
             'tertiary_color'   => $request->tertiary_color,
-            'age' => $request->age,
+            'age' => $request->age ?? null,
             'gender' => $request->gender,
             'size' => $request->size,
             'link' => $request->link ?? null,
             'status' => $request->status,
+            'birth_date' => $request->birth_date,
         ]);
 
         return response()->json(new AnimalResource($animal), 200);

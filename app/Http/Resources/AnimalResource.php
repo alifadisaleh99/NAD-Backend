@@ -39,6 +39,7 @@ class AnimalResource extends JsonResource
             'age' => $this->age,
             'gender' => $this->gender,
             'size'  => $this->size,
+            'birth_date' => $this->birth_date,
             'translations' => $this->translations,
         ];
     }

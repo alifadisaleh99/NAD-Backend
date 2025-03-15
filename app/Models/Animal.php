@@ -30,6 +30,7 @@ class Animal extends TranslatableModel
         'age',
         'gender',
         'size',
+        'birth_date',
     ];
 
     protected $translatable = [
@@ -95,5 +96,10 @@ class Animal extends TranslatableModel
     public function pet_mark()
     {
         return $this->belongsTo(PetMark::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'animal_tags');
     }
 }
