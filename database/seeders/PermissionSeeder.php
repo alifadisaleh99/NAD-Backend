@@ -103,6 +103,20 @@ class PermissionSeeder extends Seeder
         if (!in_array('petMarks.delete', $permissions))
             Permission::create(['name' => 'petMarks.delete']);
 
+        if (!in_array('tagTypes.read', $permissions))
+            Permission::create(['name' => 'tagTypes.read']);
+        if (!in_array('tagTypes.write', $permissions))
+            Permission::create(['name' => 'tagTypes.write']);
+        if (!in_array('tagTypes.delete', $permissions))
+            Permission::create(['name' => 'tagTypes.delete']);
+
+
+        if (!in_array('tags.read', $permissions))
+            Permission::create(['name' => 'tags.read']);
+        if (!in_array('tags.write', $permissions))
+            Permission::create(['name' => 'tags.write']);
+        if (!in_array('tags.delete', $permissions))
+            Permission::create(['name' => 'tags.delete']);
 
         if(!Role::where('name', 'مشرف')->exists())
             Role::create([

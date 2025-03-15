@@ -452,6 +452,10 @@
                                             "senior"
                                         ]
                                     },
+                                    "birth_date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
                                     "gender": {
                                         "type": "string",
                                         "enum": [
@@ -625,6 +629,10 @@
                                             "adult",
                                             "senior"
                                         ]
+                                    },
+                                    "birth_date": {
+                                        "type": "string",
+                                        "format": "date"
                                     },
                                     "gender": {
                                         "type": "string",
@@ -2072,6 +2080,9 @@
                                     },
                                     "allowed_users": {
                                         "type": "integer"
+                                    },
+                                    "image": {
+                                        "type": "file"
                                     }
                                 },
                                 "type": "object"
@@ -2167,6 +2178,9 @@
                                     },
                                     "allowed_users": {
                                         "type": "string"
+                                    },
+                                    "image": {
+                                        "type": "file"
                                     },
                                     "_method": {
                                         "type": "string",
@@ -3163,6 +3177,447 @@
                 ]
             }
         },
+        "/admin/tags": {
+            "get": {
+                "tags": [
+                    "Admin - Tags"
+                ],
+                "description": "Get all tags",
+                "operationId": "get_all_tags",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Tags"
+                ],
+                "description": "Add new tag.",
+                "operationId": "4f5594433d8664157d6c9e2d956ed04b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name[ar]",
+                                    "type[ar]",
+                                    "source[ar]"
+                                ],
+                                "properties": {
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    },
+                                    "type[en]": {
+                                        "type": "string"
+                                    },
+                                    "type[ar]": {
+                                        "type": "string"
+                                    },
+                                    "source[en]": {
+                                        "type": "string"
+                                    },
+                                    "source[ar]": {
+                                        "type": "string"
+                                    },
+                                    "icon": {
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/admin/tags/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Tags"
+                ],
+                "description": "Get tag information.",
+                "operationId": "show_tag",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Tags"
+                ],
+                "description": "Edit tag.",
+                "operationId": "73bfe277ec06fc7e9ca151eb4eed7eea",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name[ar]",
+                                    "type[ar]",
+                                    "source[ar]"
+                                ],
+                                "properties": {
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    },
+                                    "type[en]": {
+                                        "type": "string"
+                                    },
+                                    "type[ar]": {
+                                        "type": "string"
+                                    },
+                                    "source[en]": {
+                                        "type": "string"
+                                    },
+                                    "source[ar]": {
+                                        "type": "string"
+                                    },
+                                    "icon": {
+                                        "type": "file"
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "PUT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin - Tags"
+                ],
+                "description": "Delete entered tag.",
+                "operationId": "delete_tag",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "examples": {
+                            "int": {
+                                "summary": "An int value.",
+                                "value": "1"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/admin/tag-types": {
+            "get": {
+                "tags": [
+                    "Admin - Tag Types"
+                ],
+                "description": "Get all tag types",
+                "operationId": "get_all_tag_types",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Tag Types"
+                ],
+                "description": "Add new tag type.",
+                "operationId": "1085390f8dbee52eac39691ae7cbc5ed",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name[ar]"
+                                ],
+                                "properties": {
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    },
+                                    "icon": {
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/admin/tag-types/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Tag Types"
+                ],
+                "description": "Get tag type information.",
+                "operationId": "show_tag_type",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Tag Types"
+                ],
+                "description": "Edit tag type.",
+                "operationId": "35b80433fcda0691334fa84ca1b47cc1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    },
+                                    "icon": {
+                                        "type": "file"
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "PUT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin - Tag Types"
+                ],
+                "description": "Delete entered tag type.",
+                "operationId": "delete_tag_type",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "examples": {
+                            "int": {
+                                "summary": "An int value.",
+                                "value": "1"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/admin/users": {
             "get": {
                 "tags": [
@@ -3815,6 +4270,14 @@
         {
             "name": "Admin - Statistics",
             "description": "Admin - Statistics"
+        },
+        {
+            "name": "Admin - Tags",
+            "description": "Admin - Tags"
+        },
+        {
+            "name": "Admin - Tag Types",
+            "description": "Admin - Tag Types"
         },
         {
             "name": "Admin - Users",

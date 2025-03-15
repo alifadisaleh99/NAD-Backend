@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\PetMarkController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\StatisticsController;
+use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\TagTypeController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +53,8 @@ Route::apiResource('animal-species', AnimalSpecieController::class)->parameters(
 Route::apiResource('animal-breeds', AnimalBreedController::class);
 Route::apiResource('colors', ColorController::class);
 Route::apiResource('pet-marks', PetMarkController::class);
+//Route::apiResource('tags', TagController::class);
+
 
 
 // animal
@@ -59,6 +63,11 @@ Route::apiResource('animal-statuses', AnimalStatusController::class);
 
 //plan
 Route::apiResource('plans', PlanController::class);
+
+//tag_types
+Route::apiResource('tag-types', TagTypeController::class);
+
+
 
 //Statistics
 Route::get('statistics/count-animals', [StatisticsController::class,'getAnimalsCount']);
