@@ -40,6 +40,7 @@ class AnimalResource extends JsonResource
             'gender' => $this->gender,
             'size'  => $this->size,
             'birth_date' => $this->birth_date,
+            'tags'            => TagResource::collection($this->whenLoaded('tags')),
             'translations' => $this->translations,
         ];
     }

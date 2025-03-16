@@ -100,6 +100,7 @@ class Animal extends TranslatableModel
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'animal_tags');
+        return $this->hasMany(Tag::class);
     }
 }
+ 

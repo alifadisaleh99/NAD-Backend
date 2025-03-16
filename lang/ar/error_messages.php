@@ -5,4 +5,5 @@ return [
     'Icon should be a file'  => 'صيغة الأيقونة غير صحيحه',
     'max_animals_reached' => 'وصل المستخدم إلى الحد الأقصى المسموح به من الحيوانات في الخطة',
     'user_must_have_plan' => 'لا يملك المستخدم خطة اشتراك',
+    'factory_number_used' =>  'رقم المصنع :Fnumber مستخدم بالفعل',
 ];

@@ -3178,184 +3178,45 @@
             }
         },
         "/admin/tags": {
-            "get": {
-                "tags": [
-                    "Admin - Tags"
-                ],
-                "description": "Get all tags",
-                "operationId": "get_all_tags",
-                "parameters": [
-                    {
-                        "name": "with_paginate",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "enum": [
-                                0,
-                                1
-                            ]
-                        }
-                    },
-                    {
-                        "name": "per_page",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "q",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer_token": []
-                    }
-                ]
-            },
             "post": {
                 "tags": [
                     "Admin - Tags"
                 ],
-                "description": "Add new tag.",
-                "operationId": "4f5594433d8664157d6c9e2d956ed04b",
+                "description": "Edit tags for animal.",
+                "operationId": "f04bd52de35edd94b48ad875ffbec10a",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "multipart/form-data": {
                             "schema": {
-                                "required": [
-                                    "name[ar]",
-                                    "type[ar]",
-                                    "source[ar]"
-                                ],
                                 "properties": {
-                                    "name[en]": {
+                                    "animal_id": {
+                                        "type": "integer"
+                                    },
+                                    "tags[id]": {
+                                        "type": "integer"
+                                    },
+                                    "tags[tag_type_id]": {
+                                        "type": "integer"
+                                    },
+                                    "tags[factory_number]": {
                                         "type": "string"
                                     },
-                                    "name[ar]": {
+                                    "tags[number]": {
                                         "type": "string"
                                     },
-                                    "type[en]": {
-                                        "type": "string"
+                                    "tags[status]": {
+                                        "type": "integer",
+                                        "enum": [
+                                            "0",
+                                            "1"
+                                        ]
                                     },
-                                    "type[ar]": {
-                                        "type": "string"
-                                    },
-                                    "source[en]": {
-                                        "type": "string"
-                                    },
-                                    "source[ar]": {
-                                        "type": "string"
-                                    },
-                                    "icon": {
-                                        "type": "file"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer_token": []
-                    }
-                ]
-            }
-        },
-        "/admin/tags/{id}": {
-            "get": {
-                "tags": [
-                    "Admin - Tags"
-                ],
-                "description": "Get tag information.",
-                "operationId": "show_tag",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer_token": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "Admin - Tags"
-                ],
-                "description": "Edit tag.",
-                "operationId": "73bfe277ec06fc7e9ca151eb4eed7eea",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "required": [
-                                    "name[ar]",
-                                    "type[ar]",
-                                    "source[ar]"
-                                ],
-                                "properties": {
-                                    "name[en]": {
-                                        "type": "string"
-                                    },
-                                    "name[ar]": {
-                                        "type": "string"
-                                    },
-                                    "type[en]": {
-                                        "type": "string"
-                                    },
-                                    "type[ar]": {
-                                        "type": "string"
-                                    },
-                                    "source[en]": {
-                                        "type": "string"
-                                    },
-                                    "source[ar]": {
-                                        "type": "string"
-                                    },
-                                    "icon": {
-                                        "type": "file"
+                                    "deleted_tag_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
                                     },
                                     "_method": {
                                         "type": "string",
@@ -3368,39 +3229,6 @@
                         }
                     }
                 },
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer_token": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Admin - Tags"
-                ],
-                "description": "Delete entered tag.",
-                "operationId": "delete_tag",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "examples": {
-                            "int": {
-                                "summary": "An int value.",
-                                "value": "1"
-                            }
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "successful operation"

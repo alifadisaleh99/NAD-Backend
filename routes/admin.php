@@ -53,7 +53,6 @@ Route::apiResource('animal-species', AnimalSpecieController::class)->parameters(
 Route::apiResource('animal-breeds', AnimalBreedController::class);
 Route::apiResource('colors', ColorController::class);
 Route::apiResource('pet-marks', PetMarkController::class);
-//Route::apiResource('tags', TagController::class);
 
 
 
@@ -67,6 +66,8 @@ Route::apiResource('plans', PlanController::class);
 //tag_types
 Route::apiResource('tag-types', TagTypeController::class);
 
+//tags
+Route::put('tags', [TagController::class, 'update']);  
 
 
 //Statistics
