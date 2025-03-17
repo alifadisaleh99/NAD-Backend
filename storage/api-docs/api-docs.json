@@ -395,6 +395,30 @@
                                     "description[ar]": {
                                         "type": "string"
                                     },
+                                    "like[en]": {
+                                        "type": "string"
+                                    },
+                                    "like[ar]": {
+                                        "type": "string"
+                                    },
+                                    "deslike[en]": {
+                                        "type": "string"
+                                    },
+                                    "deslike[ar]": {
+                                        "type": "string"
+                                    },
+                                    "good_with[en]": {
+                                        "type": "string"
+                                    },
+                                    "good_with[ar]": {
+                                        "type": "string"
+                                    },
+                                    "bad_with[en]": {
+                                        "type": "string"
+                                    },
+                                    "bad_with[ar]": {
+                                        "type": "string"
+                                    },
                                     "link": {
                                         "type": "string"
                                     },
@@ -565,6 +589,30 @@
                                         "type": "string"
                                     },
                                     "description[ar]": {
+                                        "type": "string"
+                                    },
+                                    "like[en]": {
+                                        "type": "string"
+                                    },
+                                    "like[ar]": {
+                                        "type": "string"
+                                    },
+                                    "deslike[en]": {
+                                        "type": "string"
+                                    },
+                                    "deslike[ar]": {
+                                        "type": "string"
+                                    },
+                                    "good_with[en]": {
+                                        "type": "string"
+                                    },
+                                    "good_with[ar]": {
+                                        "type": "string"
+                                    },
+                                    "bad_with[en]": {
+                                        "type": "string"
+                                    },
+                                    "bad_with[ar]": {
                                         "type": "string"
                                     },
                                     "link": {

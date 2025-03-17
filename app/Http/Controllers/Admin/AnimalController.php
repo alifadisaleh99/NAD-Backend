@@ -101,7 +101,7 @@ class AnimalController extends Controller
             'q'                  => ['string']
         ]);
 
-        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed','pet_mark', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'tags'])->latest();
+        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed','pet_mark', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags'])->latest();
 
         if ($request->category_id)
             $q->where('category_id', $request->category_id);
@@ -160,6 +160,14 @@ class AnimalController extends Controller
      *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="description[en]", type="string"),
      *              @OA\Property(property="description[ar]", type="string"),
+     *              @OA\Property(property="like[en]", type="string"),
+     *              @OA\Property(property="like[ar]", type="string"),
+     *              @OA\Property(property="deslike[en]", type="string"),
+     *              @OA\Property(property="deslike[ar]", type="string"),
+     *              @OA\Property(property="good_with[en]", type="string"),
+     *              @OA\Property(property="good_with[ar]", type="string"),
+     *              @OA\Property(property="bad_with[en]", type="string"),
+     *              @OA\Property(property="bad_with[ar]", type="string"),
      *              @OA\Property(property="link", type="string"),
      *              @OA\Property(property="status", type="boolean", enum={0, 1}),
      *              @OA\Property(property="photos", type="array", @OA\Items(type="file")),
@@ -192,6 +200,10 @@ class AnimalController extends Controller
         $request->validate([
             'name'           => ['required', 'array', translation_rule()],
             'description'    => ['required', 'array', translation_rule()],
+            'like'    => ['array', translation_rule()],
+            'deslike'    => ['array', translation_rule()],
+            'good_with'    => ['array', translation_rule()],
+            'bad_with'    => ['array', translation_rule()],
             'photos'         => ['required', 'array'],
             'photos.*'       => ['image'],
             'owner_type'     => ['required', 'in:user,entity'],
@@ -234,10 +246,14 @@ class AnimalController extends Controller
                 return response()->json(['message' => __('error_messages.user_must_have_plan')], 422);
         }
 
-
+        
         $animal = Animal::create([
             'name'          => $request->name,
             'description'   => $request->description,
+            'like'  => $request->like,
+            'deslike' => $request->deslike,
+            'good_with' => $request->good_with,
+            'bad_with'  => $request->bad_with,
             'owner_type'     => $request->owner_type,
             'user_id'         => $request->user_id ?? null,
             'entity_id'         => $request->entity_id ?? null,
@@ -259,6 +275,7 @@ class AnimalController extends Controller
             'link' => $request->link ?? null,
             'status' => $request->status,
             'birth_date' => $request->birth_date,
+            'user_create_id' => auth()->id(), 
         ]);
 
         if ($request->photos) {
@@ -295,7 +312,7 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed','pet_mark', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'tags']);
+        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed','pet_mark', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags']);
         return response()->json(new AnimalResource($animal), 200);
     }
 
@@ -324,6 +341,14 @@ class AnimalController extends Controller
      *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="description[en]", type="string"),
      *              @OA\Property(property="description[ar]", type="string"),
+     *              @OA\Property(property="like[en]", type="string"),
+     *              @OA\Property(property="like[ar]", type="string"),
+     *              @OA\Property(property="deslike[en]", type="string"),
+     *              @OA\Property(property="deslike[ar]", type="string"),
+     *              @OA\Property(property="good_with[en]", type="string"),
+     *              @OA\Property(property="good_with[ar]", type="string"),
+     *              @OA\Property(property="bad_with[en]", type="string"),
+     *              @OA\Property(property="bad_with[ar]", type="string"),
      *              @OA\Property(property="link", type="string"),
      *              @OA\Property(property="status", type="boolean", enum={0, 1}),
      *              @OA\Property(property="photos", type="array", @OA\Items(type="file")),
@@ -358,6 +383,10 @@ class AnimalController extends Controller
         $request->validate([
             'name'           => ['required', 'array', translation_rule()],
             'description'    => ['required', 'array', translation_rule()],
+            'like'    => ['array', translation_rule()],
+            'deslike'    => ['array', translation_rule()],
+            'good_with'    => ['array', translation_rule()],
+            'bad_with'    => ['array', translation_rule()],
             'owner_type'     => ['required', 'in:user,entity'],
             'user_id'         => ['required_if:owner_type,user', 'integer', 'exists:users,id'],
             'entity_id'         => ['required_if:owner_type,entity', 'integer', 'exists:entities,id'],
@@ -416,6 +445,10 @@ class AnimalController extends Controller
         $animal->update([
             'name'          => $request->name,
             'description'   => $request->description,
+            'like' =>  $request->like,
+            'deslike' => $request->deslike,
+            'good_with' => $request->good_with,
+            'bad_with' => $request->bad_with,
             'owner_type'     => $request->owner_type,
             'user_id'         => $request->user_id ?? null,
             'entity_id'         => $request->entity_id ?? null,

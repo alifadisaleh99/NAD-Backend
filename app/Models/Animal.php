@@ -31,11 +31,16 @@ class Animal extends TranslatableModel
         'gender',
         'size',
         'birth_date',
+        'user_create_id',
     ];
 
     protected $translatable = [
         'name',
         'description',
+        'like',
+        'deslike',
+        'good_with',
+        'bad_with',
     ];
 
     public function media()
@@ -101,6 +106,11 @@ class Animal extends TranslatableModel
     public function tags()
     {
         return $this->hasMany(Tag::class);
+    }
+
+    public function user_create()
+    {
+        return $this->hasOne(User::class, 'id', 'user_create_id');
     }
 }
  

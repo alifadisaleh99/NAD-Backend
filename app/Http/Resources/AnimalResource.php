@@ -24,6 +24,10 @@ class AnimalResource extends JsonResource
             'link'              => $this->link,
             'name'              => $this->name,
             'description'       => $this->description,
+            'like'              =>$this->like,
+            'deslike'           => $this->deslike,
+            'good_with'         => $this->good_with,
+            'bad_with'          => $this->bad_with,
             'photos'            => MediaResource::collection($this->whenLoaded('media')),
             'category'          => new CategoryResource($this->whenLoaded('category')),
             'animal_type'       => new AnimalTypeResource($this->whenLoaded('animal_type')),
@@ -41,6 +45,8 @@ class AnimalResource extends JsonResource
             'size'  => $this->size,
             'birth_date' => $this->birth_date,
             'tags'            => TagResource::collection($this->whenLoaded('tags')),
+            'created_at'   => $this->created_at,
+            'created_by'   => new UserResource($this->whenLoaded('user_create')),
             'translations' => $this->translations,
         ];
     }
