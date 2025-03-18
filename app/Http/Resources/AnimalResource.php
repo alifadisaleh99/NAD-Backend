@@ -33,7 +33,7 @@ class AnimalResource extends JsonResource
             'animal_type'       => new AnimalTypeResource($this->whenLoaded('animal_type')),
             'animal_specie'     => new AnimalSpecieResource($this->whenLoaded('animal_specie')),
             'animal_breed'      => new AnimalBreedResource($this->whenLoaded('animal_breed')),
-            'pet_mark'          => new PetMarkResource($this->whenLoaded('pet_mark')),
+            'pet_marks'          => PetMarkResource::collection($this->whenLoaded('pet_marks')),
             'primary_color'     => new ColorResource($this->whenLoaded('primaryColor')),
             'primary_hex_color' => $this->primary_color,
             'secondary_color'   => new ColorResource($this->whenLoaded('secondaryColor')),

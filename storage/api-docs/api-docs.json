@@ -447,8 +447,11 @@
                                     "animal_breed_id": {
                                         "type": "integer"
                                     },
-                                    "pet_mark_id": {
-                                        "type": "integer"
+                                    "pet_mark_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
                                     },
                                     "primary_color_id": {
                                         "type": "integer"
@@ -649,8 +652,17 @@
                                     "animal_breed_id": {
                                         "type": "integer"
                                     },
-                                    "pet_mark_id": {
-                                        "type": "integer"
+                                    "pet_mark_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "deleted_pet_mark_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
                                     },
                                     "primary_color_id": {
                                         "type": "integer"
@@ -3238,26 +3250,23 @@
                         "multipart/form-data": {
                             "schema": {
                                 "properties": {
-                                    "animal_id": {
+                                    "tags[0][id]": {
                                         "type": "integer"
                                     },
-                                    "tags[id]": {
+                                    "tags[0][tag_type_id]": {
                                         "type": "integer"
                                     },
-                                    "tags[tag_type_id]": {
-                                        "type": "integer"
-                                    },
-                                    "tags[factory_number]": {
+                                    "tags[0][factory_number]": {
                                         "type": "string"
                                     },
-                                    "tags[number]": {
+                                    "tags[0][number]": {
                                         "type": "string"
                                     },
-                                    "tags[status]": {
+                                    "tags[0][status]": {
                                         "type": "integer",
                                         "enum": [
                                             "0",
-                                            "1"
+                                            " 1"
                                         ]
                                     },
                                     "deleted_tag_ids": {
@@ -3268,7 +3277,6 @@
                                     },
                                     "_method": {
                                         "type": "string",
-                                        "format": "string",
                                         "example": "PUT"
                                     }
                                 },

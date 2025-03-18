@@ -27,23 +27,22 @@ class TagController extends Controller
      * description="Edit tags for animal.",
      *  tags={"Admin - Tags"},
      *  security={{"bearer_token": {} }},
-     *   @OA\RequestBody(
-     *       required=true,
-     *       @OA\MediaType(
-     *           mediaType= "multipart/form-data",
-     *           @OA\Schema(
-     *              @OA\Property(property="animal_id", type="integer"),
-     *              @OA\Property(property="tags[id]", type="integer"),
-     *              @OA\Property(property="tags[tag_type_id]", type="integer"),
-     *              @OA\Property(property="tags[factory_number]", type="string"),
-     *              @OA\Property(property="tags[number]", type="string"),
-     *              @OA\Property(property="tags[status]", type="integer", enum={"0", "1"}),
-     *              @OA\Property(property="deleted_tag_ids", type="array", @OA\Items(type="integer")),
-     *              @OA\Property(property="_method", type="string", format="string", example="PUT"),
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                 @OA\Property(property="tags[0][id]", type="integer"),
+     *                 @OA\Property(property="tags[0][tag_type_id]", type="integer"),
+     *                 @OA\Property(property="tags[0][factory_number]", type="string"),
+     *                 @OA\Property(property="tags[0][number]", type="string"),
+     *                 @OA\Property(property="tags[0][status]", type="integer", enum={"0"," 1"}),
+     *                 @OA\Property(property="deleted_tag_ids",type="array",@OA\Items(type="integer")),
+     *                 @OA\Property(property="_method", type="string", example="PUT")
+     *              )
      *          )
-     *       )
-     *   ),
-     * @OA\Response(
+     *      ),
+     *      @OA\Response(
      *         response="200",
      *         description="successful operation",
      *     ),

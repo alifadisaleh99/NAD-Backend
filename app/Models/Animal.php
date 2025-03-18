@@ -98,9 +98,14 @@ class Animal extends TranslatableModel
         return $this->hasOne(Color::class, 'id', 'tertiary_color_id');
     }
 
-    public function pet_mark()
+    public function pet_marks()
     {
-        return $this->belongsTo(PetMark::class);
+        return $this->belongsToMany(PetMark::class, 'animal_pet_marks');
+    }
+
+    public function animal_pet_marks()
+    {
+        return $this->hasMany(AnimalPetMark::class, 'animal_id');
     }
 
     public function tags()

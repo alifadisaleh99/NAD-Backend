@@ -101,7 +101,7 @@ class AnimalController extends Controller
             'q'                  => ['string']
         ]);
 
-        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed','pet_mark', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags'])->latest();
+        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags'])->latest();
 
         if ($request->category_id)
             $q->where('category_id', $request->category_id);
@@ -175,7 +175,7 @@ class AnimalController extends Controller
      *              @OA\Property(property="animal_type_id", type="integer"),
      *              @OA\Property(property="animal_specie_id", type="integer"),
      *              @OA\Property(property="animal_breed_id", type="integer"),
-     *              @OA\Property(property="pet_mark_id", type="integer"),
+     *              @OA\Property(property="pet_mark_ids", type="array", @OA\Items(type="integer")),
      *              @OA\Property(property="primary_color_id", type="integer"),
      *              @OA\Property(property="primary_color", type="string"),
      *              @OA\Property(property="secondary_color_id", type="integer"),
@@ -214,7 +214,8 @@ class AnimalController extends Controller
             'animal_type_id'      => ['required', 'integer', 'exists:animal_types,id'],
             'animal_specie_id'    => ['required', 'integer', 'exists:animal_species,id'],
             'animal_breed_id'     => ['integer', 'exists:animal_breeds,id'],
-            'pet_mark_id'         => ['integer', 'exists:pet_marks,id'],
+            'pet_mark_ids'           => ['array'],
+            'pet_mark_ids.*'         => ['integer', 'exists:pet_marks,id'],
             'primary_color_id'    => ['required', 'integer', 'exists:colors,id'],
             'secondary_color_id'  => ['required', 'integer', 'exists:colors,id'],
             'tertiary_color_id'   => ['required', 'integer', 'exists:colors,id'],
@@ -236,7 +237,7 @@ class AnimalController extends Controller
 
             if ($user && $subscription) {
                 $currentAnimalsCount = $user->animals->count();
-            
+
                 $maxAllowedAnimals = $subscription->plan->addition_count;
 
                 if ($currentAnimalsCount >= $maxAllowedAnimals)
@@ -246,7 +247,7 @@ class AnimalController extends Controller
                 return response()->json(['message' => __('error_messages.user_must_have_plan')], 422);
         }
 
-        
+
         $animal = Animal::create([
             'name'          => $request->name,
             'description'   => $request->description,
@@ -275,7 +276,7 @@ class AnimalController extends Controller
             'link' => $request->link ?? null,
             'status' => $request->status,
             'birth_date' => $request->birth_date,
-            'user_create_id' => auth()->id(), 
+            'user_create_id' => auth()->id(),
         ]);
 
         if ($request->photos) {
@@ -285,6 +286,12 @@ class AnimalController extends Controller
             }
 
             $animal->media()->createMany($mediaData);
+        }
+
+        if ($request->pet_mark_ids) {
+            foreach ($request->pet_mark_ids as $pet_mark_id) {
+                $animal->animal_pet_marks()->create(['pet_mark_id' => $pet_mark_id]);
+            }
         }
 
         return response()->json(new AnimalResource($animal), 200);
@@ -312,7 +319,7 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed','pet_mark', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags']);
+        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags']);
         return response()->json(new AnimalResource($animal), 200);
     }
 
@@ -357,7 +364,8 @@ class AnimalController extends Controller
      *              @OA\Property(property="animal_type_id", type="integer"),
      *              @OA\Property(property="animal_specie_id", type="integer"),
      *              @OA\Property(property="animal_breed_id", type="integer"),
-     *              @OA\Property(property="pet_mark_id", type="integer"),
+     *              @OA\Property(property="pet_mark_ids", type="array", @OA\Items(type="integer")),
+     *              @OA\Property(property="deleted_pet_mark_ids", type="array", @OA\Items(type="integer")),
      *              @OA\Property(property="primary_color_id", type="integer"),
      *              @OA\Property(property="primary_color", type="string"),
      *              @OA\Property(property="secondary_color_id", type="integer"),
@@ -395,7 +403,10 @@ class AnimalController extends Controller
             'animal_type_id'      => ['required', 'integer', 'exists:animal_types,id'],
             'animal_specie_id'    => ['required', 'integer', 'exists:animal_species,id'],
             'animal_breed_id'     => ['integer', 'exists:animal_breeds,id'],
-            'pet_mark_id'     => ['integer', 'exists:pet_marks,id'],
+            'pet_mark_ids'         => ['array'],
+            'deleted_pet_mark_ids'  => ['array'],
+            'pet_mark_ids.*'     => ['integer', 'exists:pet_marks,id'],
+            'deleted_pet_mark_ids.*'     => ['integer', 'exists:pet_marks,id'],
             'primary_color_id'    => ['required', 'integer', 'exists:colors,id'],
             'secondary_color_id'  => ['required', 'integer', 'exists:colors,id'],
             'tertiary_color_id'   => ['required', 'integer', 'exists:colors,id'],
@@ -472,6 +483,20 @@ class AnimalController extends Controller
             'birth_date' => $request->birth_date,
         ]);
 
+        if ($request->deleted_pet_mark_ids) {
+           $animal->animal_pet_marks()->whereIn('pet_mark_id', $request->deleted_pet_mark_ids)->delete();
+        }
+        
+        if ($request->pet_mark_ids) {
+            foreach ($request->pet_mark_ids as $pet_mark_id) {
+                $is_exists = $animal->animal_pet_marks()->where('pet_mark_id', $pet_mark_id)->exists();
+        
+                if (!$is_exists) {
+                    $animal->animal_pet_marks()->create(['pet_mark_id' => $pet_mark_id]);
+                }
+            }
+        }
+        
         return response()->json(new AnimalResource($animal), 200);
     }
 
@@ -503,7 +528,9 @@ class AnimalController extends Controller
         foreach ($photos as $photo) {
             delete_file_if_exist($photo->link);
         }
-
+        
+        $animal->tags()->delete(); 
+        $animal->animal_pet_marks()->delete();
         $animal->media()->delete();
         $animal->delete();
         return response()->json(null, 204);
