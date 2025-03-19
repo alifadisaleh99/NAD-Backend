@@ -31,6 +31,7 @@ class User extends Authenticatable
         'image',
         'password',
         'status',
+        'is_owner',
     ];
 
     /**

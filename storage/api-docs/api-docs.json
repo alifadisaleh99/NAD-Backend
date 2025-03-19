@@ -3604,6 +3604,18 @@
                         "schema": {
                             "type": "integer"
                         }
+                    },
+                    {
+                        "name": "is_owner",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
                     }
                 ],
                 "responses": {
@@ -3671,6 +3683,13 @@
                                     },
                                     "branch_id": {
                                         "type": "integer"
+                                    },
+                                    "is_owner": {
+                                        "type": "integer",
+                                        "enum": [
+                                            "1",
+                                            "0"
+                                        ]
                                     },
                                     "plan_id": {
                                         "type": "integer"
@@ -4096,6 +4115,72 @@
                     }
                 ]
             }
+        },
+        "//animals/{id}/generate-token": {
+            "post": {
+                "tags": [
+                    "User - Animals"
+                ],
+                "description": "Generate token.",
+                "operationId": "a0b49c1fb4242973c0599d16b1b5f322",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "//animals/accept-transfer": {
+            "post": {
+                "tags": [
+                    "User - Animals"
+                ],
+                "description": "Accept animal transfer.",
+                "operationId": "e2115739c7354bc13d17d44b2248414e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "token"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
         }
     },
     "tags": [
@@ -4170,6 +4255,10 @@
         {
             "name": "User - Auth",
             "description": "User - Auth"
+        },
+        {
+            "name": "User - Animals",
+            "description": "User - Animals"
         }
     ],
     "components": {

@@ -101,6 +101,12 @@ class UserController extends Controller
      *     required=false,
      *     @OA\Schema(type="integer"),
      *   ),
+     *   @OA\Parameter(
+     *     in="query",
+     *     name="is_owner",
+     *     required=false,
+     *     @OA\Schema(type="integer", enum={0, 1}),
+     *   ),
      *   operationId="get_users",
      *   security={{"bearer_token": {} }},
      *   tags={"Admin - Users"},
@@ -122,7 +128,8 @@ class UserController extends Controller
             'user_is'             => ['in:single_user,entity_user'],
             'with_paginate'       => ['integer', 'in:0,1'],
             'per_page'            => ['integer', 'min:1'],
-            'entity_id'           => ['integer', 'exists:entities,id']
+            'entity_id'           => ['integer', 'exists:entities,id'],
+            'is_owner'            => ['integer', 'in:0,1'],
         ]);
 
         $q = User::with(['entity', 'branch']);
@@ -141,6 +148,11 @@ class UserController extends Controller
         if ($request->entity_id)
             $q->where('entity_id', $request->entity_id);
 
+        if ($request->is_owner === '0') {
+           $q->where('is_owner', false);
+        } else if ($request->is_owner === '1') {
+            $q->where('is_owner', true);
+        }
 
         if ($request->q) {
             $q->where(function ($query) use ($request) {
@@ -209,6 +221,7 @@ class UserController extends Controller
      *              @OA\Property(property="role_id", type="integer"),
      *              @OA\Property(property="entity_id", type="integer"),
      *              @OA\Property(property="branch_id", type="integer"),
+     *              @OA\Property(property="is_owner", type="integer", enum={"1", "0"}),
      *              @OA\Property(property="plan_id", type="integer"),
      *           )
      *       )
@@ -233,6 +246,7 @@ class UserController extends Controller
             'role_id'           => ['required', 'integer', 'exists:roles,id'],
             'entity_id'         => ['integer', 'exists:entities,id'],
             'branch_id'         => ['integer', 'exists:branches,id'],
+            'is_owner'          => ['in:0,1'],
             'plan_id'           => ['integer', 'exists:plans,id'],
         ]);
 
@@ -261,6 +275,7 @@ class UserController extends Controller
             'country_id'         => $request->country_id,
             'entity_id'          => $request->entity_id,
             'branch_id'          => $request->branch_id,
+            'is_owner'           => $request->is_owner,
             'summary'            => $request->summary,
             'password'           => Hash::make($request->password),
             'email_verified_at'  => $verified,
