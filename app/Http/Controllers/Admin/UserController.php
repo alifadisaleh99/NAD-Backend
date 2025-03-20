@@ -221,7 +221,6 @@ class UserController extends Controller
      *              @OA\Property(property="role_id", type="integer"),
      *              @OA\Property(property="entity_id", type="integer"),
      *              @OA\Property(property="branch_id", type="integer"),
-     *              @OA\Property(property="is_owner", type="integer", enum={"1", "0"}),
      *              @OA\Property(property="plan_id", type="integer"),
      *           )
      *       )
@@ -246,7 +245,6 @@ class UserController extends Controller
             'role_id'           => ['required', 'integer', 'exists:roles,id'],
             'entity_id'         => ['integer', 'exists:entities,id'],
             'branch_id'         => ['integer', 'exists:branches,id'],
-            'is_owner'          => ['in:0,1'],
             'plan_id'           => ['integer', 'exists:plans,id'],
         ]);
 
@@ -275,7 +273,6 @@ class UserController extends Controller
             'country_id'         => $request->country_id,
             'entity_id'          => $request->entity_id,
             'branch_id'          => $request->branch_id,
-            'is_owner'           => $request->is_owner,
             'summary'            => $request->summary,
             'password'           => Hash::make($request->password),
             'email_verified_at'  => $verified,

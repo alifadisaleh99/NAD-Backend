@@ -12,15 +12,12 @@ class Animal extends TranslatableModel
     protected $fillable = [
         'owner_type',
         'user_id',
-        'entity_id',
-        'branch_id',
         'status',
         'link',
         'category_id',
         'animal_type_id',
         'animal_specie_id',
         'animal_breed_id',
-        'pet_mark_id',
         'primary_color_id',
         'primary_color',
         'secondary_color_id',
@@ -71,16 +68,6 @@ class Animal extends TranslatableModel
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function entity()
-    {
-        return $this->belongsTo(Entity::class);
-    }
-
-    public function branch()
-    {
-        return $this->belongsTo(Branch::class);
     }
 
     public function primaryColor()

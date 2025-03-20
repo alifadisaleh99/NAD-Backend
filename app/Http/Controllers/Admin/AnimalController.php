@@ -65,13 +65,7 @@ class AnimalController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
-     *    name="user_id",
-     *    required=false,
-     *    @OA\Schema(type="integer"),
-     * ),
-     * @OA\Parameter(
-     *    in="query",
-     *    name="entity_id",
+     *    name="owner_id",
      *    required=false,
      *    @OA\Schema(type="integer"),
      * ),
@@ -96,12 +90,11 @@ class AnimalController extends Controller
             'animal_type_id'     => ['integer', 'exists:animal_types,id'],
             'animal_specie_id'   => ['integer', 'exists:animal_species,id'],
             'animal_breed_id'    =>  ['integer', 'exists:animal_breeds,id'],
-            'user_id'            =>  ['integer', 'exists:users,id'],
-            'entity_id'          =>  ['integer', 'exists:entities,id'],
+            'owner_id'            =>  ['integer', 'exists:users,id'],
             'q'                  => ['string']
         ]);
 
-        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags'])->latest();
+        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags'])->latest();
 
         if ($request->category_id)
             $q->where('category_id', $request->category_id);
@@ -111,10 +104,8 @@ class AnimalController extends Controller
             $q->where('animal_specie_id', $request->animal_specie_id);
         if ($request->animal_breed_id)
             $q->where('animal_breed_id', $request->animal_breed_id);
-        if ($request->user_id)
-            $q->where('user_id', $request->user_id);
-        if ($request->entity_id)
-            $q->where('entity_id', $request->entity_id);
+        if ($request->owner_id)
+            $q->where('user_id', $request->owner_id);
 
 
         if ($request->q) {
@@ -151,11 +142,9 @@ class AnimalController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"name[ar]", "description[ar]", "owner_type" },
+     *              required={"name[ar]", "description[ar]", "owner_type" , "owner_id"},
      *              @OA\Property(property="owner_type", type="string", enum={"user", "entity"}),
-     *              @OA\Property(property="user_id", type="integer"),
-     *              @OA\Property(property="entity_id", type="integer"),
-     *              @OA\Property(property="branch_id", type="integer"),
+     *              @OA\Property(property="owner_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="description[en]", type="string"),
@@ -207,9 +196,7 @@ class AnimalController extends Controller
             'photos'         => ['required', 'array'],
             'photos.*'       => ['image'],
             'owner_type'     => ['required', 'in:user,entity'],
-            'user_id'         => ['required_if:owner_type,user', 'integer', 'exists:users,id'],
-            'entity_id'         => ['required_if:owner_type,entity', 'integer', 'exists:entities,id'],
-            'branch_id'         => ['required_if:owner_type,entity', 'integer', 'exists:branches,id'],
+            'owner_id'         => ['required', 'integer', 'exists:users,id'],
             'category_id'         => ['required', 'integer', 'exists:categories,id'],
             'animal_type_id'      => ['required', 'integer', 'exists:animal_types,id'],
             'animal_specie_id'    => ['required', 'integer', 'exists:animal_species,id'],
@@ -230,10 +217,10 @@ class AnimalController extends Controller
             'birth_date' => ['required', 'date']
         ]);
 
-        if ($request->user_id) {
+      /*  if ($request->user_id) {
             $user = User::with(['animals'])->find($request->user_id);
             $subscription = $user->subscriptions()->where('is_active', 1)->first();
-
+      
 
             if ($user && $subscription) {
                 $currentAnimalsCount = $user->animals->count();
@@ -246,6 +233,7 @@ class AnimalController extends Controller
             else
                 return response()->json(['message' => __('error_messages.user_must_have_plan')], 422);
         }
+        */
 
 
         $animal = Animal::create([
@@ -256,9 +244,7 @@ class AnimalController extends Controller
             'good_with' => $request->good_with,
             'bad_with'  => $request->bad_with,
             'owner_type'     => $request->owner_type,
-            'user_id'         => $request->user_id ?? null,
-            'entity_id'         => $request->entity_id ?? null,
-            'branch_id'         => $request->branch_id ?? null,
+            'user_id'         => $request->owner_id ,
             'category_id'         => $request->category_id,
             'animal_type_id'      => $request->animal_type_id,
             'animal_specie_id'    => $request->animal_specie_id,
@@ -318,7 +304,7 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'entity', 'branch', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags']);
+        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags']);
         return response()->json(new AnimalResource($animal), 200);
     }
 
@@ -340,9 +326,7 @@ class AnimalController extends Controller
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
      *              @OA\Property(property="owner_type", type="string", enum={"user", "entity"}),
-     *              @OA\Property(property="user_id", type="integer"),
-     *              @OA\Property(property="entity_id", type="integer"),
-     *              @OA\Property(property="branch_id", type="integer"),
+     *              @OA\Property(property="owner_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="description[en]", type="string"),
@@ -395,9 +379,7 @@ class AnimalController extends Controller
             'good_with'    => ['array', translation_rule()],
             'bad_with'    => ['array', translation_rule()],
             'owner_type'     => ['required', 'in:user,entity'],
-            'user_id'         => ['required_if:owner_type,user', 'integer', 'exists:users,id'],
-            'entity_id'         => ['required_if:owner_type,entity', 'integer', 'exists:entities,id'],
-            'branch_id'         => ['required_if:owner_type,entity', 'integer', 'exists:branches,id'],
+            'owner_id'         => ['required', 'integer', 'exists:users,id'],
             'category_id'         => ['required', 'integer', 'exists:categories,id'],
             'animal_type_id'      => ['required', 'integer', 'exists:animal_types,id'],
             'animal_specie_id'    => ['required', 'integer', 'exists:animal_species,id'],
@@ -460,9 +442,7 @@ class AnimalController extends Controller
             'good_with' => $request->good_with,
             'bad_with' => $request->bad_with,
             'owner_type'     => $request->owner_type,
-            'user_id'         => $request->user_id ?? null,
-            'entity_id'         => $request->entity_id ?? null,
-            'branch_id'         => $request->branch_id ?? null,
+            'user_id'         => $request->owner_id,
             'category_id'         => $request->category_id,
             'animal_type_id'      => $request->animal_type_id,
             'animal_specie_id'    => $request->animal_specie_id,

@@ -153,6 +153,7 @@ class EntityController extends Controller
             'email'              => $request->email,
             'phone'              => $request->contact_number,
             'password'           => Hash::make('admin@123'),
+            'is_owner'           => 1,
         ]);
         $user->assignRole('مستخدم');
 
