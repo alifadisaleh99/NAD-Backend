@@ -3,21 +3,30 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GetRequest;
 use App\Http\Resources\AnimalResource;
+use App\Http\Resources\OwnershipRecordResource;
 use App\Models\Animal;
+use App\Models\OwnershipRecord;
 use App\Models\User;
+use App\Services\AnimalService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Mosab\Translation\Models\Translation;
 
 class AnimalController extends Controller
 {
-    public function __construct()
+    protected $animalService;
+
+    public function __construct(AnimalService $animalService)
     {
         $this->middleware('auth:sanctum');
         $this->middleware('permission:animals.read|animals.write|animals.delete')->only('index', 'show');
+        $this->middleware('permission:animals.read|animals.write|animals.delete|ownershipRecords.read')->only('ownershipRecords');
         $this->middleware('permission:animals.write')->only('store', 'update');
         $this->middleware('permission:animals.delete')->only('destroy');
+
+        $this->animalService = $animalService;
     }
 
     /**
@@ -217,7 +226,7 @@ class AnimalController extends Controller
             'birth_date' => ['required', 'date']
         ]);
 
-      /*  if ($request->user_id) {
+        /*  if ($request->user_id) {
             $user = User::with(['animals'])->find($request->user_id);
             $subscription = $user->subscriptions()->where('is_active', 1)->first();
       
@@ -244,7 +253,7 @@ class AnimalController extends Controller
             'good_with' => $request->good_with,
             'bad_with'  => $request->bad_with,
             'owner_type'     => $request->owner_type,
-            'user_id'         => $request->owner_id ,
+            'user_id'         => $request->owner_id,
             'category_id'         => $request->category_id,
             'animal_type_id'      => $request->animal_type_id,
             'animal_specie_id'    => $request->animal_specie_id,
@@ -278,6 +287,8 @@ class AnimalController extends Controller
                 $animal->animal_pet_marks()->create(['pet_mark_id' => $pet_mark_id]);
             }
         }
+
+        $this->animalService->createOwnershipRecord($animal);
 
         return response()->json(new AnimalResource($animal), 200);
     }
@@ -406,6 +417,8 @@ class AnimalController extends Controller
             'photos.*' => ['required'],
         ]);
 
+        $old_owner_id = $animal->user_id;
+
         if ($request->deleted_media_ids) {
             $photos = $animal->media()->whereIn('id', $request->deleted_media_ids)->get();
 
@@ -461,20 +474,28 @@ class AnimalController extends Controller
             'birth_date' => $request->birth_date,
         ]);
 
-        if ($request->deleted_pet_mark_ids) {
-           $animal->animal_pet_marks()->whereIn('pet_mark_id', $request->deleted_pet_mark_ids)->delete();
+        if ($request->owner_id && $request->owner_id != $old_owner_id) {
+            $ownership_record = OwnershipRecord::where('animal_id', $animal->id)
+                ->where('user_id', $old_owner_id)->first();
+
+            $this->animalService->updateOwnershipRecord($ownership_record);
+            $this->animalService->createOwnershipRecord($animal);
         }
-        
+
+        if ($request->deleted_pet_mark_ids) {
+            $animal->animal_pet_marks()->whereIn('pet_mark_id', $request->deleted_pet_mark_ids)->delete();
+        }
+
         if ($request->pet_mark_ids) {
             foreach ($request->pet_mark_ids as $pet_mark_id) {
                 $is_exists = $animal->animal_pet_marks()->where('pet_mark_id', $pet_mark_id)->exists();
-        
+
                 if (!$is_exists) {
                     $animal->animal_pet_marks()->create(['pet_mark_id' => $pet_mark_id]);
                 }
             }
         }
-        
+
         return response()->json(new AnimalResource($animal), 200);
     }
 
@@ -506,11 +527,60 @@ class AnimalController extends Controller
         foreach ($photos as $photo) {
             delete_file_if_exist($photo->link);
         }
-        
-        $animal->tags()->delete(); 
+
+        $animal->tags()->delete();
         $animal->animal_pet_marks()->delete();
         $animal->media()->delete();
         $animal->delete();
         return response()->json(null, 204);
+    }
+
+    /**
+     * @OA\Get(
+     *   path="/admin/animals/{id}/ownership-records",
+     *   description="Get all ownership records for animal",
+     *   operationId="get_all_ownership_records",
+     *   tags={"Admin - Animals"},
+     *   security={{"bearer_token": {}}},
+     *   
+     *   @OA\Parameter(
+     *     in="path",
+     *     name="id",
+     *     required=true,
+     *     @OA\Schema(type="string")
+     *   ),
+     *   
+     *   @OA\Parameter(
+     *     in="query",
+     *     name="with_paginate",
+     *     required=false,
+     *     @OA\Schema(type="integer", enum={0, 1})
+     *   ),
+     *   
+     *   @OA\Parameter(
+     *     in="query",
+     *     name="per_page",
+     *     required=false,
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   
+     *   @OA\Parameter(
+     *     in="query",
+     *     name="owner_id",
+     *     required=false,
+     *     @OA\Schema(type="integer")
+     *   ),
+     *@OA\Response(
+     *     response=200,
+     *     description="Success",
+     *  )
+     *  )
+     */
+
+    public function ownershipRecords(GetRequest $request, Animal $animal)
+    {
+        $ownership_records = $this->animalService->getOwnershipRecords($request, $animal);
+
+        return OwnershipRecordResource::collection($ownership_records);
     }
 }

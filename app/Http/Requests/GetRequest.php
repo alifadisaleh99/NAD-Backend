@@ -24,7 +24,9 @@ class GetRequest extends FormRequest
         return [
             'with_paginate'      => ['integer', 'in:0,1'],
             'per_page'           => ['integer', 'min:1'],
-            'q'                  => ['string']
+            'q'                  => ['string'],
+            'animal_id'          =>  ['integer', 'exists:animals,id'],
+            'owner_id'           =>  ['integer', 'exists:users,id'],
         ];
     }
 }

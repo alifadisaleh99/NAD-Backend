@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\EntityController;
+use App\Http\Controllers\Admin\OwnershipRecordController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\PetMarkController;
 use App\Http\Controllers\Admin\PlanController;
@@ -32,7 +33,7 @@ use Illuminate\Support\Facades\Route;
 
 // roles and permissions
 Route::get('/permissions', [PermissionController::class, 'get_all_permissions']);
-Route::get('/permissions/me', [PermissionController::class, 'my_permissions']);
+Route::get('/permissions/me', ['PermissionController::class', 'my_permissions']);
 Route::get('/roles/{role}/permissions', [PermissionController::class, 'get_permissions']);
 Route::post('/roles/{role}/permissions', [PermissionController::class, 'set_permissions']);
 Route::apiResource('roles', RoleController::class);
@@ -59,6 +60,7 @@ Route::apiResource('pet-marks', PetMarkController::class);
 // animal
 Route::apiResource('animals', AnimalController::class);
 Route::apiResource('animal-statuses', AnimalStatusController::class);
+Route::get('animals/{animal}/ownership-records', [AnimalController::class, 'ownershipRecords']); 
 
 //plan
 Route::apiResource('plans', PlanController::class);

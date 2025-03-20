@@ -15,5 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/animals/{animal}/generate-token', [AnimalController::class, 'generateTransferToken']);
-Route::post('/animals/accept-transfer', [AnimalController::class, 'acceptTransfer']);
+//animal
+Route::get('animals/{animal}/ownership-records', [AnimalController::class, 'ownershipRecords']); 
+Route::post('animals/{animal}/generate-token', [AnimalController::class, 'generateTransferToken']);
+Route::post('animals/accept-transfer', [AnimalController::class, 'acceptTransfer']);

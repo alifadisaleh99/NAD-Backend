@@ -104,5 +104,10 @@ class Animal extends TranslatableModel
     {
         return $this->hasOne(User::class, 'id', 'user_create_id');
     }
+
+    public function ownership_records()
+    {
+        return $this->hasMany(OwnershipRecord::class);
+    }
 }
  
