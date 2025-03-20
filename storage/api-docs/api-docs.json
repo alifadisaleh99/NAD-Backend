@@ -315,15 +315,7 @@
                         }
                     },
                     {
-                        "name": "user_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "entity_id",
+                        "name": "owner_id",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -364,7 +356,8 @@
                                 "required": [
                                     "name[ar]",
                                     "description[ar]",
-                                    "owner_type"
+                                    "owner_type",
+                                    "owner_id"
                                 ],
                                 "properties": {
                                     "owner_type": {
@@ -374,13 +367,7 @@
                                             "entity"
                                         ]
                                     },
-                                    "user_id": {
-                                        "type": "integer"
-                                    },
-                                    "entity_id": {
-                                        "type": "integer"
-                                    },
-                                    "branch_id": {
+                                    "owner_id": {
                                         "type": "integer"
                                     },
                                     "name[en]": {
@@ -573,13 +560,7 @@
                                             "entity"
                                         ]
                                     },
-                                    "user_id": {
-                                        "type": "integer"
-                                    },
-                                    "entity_id": {
-                                        "type": "integer"
-                                    },
-                                    "branch_id": {
+                                    "owner_id": {
                                         "type": "integer"
                                     },
                                     "name[en]": {
@@ -3684,13 +3665,6 @@
                                     "branch_id": {
                                         "type": "integer"
                                     },
-                                    "is_owner": {
-                                        "type": "integer",
-                                        "enum": [
-                                            "1",
-                                            "0"
-                                        ]
-                                    },
                                     "plan_id": {
                                         "type": "integer"
                                     }
@@ -4116,13 +4090,13 @@
                 ]
             }
         },
-        "//animals/{id}/generate-token": {
+        "/user/animals/{id}/generate-token": {
             "post": {
                 "tags": [
                     "User - Animals"
                 ],
                 "description": "Generate token.",
-                "operationId": "a0b49c1fb4242973c0599d16b1b5f322",
+                "operationId": "23ddf7de36b601680911a24ed9dfe084",
                 "parameters": [
                     {
                         "name": "id",
@@ -4145,13 +4119,13 @@
                 ]
             }
         },
-        "//animals/accept-transfer": {
+        "/user/animals/accept-transfer": {
             "post": {
                 "tags": [
                     "User - Animals"
                 ],
                 "description": "Accept animal transfer.",
-                "operationId": "e2115739c7354bc13d17d44b2248414e",
+                "operationId": "047c5cdb8479c9e1c16a270191fdc60e",
                 "requestBody": {
                     "required": true,
                     "content": {
