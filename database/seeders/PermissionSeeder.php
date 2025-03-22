@@ -215,6 +215,15 @@ class PermissionSeeder extends Seeder
             $admin_permissions[] = $permission->id;
         }
        //
+       if (!in_array('logos.read', $permissions)) {
+            $permission = Permission::create(['name' => 'logos.read']);
+            $admin_permissions[] = $permission->id;
+        }
+        if (!in_array('logos.write', $permissions)) {
+            $permission = Permission::create(['name' => 'logos.write']);
+            $admin_permissions[] = $permission->id;
+        }
+        //
         if (!Role::where('name', 'مشرف')->exists())
             Role::create([
                 'id'         => 1,

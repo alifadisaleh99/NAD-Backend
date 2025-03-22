@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\EntityController;
-use App\Http\Controllers\Admin\OwnershipRecordController;
+use App\Http\Controllers\Admin\LogoController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\PetMarkController;
 use App\Http\Controllers\Admin\PlanController;
@@ -76,5 +76,9 @@ Route::put('tags', [TagController::class, 'update']);
 Route::get('statistics/count-animals', [StatisticsController::class,'getAnimalsCount']);
 Route::get('statistics/plan-earnings', [StatisticsController::class,'getPlanEarnings']);
 Route::get('statistics/subscriptions', [StatisticsController::class,'getsubscriptions']);
+
+//logo
+Route::get('logo', [LogoController::class, 'show']);
+Route::put('logo', [LogoController::class, 'update']);
 
 

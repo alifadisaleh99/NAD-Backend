@@ -2336,6 +2336,75 @@
                 ]
             }
         },
+        "/admin/logo": {
+            "get": {
+                "tags": [
+                    "Admin - Logo"
+                ],
+                "description": "Get logo.",
+                "operationId": "show_logo",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Logo"
+                ],
+                "description": "Edit logo.",
+                "operationId": "e2d856481fb1e7fd228bc43196ba2f02",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "type",
+                                    "logo"
+                                ],
+                                "properties": {
+                                    "mobile_light_logo": {
+                                        "type": "file"
+                                    },
+                                    "mobile_dark_logo": {
+                                        "type": "file"
+                                    },
+                                    "light_logo": {
+                                        "type": "file"
+                                    },
+                                    "dark_logo": {
+                                        "type": "file"
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "PUT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/admin/permissions": {
             "get": {
                 "tags": [
@@ -4307,6 +4376,10 @@
         {
             "name": "Admin - Entities",
             "description": "Admin - Entities"
+        },
+        {
+            "name": "Admin - Logo",
+            "description": "Admin - Logo"
         },
         {
             "name": "Permissions",
