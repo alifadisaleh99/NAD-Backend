@@ -406,6 +406,12 @@
                                     "bad_with[ar]": {
                                         "type": "string"
                                     },
+                                    "sensitivities": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
                                     "link": {
                                         "type": "string"
                                     },
@@ -598,6 +604,18 @@
                                     },
                                     "bad_with[ar]": {
                                         "type": "string"
+                                    },
+                                    "deleted_sensitivity_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "sensitivities": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
                                     },
                                     "link": {
                                         "type": "string"

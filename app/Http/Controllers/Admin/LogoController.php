@@ -13,8 +13,8 @@ class LogoController extends Controller
     public function __construct()
     {
         $this->middleware('auth:sanctum');
-        $this->middleware('permission:logos.read|logos.write')->only('show');
-        $this->middleware('permission:logos.write')->only('update');
+        $this->middleware('permission:logo.read|logo.write')->only('show');
+        $this->middleware('permission:logo.write')->only('update');
     }
     
     /**

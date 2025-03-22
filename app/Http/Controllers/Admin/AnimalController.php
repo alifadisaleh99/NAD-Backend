@@ -103,7 +103,7 @@ class AnimalController extends Controller
             'q'                  => ['string']
         ]);
 
-        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags'])->latest();
+        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags', 'sensitivities'])->latest();
 
         if ($request->category_id)
             $q->where('category_id', $request->category_id);
@@ -166,6 +166,7 @@ class AnimalController extends Controller
      *              @OA\Property(property="good_with[ar]", type="string"),
      *              @OA\Property(property="bad_with[en]", type="string"),
      *              @OA\Property(property="bad_with[ar]", type="string"),
+     *              @OA\Property(property="sensitivities", type="array", @OA\Items(type="string")),
      *              @OA\Property(property="link", type="string"),
      *              @OA\Property(property="status", type="boolean", enum={0, 1}),
      *              @OA\Property(property="photos", type="array", @OA\Items(type="file")),
@@ -202,6 +203,8 @@ class AnimalController extends Controller
             'deslike'    => ['array', translation_rule()],
             'good_with'    => ['array', translation_rule()],
             'bad_with'    => ['array', translation_rule()],
+            'sensitivities' => ['array'],
+            'sensitivities.*' => ['string'],
             'photos'         => ['required', 'array'],
             'photos.*'       => ['image'],
             'owner_type'     => ['required', 'in:user,entity'],
@@ -288,6 +291,12 @@ class AnimalController extends Controller
             }
         }
 
+        if ($request->sensitivities) {
+            foreach ($request->sensitivities as $sensitivity) {
+                $animal->sensitivities()->create(['name' => $sensitivity]);
+            }
+        }
+
         $this->animalService->createOwnershipRecord($animal);
 
         return response()->json(new AnimalResource($animal), 200);
@@ -315,7 +324,7 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags']);
+        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags', 'sensitivities']);
         return response()->json(new AnimalResource($animal), 200);
     }
 
@@ -350,6 +359,8 @@ class AnimalController extends Controller
      *              @OA\Property(property="good_with[ar]", type="string"),
      *              @OA\Property(property="bad_with[en]", type="string"),
      *              @OA\Property(property="bad_with[ar]", type="string"),
+     *              @OA\Property(property="deleted_sensitivity_ids", type="array", @OA\Items(type="integer")),
+     *              @OA\Property(property="sensitivities", type="array", @OA\Items(type="string")),
      *              @OA\Property(property="link", type="string"),
      *              @OA\Property(property="status", type="boolean", enum={0, 1}),
      *              @OA\Property(property="photos", type="array", @OA\Items(type="file")),
@@ -389,6 +400,10 @@ class AnimalController extends Controller
             'deslike'    => ['array', translation_rule()],
             'good_with'    => ['array', translation_rule()],
             'bad_with'    => ['array', translation_rule()],
+            'sensitivities' => ['array'],
+            'sensitivities.*' => ['string'],
+            'deleted_sensitivity_ids' => ['array'],
+            'deleted_sensitivity_ids.*' => ['integer', 'exists:animal_sensitivities,id'],
             'owner_type'     => ['required', 'in:user,entity'],
             'owner_id'         => ['required', 'integer', 'exists:users,id'],
             'category_id'         => ['required', 'integer', 'exists:categories,id'],
@@ -496,6 +511,19 @@ class AnimalController extends Controller
             }
         }
 
+        if ($request->deleted_sensitivity_ids) {
+            $animal->sensitivities()->whereIn('id', $request->deleted_sensitivity_ids)->delete();
+        }
+
+        if ($request->sensitivities) {
+            foreach ($request->sensitivities as $sensitivity) {
+                $is_exists = $animal->sensitivities()->where('name', $sensitivity)->exists();
+
+                if (!$is_exists)
+                     $animal->sensitivities()->create(['name' => $sensitivity]);
+            }
+        }
+
         return response()->json(new AnimalResource($animal), 200);
     }
 
@@ -528,6 +556,7 @@ class AnimalController extends Controller
             delete_file_if_exist($photo->link);
         }
 
+        $animal->sensitivities()->delete();
         $animal->tags()->delete();
         $animal->animal_pet_marks()->delete();
         $animal->media()->delete();

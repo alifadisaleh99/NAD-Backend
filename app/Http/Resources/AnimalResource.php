@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\AnimalSensitivity;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,6 +27,7 @@ class AnimalResource extends JsonResource
             'deslike'           => $this->deslike,
             'good_with'         => $this->good_with,
             'bad_with'          => $this->bad_with,
+            'sensitivities'     => AnimalSensitivityResource::collection($this->whenLoaded('sensitivities')),
             'photos'            => MediaResource::collection($this->whenLoaded('media')),
             'category'          => new CategoryResource($this->whenLoaded('category')),
             'animal_type'       => new AnimalTypeResource($this->whenLoaded('animal_type')),

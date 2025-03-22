@@ -109,5 +109,10 @@ class Animal extends TranslatableModel
     {
         return $this->hasMany(OwnershipRecord::class);
     }
+
+    public function sensitivities()
+    {
+        return $this->hasMany(AnimalSensitivity::class);
+    }
 }
  

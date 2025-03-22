@@ -215,12 +215,12 @@ class PermissionSeeder extends Seeder
             $admin_permissions[] = $permission->id;
         }
        //
-       if (!in_array('logos.read', $permissions)) {
-            $permission = Permission::create(['name' => 'logos.read']);
+       if (!in_array('logo.read', $permissions)) {
+            $permission = Permission::create(['name' => 'logo.read']);
             $admin_permissions[] = $permission->id;
         }
-        if (!in_array('logos.write', $permissions)) {
-            $permission = Permission::create(['name' => 'logos.write']);
+        if (!in_array('logo.write', $permissions)) {
+            $permission = Permission::create(['name' => 'logo.write']);
             $admin_permissions[] = $permission->id;
         }
         //
