@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AnimalTypeController;
 use App\Http\Controllers\Admin\AnimalSpecieController;
 use App\Http\Controllers\Admin\AnimalStatusController;
 use App\Http\Controllers\Admin\BranchController;
+use App\Http\Controllers\Admin\BranchTypeController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\EntityController;
@@ -81,4 +82,5 @@ Route::get('statistics/subscriptions', [StatisticsController::class,'getsubscrip
 Route::get('logo', [LogoController::class, 'show']);
 Route::put('logo', [LogoController::class, 'update']);
 
-
+//branch_types
+Route::apiResource('branch-types', BranchTypeController::class);

@@ -176,6 +176,17 @@ class PermissionSeeder extends Seeder
             Permission::create(['name' => 'logo.write']);
         }
         //
+        if (!in_array('branchTypes.read', $permissions)) {
+            Permission::create(['name' => 'branchTypes.read']);
+        }
+        if (!in_array('branchTypes.write', $permissions)) {
+            Permission::create(['name' => 'branchTypes.write']);
+        }
+        if (!in_array('branchTypes.delete', $permissions)) {
+            Permission::create(['name' => 'branchTypes.delete']);
+        }
+        //
+
         if (!Role::where('name', 'مشرف')->exists())
             Role::create([
                 'id'         => 1,
