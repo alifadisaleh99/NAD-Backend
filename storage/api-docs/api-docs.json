@@ -323,6 +323,14 @@
                         }
                     },
                     {
+                        "name": "branch_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "q",
                         "in": "query",
                         "required": false,
@@ -368,6 +376,9 @@
                                         ]
                                     },
                                     "owner_id": {
+                                        "type": "integer"
+                                    },
+                                    "branch_id": {
                                         "type": "integer"
                                     },
                                     "name[en]": {
@@ -567,6 +578,9 @@
                                         ]
                                     },
                                     "owner_id": {
+                                        "type": "integer"
+                                    },
+                                    "branch_id": {
                                         "type": "integer"
                                     },
                                     "name[en]": {

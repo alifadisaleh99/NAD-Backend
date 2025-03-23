@@ -80,6 +80,12 @@ class AnimalController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
+     *    name="branch_id",
+     *    required=false,
+     *    @OA\Schema(type="integer"),
+     * ),
+     * @OA\Parameter(
+     *    in="query",
      *    name="q",
      *    required=false,
      *    @OA\Schema(type="string"),
@@ -100,10 +106,11 @@ class AnimalController extends Controller
             'animal_specie_id'   => ['integer', 'exists:animal_species,id'],
             'animal_breed_id'    =>  ['integer', 'exists:animal_breeds,id'],
             'owner_id'            =>  ['integer', 'exists:users,id'],
+            'branch_id'            =>  ['integer', 'exists:branches,id'],
             'q'                  => ['string']
         ]);
 
-        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags', 'sensitivities'])->latest();
+        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags', 'sensitivities', 'branch'])->latest();
 
         if ($request->category_id)
             $q->where('category_id', $request->category_id);
@@ -115,6 +122,8 @@ class AnimalController extends Controller
             $q->where('animal_breed_id', $request->animal_breed_id);
         if ($request->owner_id)
             $q->where('user_id', $request->owner_id);
+        if ($request->branch_id)
+            $q->where('branch_id', $request->branch_id);
 
 
         if ($request->q) {
@@ -154,6 +163,7 @@ class AnimalController extends Controller
      *              required={"name[ar]", "description[ar]", "owner_type" , "owner_id"},
      *              @OA\Property(property="owner_type", type="string", enum={"user", "entity"}),
      *              @OA\Property(property="owner_id", type="integer"),
+     *              @OA\Property(property="branch_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="description[en]", type="string"),
@@ -209,6 +219,7 @@ class AnimalController extends Controller
             'photos.*'       => ['image'],
             'owner_type'     => ['required', 'in:user,entity'],
             'owner_id'         => ['required', 'integer', 'exists:users,id'],
+            'branch_id'         => ['required_if:owner_type,entity', 'integer', 'exists:branches,id'],
             'category_id'         => ['required', 'integer', 'exists:categories,id'],
             'animal_type_id'      => ['required', 'integer', 'exists:animal_types,id'],
             'animal_specie_id'    => ['required', 'integer', 'exists:animal_species,id'],
@@ -257,6 +268,7 @@ class AnimalController extends Controller
             'bad_with'  => $request->bad_with,
             'owner_type'     => $request->owner_type,
             'user_id'         => $request->owner_id,
+            'branch_id'           => $request->branch_id ?? null,
             'category_id'         => $request->category_id,
             'animal_type_id'      => $request->animal_type_id,
             'animal_specie_id'    => $request->animal_specie_id,
@@ -324,7 +336,7 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags', 'sensitivities']);
+        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags', 'sensitivities', 'branch']);
         return response()->json(new AnimalResource($animal), 200);
     }
 
@@ -347,6 +359,7 @@ class AnimalController extends Controller
      *           @OA\Schema(
      *              @OA\Property(property="owner_type", type="string", enum={"user", "entity"}),
      *              @OA\Property(property="owner_id", type="integer"),
+     *              @OA\Property(property="branch_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="description[en]", type="string"),
@@ -406,6 +419,7 @@ class AnimalController extends Controller
             'deleted_sensitivity_ids.*' => ['integer', 'exists:animal_sensitivities,id'],
             'owner_type'     => ['required', 'in:user,entity'],
             'owner_id'         => ['required', 'integer', 'exists:users,id'],
+            'branch_id'         => ['required_if:owner_type,entity', 'integer', 'exists:branches,id'],
             'category_id'         => ['required', 'integer', 'exists:categories,id'],
             'animal_type_id'      => ['required', 'integer', 'exists:animal_types,id'],
             'animal_specie_id'    => ['required', 'integer', 'exists:animal_species,id'],
@@ -471,6 +485,7 @@ class AnimalController extends Controller
             'bad_with' => $request->bad_with,
             'owner_type'     => $request->owner_type,
             'user_id'         => $request->owner_id,
+            'branch_id'       => $request->branch_id,
             'category_id'         => $request->category_id,
             'animal_type_id'      => $request->animal_type_id,
             'animal_specie_id'    => $request->animal_specie_id,
@@ -542,7 +557,7 @@ class AnimalController extends Controller
      * tags={"Admin - Animals"},
      * security={{"bearer_token":{}}},
      * @OA\Response(
-     *    response=200,
+     *    response=204,
      *    description="successful operation"
      * ),
      * )
@@ -556,6 +571,7 @@ class AnimalController extends Controller
             delete_file_if_exist($photo->link);
         }
 
+        $animal->ownership_records()->delete();
         $animal->sensitivities()->delete();
         $animal->tags()->delete();
         $animal->animal_pet_marks()->delete();

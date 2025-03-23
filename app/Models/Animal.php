@@ -29,6 +29,7 @@ class Animal extends TranslatableModel
         'size',
         'birth_date',
         'user_create_id',
+        'branch_id',
     ];
 
     protected $translatable = [
@@ -113,6 +114,11 @@ class Animal extends TranslatableModel
     public function sensitivities()
     {
         return $this->hasMany(AnimalSensitivity::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 }
  
