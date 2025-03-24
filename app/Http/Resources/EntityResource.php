@@ -27,6 +27,7 @@ class EntityResource extends JsonResource
             'used_users'        => $this->used_users,
             'used_branches'     => $this->used_branches,
             'branches'          => BranchResource::collection($this->whenLoaded('branches')),
+            'branch_type'       => new BranchTypeResource($this->whenLoaded('branch_type')),
             'image'             => $this->image,
             'translations'      => $this->translations,
         ];

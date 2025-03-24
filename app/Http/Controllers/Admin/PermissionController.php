@@ -137,7 +137,7 @@ class PermissionController extends Controller
             'permissions.*' => ['string', 'exists:permissions,name'],
         ]);
 
-        if ($role->name == 'admin' || $role->name == 'user' || $role->name == 'poet')
+        if ($role->name_en == 'admin' || $role->name_en == 'user' || $role->name_en == 'poet')
             throw new BadRequestHttpException(__('error_messages.Sorry, You can not modify this role'));
 
 

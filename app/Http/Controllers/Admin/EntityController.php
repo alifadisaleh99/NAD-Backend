@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GetRequest;
 use App\Http\Resources\EntityResource;
 use App\Http\Resources\UserResource;
 use App\Models\Entity;
@@ -43,6 +44,12 @@ class EntityController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
+     *    name="branch_type_id",
+     *    required=false,
+     *    @OA\Schema(type="integer"),
+     * ),
+     * @OA\Parameter(
+     *    in="query",
      *    name="q",
      *    required=false,
      *    @OA\Schema(type="string"),
@@ -52,34 +59,30 @@ class EntityController extends Controller
      *     description="Success",
      *  )
      *  )
-    */
-    public function index(Request $request)
+     */
+    public function index(GetRequest $request)
     {
-        $request->validate([
-            'with_paginate'      => ['integer', 'in:0,1'],
-            'per_page'           => ['integer', 'min:1'],
-            'q'                  => ['string']
-        ]);
+        $q = Entity::query()->with(['branches', 'branch_type'])->latest();
 
-        $q = Entity::query()->latest();
+        if ($request->branch_type_id)
+            $q->where('branch_type_id', $request->branch_type_id);
 
-        if($request->q)
-        {
+        if ($request->q) {
             $entities_ids = Translation::where('translatable_type', Entity::class)
-                                        ->where('attribute', 'name')
-                                        ->where('value', 'LIKE', '%'.$request->q.'%')
-                                        ->groupBy('translatable_id')
-                                        ->pluck('translatable_id');
+                ->where('attribute', 'name')
+                ->where('value', 'LIKE', '%' . $request->q . '%')
+                ->groupBy('translatable_id')
+                ->pluck('translatable_id');
 
-            $q->where(function($query) use ($request, $entities_ids) {
+            $q->where(function ($query) use ($request, $entities_ids) {
                 if (is_numeric($request->q))
                     $query->where('id', $request->q);
-        
+
                 $query->orWhereIn('id', $entities_ids);
             });
         }
 
-        if($request->with_paginate === '0')
+        if ($request->with_paginate === '0')
             $entities = $q->get();
         else
             $entities = $q->paginate($request->per_page ?? 10);
@@ -109,6 +112,7 @@ class EntityController extends Controller
      *              @OA\Property(property="allowed_branches", type="integer"),
      *              @OA\Property(property="allowed_users", type="integer"),
      *              @OA\Property(property="image", type="file"),
+     *              @OA\Property(property="branch_type_id", type="integer"),
      *          )
      *       )
      *   ),
@@ -118,7 +122,7 @@ class EntityController extends Controller
      *     ),
      * )
      * )
-    */
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -131,8 +135,9 @@ class EntityController extends Controller
             'allowed_branches'  => ['required', 'integer'],
             'allowed_users'     => ['required', 'integer'],
             'image'             => ['image'],
+            'branch_type_id'    => ['required', 'integer', 'exists:branch_types,id'],
         ]);
-     
+
         $image = upload_file($request->image, 'entities', 'entity');
 
         $entity = Entity::create([
@@ -145,6 +150,7 @@ class EntityController extends Controller
             'allowed_branches'  => $request->allowed_branches,
             'allowed_users'     => $request->allowed_users,
             'image'             => $image,
+            'branch_type_id'    => $request->branch_type_id,
         ]);
 
         $user = User::create([
@@ -179,10 +185,10 @@ class EntityController extends Controller
      * ),
      * )
      *)
-    */
+     */
     public function show(Entity $entity)
     {
-        $entity->load(['branches']);
+        $entity->load(['branches', 'branch_type']);
         return response()->json(new EntityResource($entity), 200);
     }
 
@@ -213,6 +219,7 @@ class EntityController extends Controller
      *              @OA\Property(property="allowed_branches", type="string"),
      *              @OA\Property(property="allowed_users", type="string"),
      *              @OA\Property(property="image", type="file"),
+     *              @OA\Property(property="branch_type_id", type="integer"),
      *              @OA\Property(property="_method", type="string", format="string", example="PUT"),
      *           )
      *       )
@@ -223,7 +230,7 @@ class EntityController extends Controller
      *     ),
      * )
      * )
-    */
+     */
     public function update(Request $request, Entity $entity)
     {
         $request->validate([
@@ -235,14 +242,15 @@ class EntityController extends Controller
             'price_per_pet'     => ['required', 'numeric'],
             'allowed_branches'  => ['required', 'integer'],
             'allowed_users'     => ['required', 'integer'],
+            'branch_type_id'     =>  ['integer', 'exists:branch_types,id'],
         ]);
 
         $image = null;
-        if($request->image){
-            if($request->image == $entity->image){
+        if ($request->image) {
+            if ($request->image == $entity->image) {
                 $image = $entity->image;
-            }else{
-                if(!is_file($request->image))
+            } else {
+                if (!is_file($request->image))
                     throw ValidationException::withMessages(['image' => __('error_messages.Image should be a file')]);
 
                 delete_file_if_exist($entity->image);
@@ -260,6 +268,7 @@ class EntityController extends Controller
             'allowed_branches'  => $request->allowed_branches,
             'allowed_users'     => $request->allowed_users,
             'image'         => $image,
+            'branch_type_id' => $request->branch_type_id,
         ]);
 
         return response()->json(new EntityResource($entity), 200);
@@ -280,12 +289,12 @@ class EntityController extends Controller
      * tags={"Admin - Entities"},
      * security={{"bearer_token":{}}},
      * @OA\Response(
-     *    response=200,
+     *    response=204,
      *    description="successful operation"
      * ),
      * )
      *)
-    */
+     */
     public function destroy(Entity $entity)
     {
         delete_file_if_exist($entity->image);

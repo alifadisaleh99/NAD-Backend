@@ -21,6 +21,7 @@ class Entity extends TranslatableModel
         'used_users',
         'used_branches',
         'image',
+        'branch_type_id',
     ];
 
     protected $translatable = [
@@ -32,8 +33,8 @@ class Entity extends TranslatableModel
         return $this->hasMany(Branch::class);
     }
 
-    public function animals()
+    public function branch_type()
     {
-        return $this->hasMany(Animal::class);
+        return $this->belongsTo(BranchType::class);
     }
 }

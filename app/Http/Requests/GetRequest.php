@@ -27,6 +27,7 @@ class GetRequest extends FormRequest
             'q'                  => ['string'],
             'animal_id'          =>  ['integer', 'exists:animals,id'],
             'owner_id'           =>  ['integer', 'exists:users,id'],
+            'branch_type_id'     =>  ['integer', 'exists:branch_types,id'],
         ];
     }
 }
