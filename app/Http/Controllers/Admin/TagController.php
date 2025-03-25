@@ -37,7 +37,8 @@ class TagController extends Controller
      *                 @OA\Property(property="tags[0][factory_number]", type="string"),
      *                 @OA\Property(property="tags[0][number]", type="string"),
      *                 @OA\Property(property="tags[0][status]", type="integer", enum={"0"," 1"}),
-     *                 @OA\Property(property="deleted_tag_ids",type="array",@OA\Items(type="integer")),
+     *                 @OA\Property(property="deleted_tag_ids[0]",type="integer"),
+     *                 @OA\Property(property="animal_id",type="integer"),
      *                 @OA\Property(property="_method", type="string", example="PUT")
      *              )
      *          )
@@ -52,7 +53,6 @@ class TagController extends Controller
     public function update(TagRequest $request)
     {
         $tags = $this->tagService->update($request);
-
 
         return response()->json(TagResource::collection($tags), 200);
     }

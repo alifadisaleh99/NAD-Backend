@@ -9,13 +9,13 @@ use App\Models\Transfer;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AnimalService
 {
 
     public function generateTransferToken(Animal $animal)
     {
-
         $token = Str::random(15);
 
         Transfer::create([
@@ -39,12 +39,22 @@ class AnimalService
             ]);
         }
 
-        $user = User::find(auth()->id());
+        $current_owner = User::find(auth()->id());
+        
+        $branch_id = null;
 
-        if (is_null($user->entity_id)) {
+        if (is_null($current_owner->entity_id)) {
             $owner_type = 'user';
-        } else
-            $owner_type = 'entity';
+        } else {
+            if (is_null($current_owner->branch_id)) {
+                throw new BadRequestHttpException(__('error_messages.user_must_have_branch'));
+            } else {
+                $owner_type = 'entity';
+                $branch_id = $current_owner->branch_id;
+            }
+        }
+
+        $previous_owner = $transfer->animal->user;
 
         $ownership_record = OwnershipRecord::where('animal_id', $transfer->animal->id)
             ->where('user_id', $transfer->animal->user_id)->first();
@@ -53,12 +63,21 @@ class AnimalService
 
         $transfer->animal->update([
             'owner_type' => $owner_type,
+            'branch_id'  => $branch_id,
             'user_id' => auth()->id(),
         ]);
 
         $this->createOwnershipRecord($transfer->animal);
 
         $transfer->delete();
+
+        $transfer_information = [
+            'previous_owner' => $previous_owner,
+            'current_owner'  => $current_owner,
+            'animal_uaid'    => $transfer->animal->uaid,
+        ];
+
+        return $transfer_information;
     }
 
     public function createOwnershipRecord(Animal $animal)
@@ -73,19 +92,18 @@ class AnimalService
 
     public function updateOwnershipRecord(OwnershipRecord $ownership_record)
     {
-
         $ownership_record->update([
             'end_date'  => now(),
             'duration' => now()->diffInDays($ownership_record->start_date),
         ]);
     }
 
-    public function getOwnershipRecords($request,Animal $animal)
+    public function getOwnershipRecords($request, Animal $animal)
     {
         $q = $animal->ownership_records();
 
-        if($request->owner_id)
-           $q->where('user_id', $request->owner_id);
+        if ($request->owner_id)
+            $q->where('user_id', $request->owner_id);
 
         if ($request->with_paginate === '0')
             $ownership_records = $q->get();
@@ -94,4 +112,4 @@ class AnimalService
 
         return  $ownership_records;
     }
-    }
+}

@@ -8,4 +8,5 @@ return [
     'user_must_have_plan' => 'لا يملك المستخدم خطة اشتراك',
     'factory_number_used' =>  'رقم المصنع :Fnumber مستخدم بالفعل',
     'transfer_tokin_expired'  => 'انتهت صلاحية هذا الرمز، يمكنك إعادة عملية نقل الحيوان مرة أخرى',
+    'user_must_have_branch'   => '.يجب أن تملك فرع من أجل إكمال هذه العملية',
 ];

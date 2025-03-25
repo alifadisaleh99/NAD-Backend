@@ -19,7 +19,7 @@ class AnimalController extends Controller
         $this->middleware('auth:sanctum');
         //   $this->middleware('permission:animals.transfer')->only('generateTransferToken', 'acceptTransfer');
         //  $this->middleware('permission:ownershipRecords.read')->only('ownershipRecords');
-        $this->middleware('owner.animal')->only(['generateTransferToken', 'ownershipRecords']);
+       // $this->middleware('owner.animal')->only(['generateTransferToken', 'ownershipRecords']);
 
         $this->animalService = $animalService;
     }
@@ -74,9 +74,9 @@ class AnimalController extends Controller
      */
     public function acceptTransfer(TransferRequest $request)
     {
-        $this->animalService->acceptTransfer($request);
+        $transfer_information = $this->animalService->acceptTransfer($request);
 
-        return response()->json(200);
+        return response()->json(['transfer_information' => $transfer_information], 200);
     }
 
     /**

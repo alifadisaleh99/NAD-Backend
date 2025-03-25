@@ -8,4 +8,5 @@ return [
     'user_must_have_plan' => 'User does not have a subscription plan',
     'factory_number_used' => 'The factory number :Fnumber already used',  
     'transfer_tokin_expired'  => 'This token has expired, you can redo the pet ownership transfer process again',
+    'user_must_have_branch'   => 'You must have a branch to complete this process.',
 ];

@@ -62,6 +62,7 @@ Route::apiResource('pet-marks', PetMarkController::class);
 Route::apiResource('animals', AnimalController::class);
 Route::apiResource('animal-statuses', AnimalStatusController::class);
 Route::get('animals/{animal}/ownership-records', [AnimalController::class, 'ownershipRecords']); 
+Route::post('animals/{animal}/generate-token', [AnimalController::class, 'generateTransferToken']);
 
 //plan
 Route::apiResource('plans', PlanController::class);

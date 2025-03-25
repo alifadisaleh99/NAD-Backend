@@ -767,6 +767,35 @@
                 ]
             }
         },
+        "/admin/animals/{id}/generate-token": {
+            "post": {
+                "tags": [
+                    "Admin - Animals"
+                ],
+                "description": "Generate token.",
+                "operationId": "a75868e0b9db613b026a47e13675233c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/admin/animals/{id}/ownership-records": {
             "get": {
                 "tags": [
@@ -3618,11 +3647,11 @@
                                             " 1"
                                         ]
                                     },
-                                    "deleted_tag_ids": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer"
-                                        }
+                                    "deleted_tag_ids[0]": {
+                                        "type": "integer"
+                                    },
+                                    "animal_id": {
+                                        "type": "integer"
                                     },
                                     "_method": {
                                         "type": "string",

@@ -25,6 +25,7 @@ class AnimalController extends Controller
         $this->middleware('permission:animals.read|animals.write|animals.delete|ownershipRecords.read')->only('ownershipRecords');
         $this->middleware('permission:animals.write')->only('store', 'update');
         $this->middleware('permission:animals.delete')->only('destroy');
+        $this->middleware('permission:animals.transfer')->only('generateTransferToken', 'acceptTransfer');
 
         $this->animalService = $animalService;
     }
@@ -604,6 +605,31 @@ class AnimalController extends Controller
         $animal->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * @OA\Post(
+     * path="/admin/animals/{id}/generate-token",
+     * description="Generate token.",
+     * @OA\Parameter(
+     *     in="path",
+     *     name="id",
+     *     required=true,
+     *     @OA\Schema(type="string"),
+     * ),
+     * tags={"Admin - Animals"},
+     * security={{"bearer_token": {}}},
+     * @OA\Response(
+     *         response="200",
+     *         description="successful operation",
+     *     ),
+     * )
+     */
+    public function generateTransferToken(Animal $animal)
+    {
+        $token = $this->animalService->generateTransferToken($animal);
+
+        return response()->json(['token' => $token], 200);
     }
 
     /**
