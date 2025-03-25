@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\AnimalSensitivity;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -48,6 +47,7 @@ class AnimalResource extends JsonResource
             'tags'            => TagResource::collection($this->whenLoaded('tags')),
             'created_at'   => $this->created_at,
             'created_by'   => new UserResource($this->whenLoaded('user_create')),
+            'uaid'         => $this->uaid,
             'translations' => $this->translations,
         ];
     }

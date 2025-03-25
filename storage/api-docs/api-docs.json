@@ -331,6 +331,22 @@
                         }
                     },
                     {
+                        "name": "uaid",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tag_number",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "q",
                         "in": "query",
                         "required": false,
@@ -417,11 +433,8 @@
                                     "bad_with[ar]": {
                                         "type": "string"
                                     },
-                                    "sensitivities": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string"
-                                        }
+                                    "sensitivities[0]": {
+                                        "type": "string"
                                     },
                                     "link": {
                                         "type": "string"
@@ -433,11 +446,8 @@
                                             1
                                         ]
                                     },
-                                    "photos": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "file"
-                                        }
+                                    "photos[0]": {
+                                        "type": "file"
                                     },
                                     "category_id": {
                                         "type": "integer"
@@ -451,11 +461,8 @@
                                     "animal_breed_id": {
                                         "type": "integer"
                                     },
-                                    "pet_mark_ids": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer"
-                                        }
+                                    "pet_mark_ids[0]": {
+                                        "type": "integer"
                                     },
                                     "primary_color_id": {
                                         "type": "integer"
@@ -619,17 +626,11 @@
                                     "bad_with[ar]": {
                                         "type": "string"
                                     },
-                                    "deleted_sensitivity_ids": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer"
-                                        }
+                                    "deleted_sensitivity_ids[0]": {
+                                        "type": "integer"
                                     },
-                                    "sensitivities": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string"
-                                        }
+                                    "sensitivities[0]": {
+                                        "type": "string"
                                     },
                                     "link": {
                                         "type": "string"
@@ -641,17 +642,11 @@
                                             1
                                         ]
                                     },
-                                    "photos": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "file"
-                                        }
+                                    "photos[0]": {
+                                        "type": "file"
                                     },
-                                    "deleted_media_ids": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer"
-                                        }
+                                    "deleted_media_ids[0]": {
+                                        "type": "integer"
                                     },
                                     "category_id": {
                                         "type": "integer"
@@ -665,17 +660,11 @@
                                     "animal_breed_id": {
                                         "type": "integer"
                                     },
-                                    "pet_mark_ids": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer"
-                                        }
+                                    "pet_mark_ids[0]": {
+                                        "type": "integer"
                                     },
-                                    "deleted_pet_mark_ids": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer"
-                                        }
+                                    "deleted_pet_mark_ids[0]": {
+                                        "type": "integer"
                                     },
                                     "primary_color_id": {
                                         "type": "integer"
@@ -1139,7 +1128,11 @@
                                     "status": {
                                         "type": "string",
                                         "enum": [
-                                            "lost, found, adopt, dead, transfer"
+                                            "lost",
+                                            "found",
+                                            "adopt",
+                                            "dead",
+                                            "transfer"
                                         ]
                                     },
                                     "description[en]": {
@@ -1222,7 +1215,11 @@
                                     "status": {
                                         "type": "string",
                                         "enum": [
-                                            "lost, found, adopt, dead, transfer"
+                                            "lost",
+                                            "found",
+                                            "adopt",
+                                            "dead",
+                                            "transfer"
                                         ]
                                     },
                                     "description[en]": {

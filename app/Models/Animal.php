@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Mosab\Translation\Database\TranslatableModel;
+use Illuminate\Support\Str;
+
 
 class Animal extends TranslatableModel
 {
@@ -30,6 +32,7 @@ class Animal extends TranslatableModel
         'birth_date',
         'user_create_id',
         'branch_id',
+        'uaid',
     ];
 
     protected $translatable = [
@@ -119,6 +122,16 @@ class Animal extends TranslatableModel
     public function branch()
     {
         return $this->belongsTo(Branch::class);
+    }
+
+    public function animal_status()
+    {
+        return $this->hasOne(AnimalStatus::class, 'animal_id');
+    }
+
+    public function transfers()
+    {
+        return $this->hasMany(Transfer::class);
     }
 }
  

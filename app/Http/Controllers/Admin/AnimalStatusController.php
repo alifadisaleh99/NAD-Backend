@@ -100,7 +100,7 @@ class AnimalStatusController extends Controller
      *           @OA\Schema(
      *              required={"description[ar]"},
      *              @OA\Property(property="animal_id", type="integer"),
-     *              @OA\Property(property="status", type="string", enum={"lost, found, adopt, dead, transfer"}),
+     *              @OA\Property(property="status", type="string", enum={"lost", "found", "adopt", "dead", "transfer"}),
      *              @OA\Property(property="description[en]", type="string"),
      *              @OA\Property(property="description[ar]", type="string"),
      *          )
@@ -176,7 +176,7 @@ class AnimalStatusController extends Controller
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
      *              @OA\Property(property="animal_id", type="integer"),
-     *              @OA\Property(property="status", type="string", enum={"lost, found, adopt, dead, transfer"}),
+     *              @OA\Property(property="status", type="string", enum={"lost", "found", "adopt", "dead", "transfer"}),
      *              @OA\Property(property="description[en]", type="string"),
      *              @OA\Property(property="description[ar]", type="string"),
      *              @OA\Property(property="_method", type="string", format="string", example="PUT"),

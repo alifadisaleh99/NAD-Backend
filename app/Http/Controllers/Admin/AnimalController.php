@@ -8,11 +8,11 @@ use App\Http\Resources\AnimalResource;
 use App\Http\Resources\OwnershipRecordResource;
 use App\Models\Animal;
 use App\Models\OwnershipRecord;
-use App\Models\User;
 use App\Services\AnimalService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Mosab\Translation\Models\Translation;
+use Illuminate\Support\Str;
 
 class AnimalController extends Controller
 {
@@ -86,6 +86,18 @@ class AnimalController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
+     *    name="uaid",
+     *    required=false,
+     *    @OA\Schema(type="string"),
+     * ),
+     * @OA\Parameter(
+     *    in="query",
+     *    name="tag_number",
+     *    required=false,
+     *    @OA\Schema(type="string"),
+     * ),
+     * @OA\Parameter(
+     *    in="query",
      *    name="q",
      *    required=false,
      *    @OA\Schema(type="string"),
@@ -107,6 +119,8 @@ class AnimalController extends Controller
             'animal_breed_id'    =>  ['integer', 'exists:animal_breeds,id'],
             'owner_id'            =>  ['integer', 'exists:users,id'],
             'branch_id'            =>  ['integer', 'exists:branches,id'],
+            'uaid'                 => ['string', 'exists:animals,uaid'],
+            'tag_number'           => ['string', 'exists:tags,number'],
             'q'                  => ['string']
         ]);
 
@@ -125,6 +139,14 @@ class AnimalController extends Controller
         if ($request->branch_id)
             $q->where('branch_id', $request->branch_id);
 
+        if ($request->uaid)
+            $q->where('uaid', $request->uaid);
+
+        if ($request->tag_number) {
+            $q->whereHas('tags', function ($query) use ($request) {
+                return $query->where('number', $request->tag_number);
+            });
+        }
 
         if ($request->q) {
             $animals_ids = Translation::where('translatable_type', Animal::class)
@@ -176,15 +198,15 @@ class AnimalController extends Controller
      *              @OA\Property(property="good_with[ar]", type="string"),
      *              @OA\Property(property="bad_with[en]", type="string"),
      *              @OA\Property(property="bad_with[ar]", type="string"),
-     *              @OA\Property(property="sensitivities", type="array", @OA\Items(type="string")),
+     *              @OA\Property(property="sensitivities[0]", type="string"),
      *              @OA\Property(property="link", type="string"),
      *              @OA\Property(property="status", type="boolean", enum={0, 1}),
-     *              @OA\Property(property="photos", type="array", @OA\Items(type="file")),
+     *              @OA\Property(property="photos[0]", type="file"),
      *              @OA\Property(property="category_id", type="integer"),
      *              @OA\Property(property="animal_type_id", type="integer"),
      *              @OA\Property(property="animal_specie_id", type="integer"),
      *              @OA\Property(property="animal_breed_id", type="integer"),
-     *              @OA\Property(property="pet_mark_ids", type="array", @OA\Items(type="integer")),
+     *              @OA\Property(property="pet_mark_ids[0]", type="integer"),
      *              @OA\Property(property="primary_color_id", type="integer"),
      *              @OA\Property(property="primary_color", type="string"),
      *              @OA\Property(property="secondary_color_id", type="integer"),
@@ -286,6 +308,7 @@ class AnimalController extends Controller
             'status' => $request->status,
             'birth_date' => $request->birth_date,
             'user_create_id' => auth()->id(),
+            'uaid' => Str::random(15),
         ]);
 
         if ($request->photos) {
@@ -372,18 +395,18 @@ class AnimalController extends Controller
      *              @OA\Property(property="good_with[ar]", type="string"),
      *              @OA\Property(property="bad_with[en]", type="string"),
      *              @OA\Property(property="bad_with[ar]", type="string"),
-     *              @OA\Property(property="deleted_sensitivity_ids", type="array", @OA\Items(type="integer")),
-     *              @OA\Property(property="sensitivities", type="array", @OA\Items(type="string")),
+     *              @OA\Property(property="deleted_sensitivity_ids[0]", type="integer"),
+     *              @OA\Property(property="sensitivities[0]", type="string"),
      *              @OA\Property(property="link", type="string"),
      *              @OA\Property(property="status", type="boolean", enum={0, 1}),
-     *              @OA\Property(property="photos", type="array", @OA\Items(type="file")),
-     *              @OA\Property(property="deleted_media_ids", type="array", @OA\Items(type="integer")),
+     *              @OA\Property(property="photos[0]", type="file"),
+     *              @OA\Property(property="deleted_media_ids[0]", type="integer"),
      *              @OA\Property(property="category_id", type="integer"),
      *              @OA\Property(property="animal_type_id", type="integer"),
      *              @OA\Property(property="animal_specie_id", type="integer"),
      *              @OA\Property(property="animal_breed_id", type="integer"),
-     *              @OA\Property(property="pet_mark_ids", type="array", @OA\Items(type="integer")),
-     *              @OA\Property(property="deleted_pet_mark_ids", type="array", @OA\Items(type="integer")),
+     *              @OA\Property(property="pet_mark_ids[0]", type="integer"),
+     *              @OA\Property(property="deleted_pet_mark_ids[0]", type="integer"),
      *              @OA\Property(property="primary_color_id", type="integer"),
      *              @OA\Property(property="primary_color", type="string"),
      *              @OA\Property(property="secondary_color_id", type="integer"),
@@ -535,7 +558,7 @@ class AnimalController extends Controller
                 $is_exists = $animal->sensitivities()->where('name', $sensitivity)->exists();
 
                 if (!$is_exists)
-                     $animal->sensitivities()->create(['name' => $sensitivity]);
+                    $animal->sensitivities()->create(['name' => $sensitivity]);
             }
         }
 
@@ -571,12 +594,15 @@ class AnimalController extends Controller
             delete_file_if_exist($photo->link);
         }
 
+        $animal->transfers()->delete();
+        $animal->animal_status()->delete();
         $animal->ownership_records()->delete();
         $animal->sensitivities()->delete();
         $animal->tags()->delete();
         $animal->animal_pet_marks()->delete();
         $animal->media()->delete();
         $animal->delete();
+
         return response()->json(null, 204);
     }
 
