@@ -28,6 +28,8 @@ class GetRequest extends FormRequest
             'animal_id'          =>  ['integer', 'exists:animals,id'],
             'owner_id'           =>  ['integer', 'exists:users,id'],
             'branch_type_id'     =>  ['integer', 'exists:branch_types,id'],
+            'uaid'                 => ['string', 'exists:animals,uaid'],
+            'tag_number'           => ['string', 'exists:tags,number'],
         ];
     }
 }

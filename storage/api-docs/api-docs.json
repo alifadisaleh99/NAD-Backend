@@ -4557,6 +4557,43 @@
                 ]
             }
         },
+        "/user/animals": {
+            "get": {
+                "tags": [
+                    "User - Animals"
+                ],
+                "description": "Get animal by uaid or tag number",
+                "operationId": "get_animal_to_user",
+                "parameters": [
+                    {
+                        "name": "uaid",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tag_number",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/user/animals/{id}/generate-token": {
             "post": {
                 "tags": [

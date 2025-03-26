@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 //animal
+Route::get('animals', [AnimalController::class, 'getAnimal']);
 Route::get('animals/{animal}/ownership-records', [AnimalController::class, 'ownershipRecords']); 
 Route::post('animals/{animal}/generate-token', [AnimalController::class, 'generateTransferToken']);
 Route::post('animals/accept-transfer', [AnimalController::class, 'acceptTransfer']);

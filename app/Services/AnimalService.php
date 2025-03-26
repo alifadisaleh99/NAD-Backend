@@ -40,7 +40,7 @@ class AnimalService
         }
 
         $current_owner = User::find(auth()->id());
-        
+
         $branch_id = null;
 
         if (is_null($current_owner->entity_id)) {
@@ -111,5 +111,23 @@ class AnimalService
             $ownership_records = $q->paginate($request->per_page ?? 10);
 
         return  $ownership_records;
+    }
+
+    public function getAnimalByUaidAndTagNumber($request)
+    {
+        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags', 'sensitivities', 'branch'])->latest();
+
+        if ($request->uaid)
+            $q->where('uaid', $request->uaid);
+
+        if ($request->tag_number) {
+            $q->whereHas('tags', function ($query) use ($request) {
+                return $query->where('number', $request->tag_number);
+            });
+        }
+
+        $animal = $q->first();
+
+     return $animal;
     }
 }
