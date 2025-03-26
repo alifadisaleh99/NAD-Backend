@@ -22,6 +22,7 @@ class Entity extends TranslatableModel
         'used_branches',
         'image',
         'branch_type_id',
+        'branch_type_name',
     ];
 
     protected $translatable = [

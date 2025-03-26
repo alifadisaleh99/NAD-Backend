@@ -107,7 +107,7 @@ class EntityController extends Controller
      *              @OA\Property(property="address", type="string"),
      *              @OA\Property(property="email", type="string"),
      *              @OA\Property(property="contact_number", type="string"),
-     *              @OA\Property(property="founding_date", type="string"),
+     *              @OA\Property(property="founding_date", type="date"),
      *              @OA\Property(property="price_per_pet", type="float"),
      *              @OA\Property(property="allowed_branches", type="integer"),
      *              @OA\Property(property="allowed_users", type="integer"),
@@ -138,7 +138,9 @@ class EntityController extends Controller
             'branch_type_id'    => ['required', 'integer', 'exists:branch_types,id'],
         ]);
 
-        $image = upload_file($request->image, 'entities', 'entity');
+       $image = null;
+       if($request->image)
+          $image = upload_file($request->image, 'entities', 'entity');
 
         $entity = Entity::create([
             'name'              => $request->name,

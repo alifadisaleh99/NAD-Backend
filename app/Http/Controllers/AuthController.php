@@ -82,14 +82,15 @@ class AuthController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"name[ar]","email","password", "address", "contact_number", "branch_type_id", "founding_date"},
+     *              required={"name[ar]","email","password", "address", "contact_number", "founding_date"},
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="email",format="email", type="string"),
      *              @OA\Property(property="address", type="string"),
      *              @OA\Property(property="contact_number", type="string"),
-     *              @OA\Property(property="founding_date", type="string"),
+     *              @OA\Property(property="founding_date", type="date"),
      *              @OA\Property(property="branch_type_id", type="integer"),
+     *              @OA\Property(property="branch_type_name", type="integer"),
      *              @OA\Property(property="password", type="string"),
      *              @OA\Property(property="password_confirmation", type="string"),
      *              @OA\Property(property="image", type="file"),
@@ -109,8 +110,11 @@ class AuthController extends Controller
             'address'           => ['required', 'string'],
             'email'             => ['required', 'string', 'unique:users,email'],
             'contact_number'    => ['required', 'string'],
+            'founding_date'     => ['required', 'date_format:Y-m-d'],
             'image'             => ['image'],
-            'branch_type_id'    => ['required', 'integer', 'exists:branch_types,id'],
+            'branch_type_id'    => ['integer', 'exists:branch_types,id'],
+            'branch_type_name'  => ['string'],
+            'password'      => ['required', 'string', 'min:6', 'confirmed'],
         ]);
 
         $image = null;
@@ -125,6 +129,7 @@ class AuthController extends Controller
             'contact_number'    => $request->contact_number,
             'image'             => $image,
             'branch_type_id'    => $request->branch_type_id,
+            'branch_type_name'  => $request->branch_type_name,
         ]);
 
         $user = User::create([

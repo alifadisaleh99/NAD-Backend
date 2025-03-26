@@ -2432,7 +2432,8 @@
                                         "type": "string"
                                     },
                                     "founding_date": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "format": "date"
                                     },
                                     "price_per_pet": {
                                         "type": "number",
@@ -4359,7 +4360,6 @@
                                     "password",
                                     "address",
                                     "contact_number",
-                                    "branch_type_id",
                                     "founding_date"
                                 ],
                                 "properties": {
@@ -4380,9 +4380,13 @@
                                         "type": "string"
                                     },
                                     "founding_date": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "format": "date"
                                     },
                                     "branch_type_id": {
+                                        "type": "integer"
+                                    },
+                                    "branch_type_name": {
                                         "type": "integer"
                                     },
                                     "password": {
