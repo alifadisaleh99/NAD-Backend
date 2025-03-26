@@ -11,6 +11,7 @@ use App\Models\VerificationCode;
 use App\Models\User;
 
 use App\Http\Resources\UserResource;
+use App\Models\Entity;
 use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
@@ -58,6 +59,81 @@ class AuthController extends Controller
             'email'            => $request->email,
             'phone'            => $request->phone,
             'password'         => Hash::make($request->password),
+        ]);
+        $user->assignRole('مستخدم');
+
+        $token = $user->createToken('Sanctum', [])->plainTextToken;
+        return response()->json([
+            'user' => new UserResource($user),
+            'token' => $token,
+        ], 200);
+
+        return response()->json(null, 200);
+    }
+
+    /**
+     * @OA\Post(
+     * path="/entity-register",
+     * tags={"User - Auth"},
+     * description="Entity registration.",
+     * operationId="Entity_Register",
+     *   @OA\RequestBody(
+     *       required=true,
+     *       @OA\MediaType(
+     *           mediaType="multipart/form-data",
+     *           @OA\Schema(
+     *              required={"name[ar]","email","password", "address", "contact_number", "branch_type_id", "founding_date"},
+     *              @OA\Property(property="name[en]", type="string"),
+     *              @OA\Property(property="name[ar]", type="string"),
+     *              @OA\Property(property="email",format="email", type="string"),
+     *              @OA\Property(property="address", type="string"),
+     *              @OA\Property(property="contact_number", type="string"),
+     *              @OA\Property(property="founding_date", type="string"),
+     *              @OA\Property(property="branch_type_id", type="integer"),
+     *              @OA\Property(property="password", type="string"),
+     *              @OA\Property(property="password_confirmation", type="string"),
+     *              @OA\Property(property="image", type="file"),
+     *           )
+     *       )
+     *   ),
+     * @OA\Response(
+     *     response=200,
+     *     description="successful operation",
+     *  ),
+     *  )
+    */
+    public function entity_register(Request $request)
+    {
+        $request->validate([
+            'name'              => ['required', 'array', translation_rule()],
+            'address'           => ['required', 'string'],
+            'email'             => ['required', 'string', 'unique:users,email'],
+            'contact_number'    => ['required', 'string'],
+            'image'             => ['image'],
+            'branch_type_id'    => ['required', 'integer', 'exists:branch_types,id'],
+        ]);
+
+        $image = null;
+        if($request->image)
+             $image = upload_file($request->image, 'entities', 'entity');
+
+        $entity = Entity::create([
+            'name'              => $request->name,
+            'address'           => $request->address,
+            'email'             => $request->email,
+            'founding_date'     => $request->founding_date,
+            'contact_number'    => $request->contact_number,
+            'image'             => $image,
+            'branch_type_id'    => $request->branch_type_id,
+        ]);
+
+        $user = User::create([
+            'entity_id'          => $entity->id,
+            'name'               => $request->name['ar'],
+            'email'              => $request->email,
+            'phone'              => $request->contact_number,
+            'password'           => Hash::make($request->password),
+            'is_owner'           => 1,
         ]);
         $user->assignRole('مستخدم');
 

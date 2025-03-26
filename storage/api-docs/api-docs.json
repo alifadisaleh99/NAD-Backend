@@ -4341,6 +4341,72 @@
                 }
             }
         },
+        "/entity-register": {
+            "post": {
+                "tags": [
+                    "User - Auth"
+                ],
+                "description": "Entity registration.",
+                "operationId": "Entity_Register",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name[ar]",
+                                    "email",
+                                    "password",
+                                    "address",
+                                    "contact_number",
+                                    "branch_type_id",
+                                    "founding_date"
+                                ],
+                                "properties": {
+                                    "name[en]": {
+                                        "type": "string"
+                                    },
+                                    "name[ar]": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "contact_number": {
+                                        "type": "string"
+                                    },
+                                    "founding_date": {
+                                        "type": "string"
+                                    },
+                                    "branch_type_id": {
+                                        "type": "integer"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string"
+                                    },
+                                    "image": {
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "tags": [
