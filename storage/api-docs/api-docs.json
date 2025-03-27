@@ -4672,6 +4672,82 @@
                 }
             }
         },
+        "/countries": {
+            "get": {
+                "tags": [
+                    "User - Countries"
+                ],
+                "description": "Get all countries",
+                "operationId": "get_all_countries_to_user",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "country_code",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/countries/{id}": {
+            "get": {
+                "tags": [
+                    "User - Countries"
+                ],
+                "description": "Get Country information.",
+                "operationId": "show_country_to_user",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
         "/user/animals/{id}/generate-token": {
             "post": {
                 "tags": [
@@ -4884,6 +4960,10 @@
         {
             "name": "User - Branch Types",
             "description": "User - Branch Types"
+        },
+        {
+            "name": "User - Countries",
+            "description": "User - Countries"
         }
     ],
     "components": {

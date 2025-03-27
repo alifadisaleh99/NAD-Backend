@@ -4,6 +4,7 @@ use App\Http\Controllers\AnimalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BranchTypeController;
+use App\Http\Controllers\CountryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,3 +35,6 @@ Route::get('branch-types/{branch_type}'  , [BranchTypeController::class, 'show']
 //animals
 Route::get('animals', [AnimalController::class, 'getAnimal']);
 
+//countries
+Route::get('countries'  , [CountryController::class, 'index']);
+Route::get('countries/{country}'  , [CountryController::class, 'show']);
