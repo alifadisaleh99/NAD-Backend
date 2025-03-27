@@ -129,7 +129,7 @@ class BranchController extends Controller
         $entity = Entity::find($request->entity_id);
 
         if($entity->used_branches == $entity->allowed_branches)
-            throw new BadRequestHttpException(__('error_messages.Sorry'));
+            throw new BadRequestHttpException(__('error_messages.branches_limit_reached'));
      
         $branch = Branch::create([
             'entity_id'         => $request->entity_id,

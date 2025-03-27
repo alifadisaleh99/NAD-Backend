@@ -24,42 +24,6 @@ class AnimalController extends Controller
 
         $this->animalService = $animalService;
     }
-
-    /**
-     * @OA\Get(
-     * path="/user/animals",
-     * description="Get animal by uaid or tag number",
-     * operationId="get_animal_to_user",
-     * tags={"User - Animals"},
-     *   security={{"bearer_token": {} }},
-     * @OA\Parameter(
-     *    in="query",
-     *    name="uaid",
-     *    required=false,
-     *    @OA\Schema(type="string"),
-     * ),
-     * @OA\Parameter(
-     *    in="query",
-     *    name="tag_number",
-     *    required=false,
-     *    @OA\Schema(type="string"),
-     * ),
-     *   @OA\Response(
-     *     response=200,
-     *     description="Success",
-     *  )
-     *  )
-     */
-    public function getAnimal(GetRequest $request)
-    { 
-        $animal = $this->animalService->getAnimalByUaidAndTagNumber($request);
-
-        if(!$animal)
-           return response()->json(['message' => __('error_messages.animal_not_found')], 404); 
-
-        return response()->json(new AnimalResource($animal), 200);   
-    }
-          
     /**
      * @OA\Post(
      * path="/user/animals/{id}/generate-token",

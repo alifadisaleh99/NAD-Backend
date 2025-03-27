@@ -4298,6 +4298,38 @@
                 ]
             }
         },
+        "/animals": {
+            "get": {
+                "tags": [
+                    "User - Animals"
+                ],
+                "description": "Get animal by uaid or tag number",
+                "operationId": "get_animal_to_user",
+                "parameters": [
+                    {
+                        "name": "uaid",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tag_number",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "tags": [
@@ -4598,12 +4630,7 @@
                     "200": {
                         "description": "Success"
                     }
-                },
-                "security": [
-                    {
-                        "bearer_token": []
-                    }
-                ]
+                }
             }
         },
         "/branch-types/{id}": {
@@ -4627,49 +4654,7 @@
                     "200": {
                         "description": "successful operation"
                     }
-                },
-                "security": [
-                    {
-                        "bearer_token": []
-                    }
-                ]
-            }
-        },
-        "/user/animals": {
-            "get": {
-                "tags": [
-                    "User - Animals"
-                ],
-                "description": "Get animal by uaid or tag number",
-                "operationId": "get_animal_to_user",
-                "parameters": [
-                    {
-                        "name": "uaid",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "tag_number",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer_token": []
-                    }
-                ]
+                }
             }
         },
         "/user/animals/{id}/generate-token": {
@@ -4874,16 +4859,16 @@
             "description": "Admin - Users"
         },
         {
+            "name": "User - Animals",
+            "description": "User - Animals"
+        },
+        {
             "name": "User - Auth",
             "description": "User - Auth"
         },
         {
             "name": "User - Branch Types",
             "description": "User - Branch Types"
-        },
-        {
-            "name": "User - Animals",
-            "description": "User - Animals"
         }
     ],
     "components": {

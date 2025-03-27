@@ -16,7 +16,6 @@ class BranchTypeController extends Controller
      * description="Get all branch types",
      * operationId="get_all_branch_types_to_user",
      * tags={"User - Branch Types"},
-     *   security={{"bearer_token": {} }},
      * @OA\Parameter(
      *     in="query",
      *     name="with_paginate",
@@ -79,7 +78,6 @@ class BranchTypeController extends Controller
      *      ),
      * operationId="show_branch_type_to_user",
      * tags={"User - Branch Types"},
-     * security={{"bearer_token": {} }},
      * @OA\Response(
      *    response=200,
      *    description="successful operation"
