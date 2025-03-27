@@ -299,6 +299,7 @@ class EntityController extends Controller
      */
     public function destroy(Entity $entity)
     {
+        $entity->users()->delete();
         delete_file_if_exist($entity->image);
         $entity->delete();
         return response()->json(null, 204);

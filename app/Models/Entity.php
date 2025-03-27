@@ -38,4 +38,9 @@ class Entity extends TranslatableModel
     {
         return $this->belongsTo(BranchType::class);
     }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }

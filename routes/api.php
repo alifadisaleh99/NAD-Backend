@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BranchTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,8 @@ Route::post('logout', [AuthController::class, 'logout']);
 Route::put('user', [AuthController::class, 'edit_profile']);
 Route::get('user', [AuthController::class, 'get_profile']);
 Route::delete('user/delete_account', [AuthController::class, 'delete_user']);
+
+//branch_types
+Route::get('branch-types'  , [BranchTypeController::class, 'index']);
+Route::get('branch-types/{branch_type}'  , [BranchTypeController::class, 'show']);
+
