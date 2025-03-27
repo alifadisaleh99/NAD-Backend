@@ -32,6 +32,7 @@ class User extends Authenticatable
         'password',
         'status',
         'is_owner',
+        'national_id',
     ];
 
     /**

@@ -108,6 +108,7 @@ class EntityController extends Controller
      *              @OA\Property(property="email", type="string"),
      *              @OA\Property(property="contact_number", type="string"),
      *              @OA\Property(property="founding_date", type="date"),
+     *              @OA\Property(property="national_id", type="string"),
      *              @OA\Property(property="price_per_pet", type="float"),
      *              @OA\Property(property="allowed_branches", type="integer"),
      *              @OA\Property(property="allowed_users", type="integer"),
@@ -136,6 +137,7 @@ class EntityController extends Controller
             'allowed_users'     => ['required', 'integer'],
             'image'             => ['image'],
             'branch_type_id'    => ['required', 'integer', 'exists:branch_types,id'],
+            'national_id'       => ['string', 'min:3', 'unique:users'],
         ]);
 
        $image = null;
@@ -162,6 +164,7 @@ class EntityController extends Controller
             'phone'              => $request->contact_number,
             'password'           => Hash::make('admin@123'),
             'is_owner'           => 1,
+            'national_id'       => $request->national_id,
         ]);
         $user->assignRole('مستخدم');
 

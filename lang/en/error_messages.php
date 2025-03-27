@@ -11,4 +11,5 @@ return [
     'user_must_have_branch'   => 'You must have a branch to complete this process',
     'animal_not_found' => 'Animal not found',
     'branches_limit_reached' => 'Sorry, you have reached the maximum allowed branches.',
+    'entity_no_branches' => 'Sorry, you cannot complete this operation because the entity has not used any branches yet. Please add a branch before proceeding',
 ];

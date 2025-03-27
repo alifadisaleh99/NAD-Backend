@@ -215,6 +215,7 @@ class UserController extends Controller
      *              @OA\Property(property="password_confirmation", type="string"),
      *              @OA\Property(property="phone_country_id", type="integer"),
      *              @OA\Property(property="phone", type="string"),
+     *              @OA\Property(property="national_id", type="string"),
      *              @OA\Property(property="country_id", type="integer"),
      *              @OA\Property(property="summary", type="string"),
      *              @OA\Property(property="image", type="file"),
@@ -246,12 +247,13 @@ class UserController extends Controller
             'entity_id'         => ['integer', 'exists:entities,id'],
             'branch_id'         => ['integer', 'exists:branches,id'],
             'plan_id'           => ['integer', 'exists:plans,id'],
+            'national_id'       => ['string', 'min:3', 'unique:users'],
         ]);
 
         $entity = Entity::find($request->entity_id);
         if ($entity) {
             if ($entity->used_branches == 0)
-                throw new BadRequestHttpException(__('error_messages.Sorry'));
+                throw new BadRequestHttpException(__('error_messages.entity_no_branches'));
 
             $entity->used_users = $entity->used_users - 1;
             $entity->save();
@@ -277,6 +279,7 @@ class UserController extends Controller
             'password'           => Hash::make($request->password),
             'email_verified_at'  => $verified,
             'image'              => $image,
+            'national_id'       => $request->national_id,
         ]);
 
         if ($request->plan_id) {
@@ -352,6 +355,7 @@ class UserController extends Controller
      *              @OA\Property(property="image", type="file"),
      *              @OA\Property(property="role_id", type="integer"),
      *              @OA\Property(property="plan_id", type="integer"),
+     *              @OA\Property(property="national_id", type="string"),
      *              @OA\Property(property="_method", type="string", format="string", example="PUT"),
      *       )
      *     )
@@ -374,6 +378,7 @@ class UserController extends Controller
             'image'                 => [''],
             'role_id'               => ['exists:roles,id'],
             'plan_id'               => ['integer', 'exists:plans,id'],
+            'national_id'           => ['string', 'min:3', 'unique:users'],
         ]);
 
         $role_name = $request->role_id ? Role::find($request->role_id)->name : $user->roles();
@@ -414,6 +419,7 @@ class UserController extends Controller
             $user->country_id = $request->country_id;
             $user->summary = $request->summary;
             $user->image = $image;
+            $user->national_id = $request->national_id;
             if ($request->password) {
                 $user->password = Hash::make($request->password);
             }

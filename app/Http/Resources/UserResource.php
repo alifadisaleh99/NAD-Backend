@@ -31,6 +31,7 @@ class UserResource extends JsonResource
             'status'            => $this->status,
             'role'              => $this->roleModel(),
             'plan'              =>  new PlanResource($subscription->plan??null),
+            'national_id'        => $this->national_id,
         ];
     }
 }

@@ -25,8 +25,8 @@ class AuthController extends Controller
      * @OA\Post(
      * path="/register",
      * tags={"User - Auth"},
-     * description="Register by enter name,email,phone.",
-     * operationId="Register",
+     * description="User registration.",
+     * operationId="User_Register",
      *   @OA\RequestBody(
      *       required=true,
      *       @OA\MediaType(
@@ -37,7 +37,13 @@ class AuthController extends Controller
      *              @OA\Property(property="email",format="email", type="string"),
      *              @OA\Property(property="password", type="string"),
      *              @OA\Property(property="password_confirmation", type="string"),
-     *           )
+     *              @OA\Property(property="phone_country_id", type="integer"),
+     *              @OA\Property(property="phone", type="string"),
+     *              @OA\Property(property="national_id", type="string"),
+     *              @OA\Property(property="country_id", type="integer"),
+     *              @OA\Property(property="summary", type="string"),
+     *              @OA\Property(property="image", type="file"),
+     *                )
      *       )
      *   ),
      * @OA\Response(
@@ -49,16 +55,31 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name'          => ['required', 'string'],
-            'email'         => ['required', 'string', 'email', 'unique:users'],
-            'password'      => ['required', 'string', 'min:6', 'confirmed'],
+            'name'              => ['required', 'string'],
+            'email'             => ['required', 'string', 'email', 'unique:users'],
+            'phone_country_id'  => ['integer', 'exists:countries,id'],
+            'phone'             => ['string', 'size:8', 'unique:users'],
+            'password'          => ['required', 'string', 'min:6', 'confirmed'],
+            'country_id'        => ['integer', 'exists:countries,id'],
+            'summary'           => ['string'],
+            'image'             => ['image'],
+            'national_id'       => ['string', 'min:3', 'unique:users'],
         ]);
 
+        $image = null;
+        if ($request->image)
+            $image = upload_file($request->image, 'users', 'user');
+
         $user = User::create([
-            'name'        => $request->name,
-            'email'            => $request->email,
-            'phone'            => $request->phone,
-            'password'         => Hash::make($request->password),
+            'name'               => $request->name,
+            'email'              => $request->email,
+            'phone_country_id'   => $request->phone_country_id,
+            'phone'              => $request->phone,
+            'country_id'         => $request->country_id,
+            'summary'            => $request->summary,
+            'password'           => Hash::make($request->password),
+            'image'              => $image,
+            'national_id'       => $request->national_id,
         ]);
         $user->assignRole('مستخدم');
 
@@ -93,6 +114,7 @@ class AuthController extends Controller
      *              @OA\Property(property="branch_type_name", type="integer"),
      *              @OA\Property(property="password", type="string"),
      *              @OA\Property(property="password_confirmation", type="string"),
+     *              @OA\Property(property="national_id", type="string"),
      *              @OA\Property(property="image", type="file"),
      *           )
      *       )
@@ -114,6 +136,7 @@ class AuthController extends Controller
             'image'             => ['image'],
             'branch_type_id'    => ['integer', 'exists:branch_types,id'],
             'branch_type_name'  => ['string'],
+            'national_id'   => ['string', 'min:3', 'unique:users'],
             'password'      => ['required', 'string', 'min:6', 'confirmed'],
         ]);
 
@@ -139,6 +162,7 @@ class AuthController extends Controller
             'phone'              => $request->contact_number,
             'password'           => Hash::make($request->password),
             'is_owner'           => 1,
+            'national_id'       => $request->national_id,
         ]);
         $user->assignRole('مستخدم');
 
@@ -241,6 +265,7 @@ class AuthController extends Controller
      *              @OA\Property(property="country_id", type="integer"),
      *              @OA\Property(property="summary", type="string"),
      *              @OA\Property(property="image", type="file"),
+     *              @OA\Property(property="national_id", type="string"),
      *              @OA\Property(property="_method", type="string", format="string", example="PUT"),
      *           )
      *       )
@@ -263,6 +288,7 @@ class AuthController extends Controller
             'country_id'            => ['integer', 'exists:countries,id'],
             'summary'               => ['string'],
             'image'                 => ['image'],
+            'national_id'   => ['string', 'min:3', 'unique:users'],
             // 'email'               => ['required', 'string', 'email', Rule::unique('users', 'email')->ignore($user->id)],
         ]);
         
@@ -276,6 +302,7 @@ class AuthController extends Controller
         $user->country_id = $request->country_id;
         $user->summary = $request->summary;
         $user->image = $image;
+        $user->national_id = $request->national_id;
 
         $user->save();
 

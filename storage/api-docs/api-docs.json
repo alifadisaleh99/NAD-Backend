@@ -2417,6 +2417,9 @@
                                         "type": "string",
                                         "format": "date"
                                     },
+                                    "national_id": {
+                                        "type": "string"
+                                    },
                                     "price_per_pet": {
                                         "type": "number",
                                         "format": "float"
@@ -4027,6 +4030,9 @@
                                     "phone": {
                                         "type": "string"
                                     },
+                                    "national_id": {
+                                        "type": "string"
+                                    },
                                     "country_id": {
                                         "type": "integer"
                                     },
@@ -4149,6 +4155,9 @@
                                     },
                                     "plan_id": {
                                         "type": "integer"
+                                    },
+                                    "national_id": {
+                                        "type": "string"
                                     },
                                     "_method": {
                                         "type": "string",
@@ -4317,8 +4326,8 @@
                 "tags": [
                     "User - Auth"
                 ],
-                "description": "Register by enter name,email,phone.",
-                "operationId": "Register",
+                "description": "User registration.",
+                "operationId": "User_Register",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -4342,6 +4351,24 @@
                                     },
                                     "password_confirmation": {
                                         "type": "string"
+                                    },
+                                    "phone_country_id": {
+                                        "type": "integer"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "national_id": {
+                                        "type": "string"
+                                    },
+                                    "country_id": {
+                                        "type": "integer"
+                                    },
+                                    "summary": {
+                                        "type": "string"
+                                    },
+                                    "image": {
+                                        "type": "file"
                                     }
                                 },
                                 "type": "object"
@@ -4407,6 +4434,9 @@
                                         "type": "string"
                                     },
                                     "password_confirmation": {
+                                        "type": "string"
+                                    },
+                                    "national_id": {
                                         "type": "string"
                                     },
                                     "image": {
@@ -4509,6 +4539,9 @@
                                     },
                                     "image": {
                                         "type": "file"
+                                    },
+                                    "national_id": {
+                                        "type": "string"
                                     },
                                     "_method": {
                                         "type": "string",
