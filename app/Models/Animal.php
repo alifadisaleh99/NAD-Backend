@@ -21,11 +21,8 @@ class Animal extends TranslatableModel
         'animal_specie_id',
         'animal_breed_id',
         'primary_color_id',
-        'primary_color',
         'secondary_color_id',
-        'secondary_color',
         'tertiary_color_id',
-        'tertiary_color',
         'age',
         'gender',
         'size',
@@ -74,17 +71,17 @@ class Animal extends TranslatableModel
         return $this->belongsTo(User::class);
     }
 
-    public function primaryColor()
+    public function primary_color()
     {
         return $this->hasOne(Color::class, 'id', 'primary_color_id');
     }
 
-    public function secondaryColor()
+    public function secondary_color()
     {
         return $this->hasOne(Color::class, 'id', 'secondary_color_id');
     }
 
-    public function tertiaryColor()
+    public function tertiary_color()
     {
         return $this->hasOne(Color::class, 'id', 'tertiary_color_id');
     }

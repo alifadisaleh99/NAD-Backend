@@ -125,7 +125,7 @@ class AnimalController extends Controller
             'q'                  => ['string']
         ]);
 
-        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags', 'sensitivities', 'branch'])->latest();
+        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch'])->latest();
 
         if ($request->category_id)
             $q->where('category_id', $request->category_id);
@@ -209,11 +209,8 @@ class AnimalController extends Controller
      *              @OA\Property(property="animal_breed_id", type="integer"),
      *              @OA\Property(property="pet_mark_ids[0]", type="integer"),
      *              @OA\Property(property="primary_color_id", type="integer"),
-     *              @OA\Property(property="primary_color", type="string"),
      *              @OA\Property(property="secondary_color_id", type="integer"),
-     *              @OA\Property(property="secondary_color", type="string"),
      *              @OA\Property(property="tertiary_color_id", type="integer"),
-     *              @OA\Property(property="tertiary_color", type="string"),
      *              @OA\Property(property="age", type="string", enum={"young", "adult", "senior"}),
      *              @OA\Property(property="birth_date", type="date"),
      *              @OA\Property(property="gender", type="string", enum={"male", "female"}),
@@ -252,9 +249,6 @@ class AnimalController extends Controller
             'primary_color_id'    => ['required', 'integer', 'exists:colors,id'],
             'secondary_color_id'  => ['required', 'integer', 'exists:colors,id'],
             'tertiary_color_id'   => ['required', 'integer', 'exists:colors,id'],
-            'primary_color'    => ['required', 'string'],
-            'secondary_color'  => ['required', 'string'],
-            'tertiary_color'   => ['required', 'string'],
             'age' => ['in:young,adult,senior'],
             'gender' => ['required', 'in:male,female'],
             'size' => ['required', 'in:small,medium,large'],
@@ -299,9 +293,6 @@ class AnimalController extends Controller
             'primary_color_id'    => $request->primary_color_id,
             'secondary_color_id'  => $request->secondary_color_id,
             'tertiary_color_id'   => $request->tertiary_color_id,
-            'primary_color'    => $request->primary_color,
-            'secondary_color'  => $request->secondary_color,
-            'tertiary_color'   => $request->tertiary_color,
             'age' => $request->age ?? null,
             'gender' => $request->gender,
             'size' => $request->size,
@@ -360,7 +351,8 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags', 'sensitivities', 'branch']);
+        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch']);
+
         return response()->json(new AnimalResource($animal), 200);
     }
 
@@ -409,11 +401,8 @@ class AnimalController extends Controller
      *              @OA\Property(property="pet_mark_ids[0]", type="integer"),
      *              @OA\Property(property="deleted_pet_mark_ids[0]", type="integer"),
      *              @OA\Property(property="primary_color_id", type="integer"),
-     *              @OA\Property(property="primary_color", type="string"),
      *              @OA\Property(property="secondary_color_id", type="integer"),
-     *              @OA\Property(property="secondary_color", type="string"),
      *              @OA\Property(property="tertiary_color_id", type="integer"),
-     *              @OA\Property(property="tertiary_color", type="string"),
      *              @OA\Property(property="age", type="string", enum={"young", "adult", "senior"}),
      *              @OA\Property(property="birth_date", type="date"),
      *              @OA\Property(property="gender", type="string", enum={"male", "female"}),
@@ -441,8 +430,8 @@ class AnimalController extends Controller
             'sensitivities.*' => ['string'],
             'deleted_sensitivity_ids' => ['array'],
             'deleted_sensitivity_ids.*' => ['integer', 'exists:animal_sensitivities,id'],
-            'owner_type'     => ['required', 'in:user,entity'],
-            'owner_id'         => ['required', 'integer', 'exists:users,id'],
+            'owner_type'     => ['in:user,entity'],
+            'owner_id'         => ['integer', 'exists:users,id'],
             'branch_id'         => ['required_if:owner_type,entity', 'integer', 'exists:branches,id'],
             'category_id'         => ['required', 'integer', 'exists:categories,id'],
             'animal_type_id'      => ['required', 'integer', 'exists:animal_types,id'],
@@ -455,9 +444,6 @@ class AnimalController extends Controller
             'primary_color_id'    => ['required', 'integer', 'exists:colors,id'],
             'secondary_color_id'  => ['required', 'integer', 'exists:colors,id'],
             'tertiary_color_id'   => ['required', 'integer', 'exists:colors,id'],
-            'primary_color'    => ['required', 'string'],
-            'secondary_color'  => ['required', 'string'],
-            'tertiary_color'   => ['required', 'string'],
             'age' => ['in:young,adult,senior'],
             'birth_date' => ['required', 'date'],
             'gender' => ['required', 'in:male,female'],
@@ -466,7 +452,7 @@ class AnimalController extends Controller
             'status' => ['required', 'in:1,0'],
             'deleted_media_ids' => ['array'],
             'deleted_media_ids.*' => ['integer', 'exists:media,id'],
-            'photos' => ['array'],
+            'photos' => ['required','array'],
             'photos.*' => ['required'],
         ]);
 
@@ -507,9 +493,9 @@ class AnimalController extends Controller
             'deslike' => $request->deslike,
             'good_with' => $request->good_with,
             'bad_with' => $request->bad_with,
-            'owner_type'     => $request->owner_type,
-            'user_id'         => $request->owner_id,
-            'branch_id'       => $request->branch_id,
+            'owner_type'     => $request->owner_type ?? $animal->owner_type,
+            'user_id'         => $request->owner_id ?? $animal->user_id,
+            'branch_id'       => $request->branch_id ?? $animal->branch_id,
             'category_id'         => $request->category_id,
             'animal_type_id'      => $request->animal_type_id,
             'animal_specie_id'    => $request->animal_specie_id,
@@ -517,9 +503,6 @@ class AnimalController extends Controller
             'primary_color_id'    => $request->primary_color_id,
             'secondary_color_id'  => $request->secondary_color_id,
             'tertiary_color_id'   => $request->tertiary_color_id,
-            'primary_color'    => $request->primary_color,
-            'secondary_color'  => $request->secondary_color,
-            'tertiary_color'   => $request->tertiary_color,
             'age' => $request->age ?? null,
             'gender' => $request->gender,
             'size' => $request->size,

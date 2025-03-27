@@ -467,20 +467,11 @@
                                     "primary_color_id": {
                                         "type": "integer"
                                     },
-                                    "primary_color": {
-                                        "type": "string"
-                                    },
                                     "secondary_color_id": {
                                         "type": "integer"
                                     },
-                                    "secondary_color": {
-                                        "type": "string"
-                                    },
                                     "tertiary_color_id": {
                                         "type": "integer"
-                                    },
-                                    "tertiary_color": {
-                                        "type": "string"
                                     },
                                     "age": {
                                         "type": "string",
@@ -669,20 +660,11 @@
                                     "primary_color_id": {
                                         "type": "integer"
                                     },
-                                    "primary_color": {
-                                        "type": "string"
-                                    },
                                     "secondary_color_id": {
                                         "type": "integer"
                                     },
-                                    "secondary_color": {
-                                        "type": "string"
-                                    },
                                     "tertiary_color_id": {
                                         "type": "integer"
-                                    },
-                                    "tertiary_color": {
-                                        "type": "string"
                                     },
                                     "age": {
                                         "type": "string",

@@ -115,7 +115,7 @@ class AnimalService
 
     public function getAnimalByUaidAndTagNumber($request)
     {
-        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primaryColor', 'secondaryColor', 'tertiaryColor', 'user_create', 'tags', 'sensitivities', 'branch'])->latest();
+        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch'])->latest();
 
         if ($request->uaid)
             $q->where('uaid', $request->uaid);
