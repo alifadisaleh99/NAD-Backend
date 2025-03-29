@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GetRequest;
 use App\Http\Resources\BranchResource;
 use App\Models\Branch;
 use App\Models\Entity;
@@ -57,15 +58,8 @@ class BranchController extends Controller
      *  )
      *  )
     */
-    public function index(Request $request)
+    public function index(GetRequest $request)
     {
-        $request->validate([
-            'with_paginate'      => ['integer', 'in:0,1'],
-            'per_page'           => ['integer', 'min:1'],
-            'entity_id'          => ['integer', 'exists:entities,id'],
-            'q'                  => ['string']
-        ]);
-
         $q = Branch::with('entity')->latest();
 
         if ($request->entity_id)

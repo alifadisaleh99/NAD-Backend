@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exports\UserExport;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GetRequest;
 use App\Http\Resources\AddressResource;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Auth;
@@ -116,22 +117,8 @@ class UserController extends Controller
      *   ),
      * )
      */
-    public function index(Request $request)
+    public function index(GetRequest $request)
     {
-        $request->validate([
-            'q'                   => ['string'],
-            'role_id'             => ['exists:roles,id'],
-            'status'              => ['integer', 'in:1,0'],
-            'start_date'          => ['date_format:Y-m-d'],
-            'end_date'            => ['date_format:Y-m-d'],
-            'type'                => ['in:employee'],
-            'user_is'             => ['in:single_user,entity_user'],
-            'with_paginate'       => ['integer', 'in:0,1'],
-            'per_page'            => ['integer', 'min:1'],
-            'entity_id'           => ['integer', 'exists:entities,id'],
-            'is_owner'            => ['integer', 'in:0,1'],
-        ]);
-
         $q = User::with(['entity', 'branch']);
 
         if ($request->status === '0') {

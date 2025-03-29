@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GetRequest;
 use App\Http\Resources\PlanResource;
 use App\Models\plan;
 use Illuminate\Http\Request;
@@ -50,14 +51,8 @@ class PlanController extends Controller
      *  )
      *  )
      */
-    public function index(Request $request)
+    public function index(GetRequest $request)
     {
-        $request->validate([
-            'with_paginate'      => ['integer', 'in:0,1'],
-            'per_page'           => ['integer', 'min:1'],
-            'q'                   => ['string'],
-        ]);
-
         $q = plan::query()->latest();
 
         if($request->q)

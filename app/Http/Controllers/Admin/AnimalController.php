@@ -109,22 +109,8 @@ class AnimalController extends Controller
      *  )
      *  )
      */
-    public function index(Request $request)
+    public function index(GetRequest $request)
     {
-        $request->validate([
-            'with_paginate'      => ['integer', 'in:0,1'],
-            'per_page'           => ['integer', 'min:1'],
-            'category_id'        => ['integer', 'exists:categories,id'],
-            'animal_type_id'     => ['integer', 'exists:animal_types,id'],
-            'animal_specie_id'   => ['integer', 'exists:animal_species,id'],
-            'animal_breed_id'    =>  ['integer', 'exists:animal_breeds,id'],
-            'owner_id'            =>  ['integer', 'exists:users,id'],
-            'branch_id'            =>  ['integer', 'exists:branches,id'],
-            'uaid'                 => ['string', 'exists:animals,uaid'],
-            'tag_number'           => ['string', 'exists:tags,number'],
-            'q'                  => ['string']
-        ]);
-
         $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch'])->latest();
 
         if ($request->category_id)

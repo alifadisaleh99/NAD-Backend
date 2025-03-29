@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GetRequest;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -62,14 +63,8 @@ class RoleController extends Controller
      * )
      */
 
-    public function index(Request $request)
+    public function index(GetRequest $request)
     {
-        $request->validate([
-            'with_paginate' => ['integer', 'in:0,1'],
-            'per_page'      => ['integer', 'min:1'],
-            'search'        => ['string'],
-        ]);
-
         $searchTerm = $request->query('search');
         $query = Role::query();
 

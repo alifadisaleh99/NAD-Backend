@@ -58,7 +58,6 @@ class TagTypeController extends Controller
 
     public function index(GetRequest $request)
     {
-
         $tag_types = $this->tagTypeService->getAllTagTypes($request);
 
         return TagTypeResource::collection($tag_types);

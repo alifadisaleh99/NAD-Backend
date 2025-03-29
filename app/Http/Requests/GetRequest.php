@@ -30,6 +30,20 @@ class GetRequest extends FormRequest
             'branch_type_id'     =>  ['integer', 'exists:branch_types,id'],
             'uaid'                 => ['string', 'exists:animals,uaid'],
             'tag_number'           => ['string', 'exists:tags,number'],
+            'category_id'        => ['integer', 'exists:categories,id'],
+            'animal_type_id'     => ['integer', 'exists:animal_types,id'],
+            'animal_specie_id'   => ['integer', 'exists:animal_species,id'],
+            'animal_breed_id'    =>  ['integer', 'exists:animal_breeds,id'],
+            'branch_id'            =>  ['integer', 'exists:branches,id'],
+            'entity_id'          => ['integer', 'exists:entities,id'],
+            'search'        => ['string'],
+            'role_id'        => ['exists:roles,id'],
+            'status'              => ['integer', 'in:1,0'],
+            'start_date'          => ['date_format:Y-m-d'],
+            'end_date'            => ['date_format:Y-m-d'],
+            'type'                => ['in:employee'],
+            'user_is'             => ['in:single_user,entity_user'],
+            'is_owner'              => ['integer', 'in:1,0'],
         ];
     }
 }

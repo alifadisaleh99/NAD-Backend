@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GetRequest;
 use App\Http\Resources\AnimalTypeResource;
 use App\Models\AnimalType;
 use Illuminate\Http\Request;
@@ -55,15 +56,8 @@ class AnimalTypeController extends Controller
      *  )
      *  )
     */
-    public function index(Request $request)
+    public function index(GetRequest $request)
     {
-        $request->validate([
-            'with_paginate'      => ['integer', 'in:0,1'],
-            'per_page'           => ['integer', 'min:1'],
-            'category_id'        => ['integer', 'exists:categories,id'],
-            'q'                  => ['string']
-        ]);
-
         $q = AnimalType::query()->with('category')->latest();
 
         if($request->category_id)
