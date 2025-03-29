@@ -16,8 +16,8 @@ class OwnershipRecordResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'animal' => $this->animal,
-            'owner'  => $this->user,
+            'animal_id' => $this->animal_id,
+            'owner'  => new UserResource($this->user),
             'start_date' => $this->start_date,
             'end_date'  => $this->end_date,
             'duration' => $this->duration,

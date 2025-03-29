@@ -4428,7 +4428,7 @@
                                         "type": "integer"
                                     },
                                     "branch_type_name": {
-                                        "type": "integer"
+                                        "type": "string"
                                     },
                                     "password": {
                                         "type": "string"

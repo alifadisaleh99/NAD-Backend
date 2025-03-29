@@ -38,26 +38,26 @@ class AnimalService
                 'token' => __('error_messages.transfer_tokin_expired')
             ]);
         }
+        
+        if(auth()->id() == $transfer->animal->user_id)
+        {
+            throw new BadRequestHttpException(__('error_messages.owner_of_animal'));
+        }
 
         $current_owner = User::find(auth()->id());
+        $previous_owner = $transfer->animal->user;
 
         $branch_id = null;
 
         if (is_null($current_owner->entity_id)) {
             $owner_type = 'user';
         } else {
-            if (is_null($current_owner->branch_id)) {
-                throw new BadRequestHttpException(__('error_messages.user_must_have_branch'));
-            } else {
                 $owner_type = 'entity';
                 $branch_id = $current_owner->branch_id;
             }
-        }
-
-        $previous_owner = $transfer->animal->user;
 
         $ownership_record = OwnershipRecord::where('animal_id', $transfer->animal->id)
-            ->where('user_id', $transfer->animal->user_id)->first();
+            ->where('user_id', $transfer->animal->user_id)->where('end_date', null)->first();
 
         $this->updateOwnershipRecord($ownership_record);
 
@@ -82,7 +82,6 @@ class AnimalService
 
     public function createOwnershipRecord(Animal $animal)
     {
-
         OwnershipRecord::create([
             'animal_id' => $animal->id,
             'user_id' => $animal->user_id,
@@ -100,7 +99,7 @@ class AnimalService
 
     public function getOwnershipRecords($request, Animal $animal)
     {
-        $q = $animal->ownership_records();
+        $q = $animal->ownership_records()->latest();
 
         if ($request->owner_id)
             $q->where('user_id', $request->owner_id);

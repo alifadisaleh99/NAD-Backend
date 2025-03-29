@@ -111,7 +111,7 @@ class AuthController extends Controller
      *              @OA\Property(property="contact_number", type="string"),
      *              @OA\Property(property="founding_date", type="date"),
      *              @OA\Property(property="branch_type_id", type="integer"),
-     *              @OA\Property(property="branch_type_name", type="integer"),
+     *              @OA\Property(property="branch_type_name", type="string"),
      *              @OA\Property(property="password", type="string"),
      *              @OA\Property(property="password_confirmation", type="string"),
      *              @OA\Property(property="national_id", type="string"),

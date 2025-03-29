@@ -12,4 +12,5 @@ return [
     'animal_not_found' => 'Animal not found',
     'branches_limit_reached' => 'Sorry, you have reached the maximum allowed branches.',
     'entity_no_branches' => 'Sorry, you cannot complete this operation because the entity has not used any branches yet. Please add a branch before proceeding',
+    'owner_of_animal' => 'You are the current owner of this animal',
 ];
