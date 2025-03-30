@@ -129,4 +129,16 @@ class AnimalService
 
      return $animal;
     }
+    public function reportLost($request, Animal $animal)
+    {
+        $animal->lost_reports()->create([
+            'seen_at' => $request->seen_at,
+            'address' => $request->address,
+            'mark_as_public' => $request->mark_as_public,
+        ]);
+
+        $animal->update([
+         'pet_status' => 'lost',
+        ]);
+    }
 }

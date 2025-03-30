@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LostReportRequest;
 use App\Http\Requests\GetRequest;
 use App\Http\Requests\TransferRequest;
 use App\Http\Resources\AnimalResource;
@@ -122,5 +123,42 @@ class AnimalController extends Controller
         $ownership_records = $this->animalService->getOwnershipRecords($request, $animal);
 
         return OwnershipRecordResource::collection($ownership_records);
+    }
+
+    /**
+     * @OA\Post(
+     * path="/user/animals/{id}/report-lost",
+     * description="Report a lost animal.",
+     * tags={"User - Animals"},
+     * security={{"bearer_token": {}}},
+     * @OA\Parameter(
+     *     in="path",
+     *     name="id",
+     *     required=true,
+     *     @OA\Schema(type="string"),
+     * ),
+     *   @OA\RequestBody(
+     *       required=true,
+     *       @OA\MediaType(
+     *           mediaType="multipart/form-data",
+     *           @OA\Schema(
+     *              required={"seen_at", "address", "mark_as_public"},
+     *              @OA\Property(property="seen_at", type="date"),
+     *              @OA\Property(property="address", type="string"),
+     *              @OA\Property(property="mark_as_public", type="integer", enum={"0", "1"}),
+     *           )
+     *       )
+     *   ),
+     * @OA\Response(
+     *         response="200",
+     *         description="successful operation",
+     *     ),
+     * )
+     */
+    public function reportLost(LostReportRequest $request, Animal $animal)
+    {
+          $this->animalService->reportLost($request, $animal);
+
+        return response()->json(new AnimalResource($animal), 200);    
     }
 }

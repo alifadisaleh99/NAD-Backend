@@ -347,6 +347,19 @@
                         }
                     },
                     {
+                        "name": "pet_status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "lost",
+                                "found",
+                                "dead"
+                            ]
+                        }
+                    },
+                    {
                         "name": "q",
                         "in": "query",
                         "required": false,
@@ -4862,6 +4875,66 @@
                 "responses": {
                     "200": {
                         "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/user/animals/{id}/report-lost": {
+            "post": {
+                "tags": [
+                    "User - Animals"
+                ],
+                "description": "Report a lost animal.",
+                "operationId": "77e4b55b652c06f49e5104deacd11900",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "seen_at",
+                                    "address",
+                                    "mark_as_public"
+                                ],
+                                "properties": {
+                                    "seen_at": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "mark_as_public": {
+                                        "type": "integer",
+                                        "enum": [
+                                            "0",
+                                            "1"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
                     }
                 },
                 "security": [

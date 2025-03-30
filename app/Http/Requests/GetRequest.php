@@ -44,6 +44,7 @@ class GetRequest extends FormRequest
             'type'                => ['in:employee'],
             'user_is'             => ['in:single_user,entity_user'],
             'is_owner'              => ['integer', 'in:1,0'],
+            'pet_status'              => ['string', 'in:found,lost,dead'],
         ];
     }
 }

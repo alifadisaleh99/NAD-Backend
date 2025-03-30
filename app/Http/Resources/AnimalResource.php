@@ -45,6 +45,7 @@ class AnimalResource extends JsonResource
             'created_at'   => $this->created_at,
             'created_by'   => new UserResource($this->whenLoaded('user_create')),
             'uaid'         => $this->uaid,
+            'pet_status'   => $this->pet_status,
             'translations' => $this->translations,
         ];
     }

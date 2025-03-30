@@ -99,6 +99,12 @@ class AnimalController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
+     *    name="pet_status",
+     *    required=false,
+     *    @OA\Schema(type="string", enum={"lost", "found", "dead"}),
+     * ),
+     * @OA\Parameter(
+     *    in="query",
      *    name="q",
      *    required=false,
      *    @OA\Schema(type="string"),
@@ -135,6 +141,11 @@ class AnimalController extends Controller
             });
         }
 
+        if ($request->pet_status)
+        {
+            $q->where('pet_status', $request->pet_status);
+        }
+        
         if ($request->q) {
             $animals_ids = Translation::where('translatable_type', Animal::class)
                 ->where('attribute', 'name')

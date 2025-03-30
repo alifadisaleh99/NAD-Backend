@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Mosab\Translation\Database\TranslatableModel;
 use Illuminate\Support\Str;
 
 
 class Animal extends TranslatableModel
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'owner_type',
@@ -30,6 +31,7 @@ class Animal extends TranslatableModel
         'user_create_id',
         'branch_id',
         'uaid',
+        'pet_status',
     ];
 
     protected $translatable = [
@@ -129,6 +131,11 @@ class Animal extends TranslatableModel
     public function transfers()
     {
         return $this->hasMany(Transfer::class);
+    }
+
+    public function lost_reports()
+    {
+        return $this->hasMany(AnimalLostReport::class, 'animal_id');
     }
 }
  
