@@ -6,17 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\GetRequest;
 use App\Http\Resources\ColorResource;
 use App\Models\Color;
+use App\Services\ColorService;
 use Illuminate\Http\Request;
 use Mosab\Translation\Models\Translation;
 
 class ColorController extends Controller
 {
-    public function __construct()
+    public $colorService;
+
+    public function __construct(ColorService $colorService)
     {
         $this->middleware('auth:sanctum');
         $this->middleware('permission:colors.read|colors.write|colors.delete')->only('index', 'show');
         $this->middleware('permission:colors.write')->only('store', 'update');
         $this->middleware('permission:colors.delete')->only('destroy');
+
+        $this->colorService = $colorService;
     }
 
     /**
@@ -52,28 +57,7 @@ class ColorController extends Controller
     */
     public function index(GetRequest $request)
     {
-        $q = Color::query()->latest();
-
-        if($request->q)
-        {
-            $colors_ids = Translation::where('translatable_type', Color::class)
-                                        ->where('attribute', 'name')
-                                        ->where('value', 'LIKE', '%'.$request->q.'%')
-                                        ->groupBy('translatable_id')
-                                        ->pluck('translatable_id');
-
-            $q->where(function($query) use ($request, $colors_ids) {
-                if (is_numeric($request->q))
-                    $query->where('id', $request->q);
-        
-                $query->orWhereIn('id', $colors_ids);
-            });
-        }    
-
-        if($request->with_paginate === '0')
-            $colors = $q->get();
-        else
-            $colors = $q->paginate($request->per_page ?? 10);
+          $colors = $this->colorService->getAllColors($request);
 
         return ColorResource::collection($colors);
     }
