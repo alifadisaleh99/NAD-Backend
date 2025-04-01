@@ -6,17 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\GetRequest;
 use App\Http\Resources\AnimalBreedResource;
 use App\Models\AnimalBreed;
+use App\Services\AnimalBreedService;
 use Illuminate\Http\Request;
 use Mosab\Translation\Models\Translation;
 
 class AnimalBreedController extends Controller
 {
-    public function __construct()
+    public $animalBreedService;
+
+    public function __construct(AnimalBreedService $animalBreedService)
     {
         $this->middleware('auth:sanctum');
         $this->middleware('permission:animalBreeds.read|animalBreeds.write|animalBreeds.delete')->only('index', 'show');
         $this->middleware('permission:animalBreeds.write')->only('store', 'update');
         $this->middleware('permission:animalBreeds.delete')->only('destroy');
+
+        $this->animalBreedService = $animalBreedService;
     }
 
     /**
@@ -69,36 +74,8 @@ class AnimalBreedController extends Controller
      *  )
     */
     public function index(GetRequest $request)
-    {
-        $q = AnimalBreed::query()->with(['category', 'animal_type', 'animal_specie'])->latest();
-
-        if($request->category_id)
-           $q->where('category_id', $request->category_id);
-        if($request->animal_type_id)
-           $q->where('animal_type_id', $request->animal_type_id);
-        if($request->animal_specie_id)
-           $q->where('animal_specie_id', $request->animal_specie_id);
-
-        if($request->q)
-        {
-            $animal_breeds_ids = Translation::where('translatable_type', AnimalBreed::class)
-                                        ->where('attribute', 'name')
-                                        ->where('value', 'LIKE', '%'.$request->q.'%')
-                                        ->groupBy('translatable_id')
-                                        ->pluck('translatable_id');
-
-            $q->where(function($query) use ($request, $animal_breeds_ids) {
-                if (is_numeric($request->q))
-                    $query->where('id', $request->q);
-        
-                $query->orWhereIn('id', $animal_breeds_ids);
-            });
-        }
-
-        if($request->with_paginate === '0')
-            $animal_breeds = $q->get();
-        else
-            $animal_breeds = $q->paginate($request->per_page ?? 10);
+    {   
+              $animal_breeds = $this->animalBreedService->getAllAnimalBreeds($request);
 
         return AnimalBreedResource::collection($animal_breeds);
     }
