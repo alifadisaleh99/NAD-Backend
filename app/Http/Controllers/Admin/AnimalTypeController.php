@@ -6,17 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\GetRequest;
 use App\Http\Resources\AnimalTypeResource;
 use App\Models\AnimalType;
+use App\Services\AnimalTypeService;
 use Illuminate\Http\Request;
 use Mosab\Translation\Models\Translation;
 
 class AnimalTypeController extends Controller
 {
-    public function __construct()
+    public  $animalTypeService;
+
+    public function __construct(AnimalTypeService $animalTypeService)
     {
         $this->middleware('auth:sanctum');
         $this->middleware('permission:animalTypes.read|animalTypes.write|animalTypes.delete')->only('index', 'show');
         $this->middleware('permission:animalTypes.write')->only('store', 'update');
         $this->middleware('permission:animalTypes.delete')->only('destroy');
+
+        $this->animalTypeService = $animalTypeService;
     }
 
     /**
@@ -58,33 +63,8 @@ class AnimalTypeController extends Controller
     */
     public function index(GetRequest $request)
     {
-        $q = AnimalType::query()->with('category')->latest();
-
-        if($request->category_id)
-           $q->where('category_id', $request->category_id);
+        $animal_types = $this->animalTypeService->getAllAnimalTypes($request);
         
-
-        if($request->q)
-        {
-            $animal_types_ids = Translation::where('translatable_type', AnimalType::class)
-                                        ->where('attribute', 'name')
-                                        ->where('value', 'LIKE', '%'.$request->q.'%')
-                                        ->groupBy('translatable_id')
-                                        ->pluck('translatable_id');
-
-            $q->where(function($query) use ($request, $animal_types_ids) {
-                if (is_numeric($request->q))
-                    $query->where('id', $request->q);
-        
-                $query->orWhereIn('id', $animal_types_ids);
-            });
-        }
-
-        if($request->with_paginate === '0')
-            $animal_types = $q->get();
-        else
-            $animal_types = $q->paginate($request->per_page ?? 10);
-
         return AnimalTypeResource::collection($animal_types);
     }
 
