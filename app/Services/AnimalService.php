@@ -9,6 +9,7 @@ use App\Models\Transfer;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Mosab\Translation\Models\Translation;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AnimalService
@@ -112,22 +113,57 @@ class AnimalService
         return  $ownership_records;
     }
 
-    public function getAnimalByUaidAndTagNumber($request)
+    public function getAllAnimals($request)
     {
         $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch'])->latest();
 
+        if ($request->category_id)
+            $q->where('category_id', $request->category_id);
+        if ($request->primary_color_id)
+            $q->where('primary_color_id', $request->primary_color_id);
+        if($request->secondary_color_id)
+            $q->where('secondary_color_id', $request->secondary_color_id);
+        if($request->tertiary_color_id)
+             $q->where('tertiary_color_id', $request->tertiary_color_id);
+        if($request->gender)
+             $q->where('gender', $request->gender);
+        if ($request->animal_type_id)
+            $q->where('animal_type_id', $request->animal_type_id);
+        if ($request->animal_specie_id)
+            $q->where('animal_specie_id', $request->animal_specie_id);
+        if ($request->animal_breed_id)
+            $q->where('animal_breed_id', $request->animal_breed_id);
         if ($request->uaid)
             $q->where('uaid', $request->uaid);
-
         if ($request->tag_number) {
             $q->whereHas('tags', function ($query) use ($request) {
                 return $query->where('number', $request->tag_number);
             });
         }
+        if ($request->pet_status)
+            $q->where('pet_status', $request->pet_status);
 
-        $animal = $q->first();
+        if ($request->q) {
+            $animals_ids = Translation::where('translatable_type', Animal::class)
+                ->where('attribute', 'name')
+                ->where('value', 'LIKE', '%' . $request->q . '%')
+                ->groupBy('translatable_id')
+                ->pluck('translatable_id');
 
-     return $animal;
+            $q->where(function ($query) use ($request, $animals_ids) {
+                if (is_numeric($request->q))
+                    $query->where('id', $request->q);
+
+                $query->orWhereIn('id', $animals_ids);
+            });
+        }
+
+        if ($request->with_paginate === '0')
+            $animals = $q->get();
+        else
+            $animals = $q->paginate($request->per_page ?? 10);
+
+      return $animals;
     }
 
     public function reportLost($request, Animal $animal)

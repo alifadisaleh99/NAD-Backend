@@ -45,6 +45,10 @@ class GetRequest extends FormRequest
             'user_is'             => ['in:single_user,entity_user'],
             'is_owner'              => ['integer', 'in:1,0'],
             'pet_status'              => ['string', 'in:found,lost,dead'],
+            'primary_color_id'       => ['integer', 'exists:colors,id'],
+            'secondary_color_id'       => ['integer', 'exists:colors,id'],
+            'tertiary_color_id'       => ['integer', 'exists:colors,id'],          
+             'gender'                => ['string', 'in:male,female'],
         ];
     }
 }
