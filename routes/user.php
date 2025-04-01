@@ -20,3 +20,4 @@ Route::get('animals/{animal}/ownership-records', [AnimalController::class, 'owne
 Route::post('animals/{animal}/generate-token', [AnimalController::class, 'generateTransferToken']);
 Route::post('animals/accept-transfer', [AnimalController::class, 'acceptTransfer']);
 Route::post('animals/{animal}/report-lost', [AnimalController::class, 'reportLost']);
+Route::post('animals/{animal}/mark-as-found', [AnimalController::class, 'markAsFound']);

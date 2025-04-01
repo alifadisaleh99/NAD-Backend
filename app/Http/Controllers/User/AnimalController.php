@@ -161,4 +161,29 @@ class AnimalController extends Controller
 
         return response()->json(new AnimalResource($animal), 200);    
     }
+
+     /**
+     * @OA\Post(
+     * path="/user/animals/{id}/mark-as-found",
+     * description="mark animal status as found.",
+     * tags={"User - Animals"},
+     * security={{"bearer_token": {}}},
+     * @OA\Parameter(
+     *     in="path",
+     *     name="id",
+     *     required=true,
+     *     @OA\Schema(type="string"),
+     * ),
+     * @OA\Response(
+     *         response="200",
+     *         description="successful operation",
+     *     ),
+     * )
+     */
+    public function markAsfound(Animal $animal)
+    {
+          $this->animalService->markAsFound($animal);
+
+        return response()->json(new AnimalResource($animal), 200);    
+    }
 }

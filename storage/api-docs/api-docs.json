@@ -4943,6 +4943,35 @@
                     }
                 ]
             }
+        },
+        "/user/animals/{id}/mark-as-found": {
+            "post": {
+                "tags": [
+                    "User - Animals"
+                ],
+                "description": "mark animal status as found.",
+                "operationId": "382b903daa0704465dc1139def9574a8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
         }
     },
     "tags": [

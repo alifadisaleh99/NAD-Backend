@@ -129,6 +129,7 @@ class AnimalService
 
      return $animal;
     }
+
     public function reportLost($request, Animal $animal)
     {
         $animal->lost_reports()->create([
@@ -139,6 +140,13 @@ class AnimalService
 
         $animal->update([
          'pet_status' => 'lost',
+        ]);
+    }
+    
+    public function markAsFound(Animal $animal)
+    {
+        $animal->update([
+         'pet_status' => 'found',
         ]);
     }
 }
