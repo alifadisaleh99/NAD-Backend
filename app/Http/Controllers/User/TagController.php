@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TagRequest;
 use App\Http\Resources\TagResource;
 use App\Services\TagService;
+use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
@@ -14,16 +15,15 @@ class TagController extends Controller
     public function __construct(TagService $tagService)
     {
         $this->middleware('auth:sanctum');
-        $this->middleware('permission:tags.read|tags.write|tags.delete')->only('update');
 
         $this->tagService = $tagService;
     }
 
     /**
      * @OA\Post(
-     * path="/admin/tags",
+     * path="/user/tags",
      * description="Edit tags for animal.",
-     *  tags={"Admin - Tags"},
+     *  tags={"User - Tags"},
      *  security={{"bearer_token": {} }},
      *      @OA\RequestBody(
      *          required=true,
@@ -55,3 +55,4 @@ class TagController extends Controller
         return response()->json(TagResource::collection($tags), 200);
     }
 }
+

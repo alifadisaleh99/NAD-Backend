@@ -21,7 +21,7 @@ class CheckOwnerAnimal
 
         if ($animal && $animal->user_id !== auth()->id()) {
 
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('error_messages.not_owner_of_animal')], 403);
         }
         return $next($request);
     }

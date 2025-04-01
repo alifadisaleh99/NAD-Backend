@@ -56,6 +56,9 @@ Route::apiResource('animal-breeds', AnimalBreedController::class);
 Route::apiResource('colors', ColorController::class);
 Route::apiResource('pet-marks', PetMarkController::class);
 
+Route::name('admin.')->group(function () {
+    Route::apiResource('animals',AnimalController::class);
+});
 
 
 // animal

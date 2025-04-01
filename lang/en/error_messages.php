@@ -13,4 +13,5 @@ return [
     'branches_limit_reached' => 'Sorry, you have reached the maximum allowed branches.',
     'entity_no_branches' => 'Sorry, you cannot complete this operation because the entity has not used any branches yet. Please add a branch before proceeding',
     'owner_of_animal' => 'You are the current owner of this animal',
+    'not_owner_of_animal' => 'You are not the pet owner',
 ];

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\User\AnimalController;
+use App\Http\Controllers\User\TagController;
+use App\Http\Controllers\User\TagTypeController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -21,3 +23,15 @@ Route::post('animals/{animal}/generate-token', [AnimalController::class, 'genera
 Route::post('animals/accept-transfer', [AnimalController::class, 'acceptTransfer']);
 Route::post('animals/{animal}/report-lost', [AnimalController::class, 'reportLost']);
 Route::post('animals/{animal}/mark-as-found', [AnimalController::class, 'markAsFound']);
+Route::name('user.')->group(function () {
+    Route::apiResource('animals',AnimalController::class);
+});
+
+//tag_types
+Route::get('tag-types', [TagTypeController::class, 'index']); 
+Route::get('tag-types/{tag_type}', [TagTypeController::class, 'show']); 
+
+//tag
+Route::put('tags', [TagController::class, 'update']);  
+
+

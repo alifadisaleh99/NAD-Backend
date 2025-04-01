@@ -575,6 +575,7 @@ class AnimalController extends Controller
             delete_file_if_exist($photo->link);
         }
 
+        $animal->lost_reports()->delete();
         $animal->transfers()->delete();
         $animal->animal_status()->delete();
         $animal->ownership_records()->delete();
