@@ -6,17 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\GetRequest;
 use App\Http\Resources\PetMarkResource;
 use App\Models\PetMark;
+use App\Services\PetMarkService;
 use Illuminate\Http\Request;
 use Mosab\Translation\Models\Translation;
 
 class PetMarkController extends Controller
 {
-    public function __construct()
+    public $petMarkService;
+
+    public function __construct(PetMarkService $petMarkService)
     {
         $this->middleware('auth:sanctum');
         $this->middleware('permission:petMarks.read|petMarks.write|petMarks.delete')->only('index', 'show');
         $this->middleware('permission:petMarks.write')->only('store', 'update');
         $this->middleware('permission:petMarks.delete')->only('destroy');
+
+        $this->petMarkService = $petMarkService;
     }
 
     /**
@@ -52,28 +57,7 @@ class PetMarkController extends Controller
     */
     public function index(GetRequest $request)
     {
-        $q = PetMark::query()->latest();
-
-        if($request->q)
-        {
-            $pet_marks_ids = Translation::where('translatable_type', PetMark::class)
-                                        ->where('attribute', 'name')
-                                        ->where('value', 'LIKE', '%'.$request->q.'%')
-                                        ->groupBy('translatable_id')
-                                        ->pluck('translatable_id');
-
-            $q->where(function($query) use ($request, $pet_marks_ids) {
-                if (is_numeric($request->q))
-                    $query->where('id', $request->q);
-        
-                $query->orWhereIn('id', $pet_marks_ids);
-            });
-        }    
-
-        if($request->with_paginate === '0')
-          $pet_marks = $q->get();
-        else
-          $pet_marks = $q->paginate($request->per_page ?? 10);
+          $pet_marks = $this->petMarkService->getAllPetMarks($request);
 
         return PetMarkResource::collection($pet_marks);
     }
