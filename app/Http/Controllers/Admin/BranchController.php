@@ -139,6 +139,8 @@ class BranchController extends Controller
     */
     public function show(Branch $branch)
     {
+          $branch->load('entity');
+
         return response()->json(new BranchResource($branch), 200);
     }
 

@@ -3,26 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GetRequest;
-use App\Http\Resources\BranchResource;
-use App\Models\Branch;
-use App\Services\BranchService;
+use App\Http\Resources\EntityResource;
+use App\Models\Entity;
+use App\Services\EntityService;
 use Illuminate\Http\Request;
 
-class BranchController extends Controller
+class EntityController extends Controller
 {
-    public $branchService;
+    public $entityService;
 
-    public function __construct(BranchService $branchService)
+    public function __construct(EntityService $entityService)
     {
-        $this->branchService = $branchService;
+        $this->entityService = $entityService;
     }
-
     /**
      * @OA\Get(
-     * path="/branches",
-     * description="Get all branches",
-     * operationId="get_all_branches_for_user",
-     * tags={"User - Branches"},
+     * path="/entities",
+     * description="Get all entities",
+     * operationId="get_all_entities_for_user",
+     * tags={"User - Entities"},
      * @OA\Parameter(
      *     in="query",
      *     name="with_paginate",
@@ -37,7 +36,7 @@ class BranchController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
-     *    name="entity_id",
+     *    name="branch_type_id",
      *    required=false,
      *    @OA\Schema(type="integer"),
      * ),
@@ -55,34 +54,34 @@ class BranchController extends Controller
      */
     public function index(GetRequest $request)
     {
-        $branches = $this->branchService->getAllBranches($request);
+        $entities = $this->entityService->getAllEntities($request);
 
-        return BranchResource::collection($branches);
+        return EntityResource::collection($entities);
     }
 
-     /**
+    /**
      * @OA\Get(
-     * path="/branches/{id}",
-     * description="Get branch information.",
+     * path="/entities/{id}",
+     * description="Get entity information.",
      *     @OA\Parameter(
      *         in="path",
      *         name="id",
      *         required=true,
      *         @OA\Schema(type="string"),
      *      ),
-     * operationId="show_branch_for_user",
-     * tags={"User - Branches"},
+     * operationId="show_entity_for_user",
+     * tags={"User - Entities"},
      * @OA\Response(
      *    response=200,
      *    description="successful operation"
      * ),
      * )
      *)
-    */
-    public function show(Branch $branch)
-    {    
-           $branch->load('entity');
+     */
+    public function show(Entity $entity)
+    {
+        $entity->load(['branches', 'branch_type']);
 
-        return response()->json(new BranchResource($branch), 200);
+        return response()->json(new EntityResource($entity), 200);
     }
 }

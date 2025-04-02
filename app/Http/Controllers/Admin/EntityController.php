@@ -8,6 +8,7 @@ use App\Http\Resources\EntityResource;
 use App\Http\Resources\UserResource;
 use App\Models\Entity;
 use App\Models\User;
+use App\Services\EntityService;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -15,12 +16,16 @@ use Mosab\Translation\Models\Translation;
 
 class EntityController extends Controller
 {
-    public function __construct()
+    public $entityService;
+
+    public function __construct(EntityService $entityService)
     {
         $this->middleware('auth:sanctum');
         $this->middleware('permission:entities.read|entities.write|entities.delete')->only('index', 'show');
         $this->middleware('permission:entities.write')->only('store', 'update');
         $this->middleware('permission:entities.delete')->only('destroy');
+
+        $this->entityService = $entityService;
     }
 
     /**
@@ -62,30 +67,7 @@ class EntityController extends Controller
      */
     public function index(GetRequest $request)
     {
-        $q = Entity::query()->with(['branches', 'branch_type'])->latest();
-
-        if ($request->branch_type_id)
-            $q->where('branch_type_id', $request->branch_type_id);
-
-        if ($request->q) {
-            $entities_ids = Translation::where('translatable_type', Entity::class)
-                ->where('attribute', 'name')
-                ->where('value', 'LIKE', '%' . $request->q . '%')
-                ->groupBy('translatable_id')
-                ->pluck('translatable_id');
-
-            $q->where(function ($query) use ($request, $entities_ids) {
-                if (is_numeric($request->q))
-                    $query->where('id', $request->q);
-
-                $query->orWhereIn('id', $entities_ids);
-            });
-        }
-
-        if ($request->with_paginate === '0')
-            $entities = $q->get();
-        else
-            $entities = $q->paginate($request->per_page ?? 10);
+         $entities = $this->entityService->getAllEntities($request);
 
         return EntityResource::collection($entities);
     }
