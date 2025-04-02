@@ -6,10 +6,13 @@ use App\Http\Controllers\AnimalSpecieController;
 use App\Http\Controllers\AnimalTypeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchTypeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\EntityController;
+use App\Http\Controllers\PetMarkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,3 +66,16 @@ Route::get('animal-species/{animal_specie}'  , [AnimalSpecieController::class, '
 //animal-breeds
 Route::get('animal-breeds'  , [AnimalBreedController::class, 'index']);
 Route::get('animal-breeds/{animal_breed}'  , [AnimalBreedController::class, 'show']);
+
+//pet-marks
+Route::get('pet-marks'  , [PetMarkController::class, 'index']);
+Route::get('pet-marks/{pet_mark}'  , [PetMarkController::class, 'show']);
+
+//branches
+Route::get('branches'  , [BranchController::class, 'index']);
+Route::get('branches/{branch}'  , [BranchController::class, 'show']);
+
+//entities
+Route::get('entities'  , [EntityController::class, 'index']);
+Route::get('entities/{entity}'  , [EntityController::class, 'show']);
+

@@ -4978,6 +4978,82 @@
                 ]
             }
         },
+        "/branches": {
+            "get": {
+                "tags": [
+                    "User - Branches"
+                ],
+                "description": "Get all branches",
+                "operationId": "get_all_branches_for_user",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "entity_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/branches/{id}": {
+            "get": {
+                "tags": [
+                    "User - Branches"
+                ],
+                "description": "Get branch information.",
+                "operationId": "show_branch_for_user",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
         "/branch-types": {
             "get": {
                 "tags": [
@@ -5241,6 +5317,150 @@
                 ],
                 "description": "Get Country information.",
                 "operationId": "show_country_to_user",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/entities": {
+            "get": {
+                "tags": [
+                    "User - Entities"
+                ],
+                "description": "Get all entities",
+                "operationId": "get_all_entities_for_user",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "branch_type_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/entities/{id}": {
+            "get": {
+                "tags": [
+                    "User - Entities"
+                ],
+                "description": "Get entity information.",
+                "operationId": "show_entity_for_user",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/pet-marks": {
+            "get": {
+                "tags": [
+                    "User - Pet Marks"
+                ],
+                "description": "Get all pet marks",
+                "operationId": "get_all_pet_marks_for_user",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/pet-marks/{id}": {
+            "get": {
+                "tags": [
+                    "User - Pet Marks"
+                ],
+                "description": "Get pet mark information.",
+                "operationId": "show_pet_mark_for_user",
                 "parameters": [
                     {
                         "name": "id",
@@ -6178,6 +6398,10 @@
             "description": "User - Auth"
         },
         {
+            "name": "User - Branches",
+            "description": "User - Branches"
+        },
+        {
             "name": "User - Branch Types",
             "description": "User - Branch Types"
         },
@@ -6192,6 +6416,14 @@
         {
             "name": "User - Countries",
             "description": "User - Countries"
+        },
+        {
+            "name": "User - Entities",
+            "description": "User - Entities"
+        },
+        {
+            "name": "User - Pet Marks",
+            "description": "User - Pet Marks"
         },
         {
             "name": "User - Tags",

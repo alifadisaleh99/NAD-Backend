@@ -182,7 +182,7 @@ class AnimalService
     public function markAsFound(Animal $animal)
     {
         $animal->update([
-         'pet_status' => 'found',
+         'pet_status' => null,
         ]);
     }
 }
