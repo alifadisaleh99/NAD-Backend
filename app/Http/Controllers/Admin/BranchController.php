@@ -7,18 +7,23 @@ use App\Http\Requests\GetRequest;
 use App\Http\Resources\BranchResource;
 use App\Models\Branch;
 use App\Models\Entity;
+use App\Services\BranchService;
 use Illuminate\Http\Request;
 use Mosab\Translation\Models\Translation;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class BranchController extends Controller
 {
-    public function __construct()
+    public $branchService;
+
+    public function __construct(BranchService $branchService)
     {
         $this->middleware('auth:sanctum');
         $this->middleware('permission:entities.read|entities.write|entities.delete')->only('index', 'show');
         $this->middleware('permission:entities.write')->only('store', 'update');
         $this->middleware('permission:entities.delete')->only('destroy');
+
+        $this->branchService = $branchService;
     }
 
     /**
@@ -60,31 +65,7 @@ class BranchController extends Controller
     */
     public function index(GetRequest $request)
     {
-        $q = Branch::with('entity')->latest();
-
-        if ($request->entity_id)
-            $q->where('entity_id', $request->entity_id);
-
-        if($request->q)
-        {
-            $branches_ids = Translation::where('translatable_type', Branch::class)
-                                        ->where('attribute', 'name')
-                                        ->where('value', 'LIKE', '%'.$request->q.'%')
-                                        ->groupBy('translatable_id')
-                                        ->pluck('translatable_id');
-
-            $q->where(function($query) use ($request, $branches_ids) {
-                if (is_numeric($request->q))
-                    $query->where('id', $request->q);
-        
-                $query->orWhereIn('id', $branches_ids);
-            });
-        }
-
-        if($request->with_paginate === '0')
-            $branches = $q->get();
-        else
-            $branches = $q->paginate($request->per_page ?? 10);
+            $branches = $this->branchService->getAllBranches($request);
 
         return BranchResource::collection($branches);
     }
