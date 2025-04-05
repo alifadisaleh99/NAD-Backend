@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AnimalTypeRequest;
 use App\Http\Requests\GetRequest;
 use App\Http\Resources\AnimalTypeResource;
 use App\Models\AnimalType;
 use App\Services\AnimalTypeService;
-use Illuminate\Http\Request;
-use Mosab\Translation\Models\Translation;
 
 class AnimalTypeController extends Controller
 {
@@ -93,13 +92,8 @@ class AnimalTypeController extends Controller
      * )
      * )
     */
-    public function store(Request $request)
+    public function store(AnimalTypeRequest $request)
     {
-        $request->validate([
-            'category_id'         => ['required', 'integer', 'exists:categories,id'],
-            'name'           => ['required', 'array', translation_rule()],
-        ]);
-     
         $animal_type = AnimalType::create([
             'category_id'   => $request->category_id,
             'name'          => $request->name,
@@ -165,13 +159,8 @@ class AnimalTypeController extends Controller
      * )
      * )
     */
-    public function update(Request $request, AnimalType $animal_type)
+    public function update(AnimalTypeRequest $request, AnimalType $animal_type)
     {
-        $request->validate([
-            'category_id'    => ['required', 'integer', 'exists:categories,id'],
-            'name'           => ['required', 'array', translation_rule()],
-        ]);
-
         $animal_type->update([
             'category_id' => $request->category_id,
             'name'         => $request->name,

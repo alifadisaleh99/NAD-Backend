@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AnimalSpecieRequest;
 use App\Http\Requests\GetRequest;
-use Illuminate\Http\Request;
 use App\Models\AnimalSpecie;
 use App\Http\Resources\AnimalSpecieResource;
 use App\Services\AnimalSpecieService;
-use Mosab\Translation\Models\Translation;
 
 class AnimalSpecieController extends Controller
 {
@@ -100,14 +99,8 @@ class AnimalSpecieController extends Controller
      * )
      * )
     */
-    public function store(Request $request)
+    public function store(AnimalSpecieRequest $request)
     {
-        $request->validate([
-            'category_id'         => ['required', 'integer', 'exists:categories,id'],
-            'animal_type_id'      => ['required', 'integer', 'exists:animal_types,id'],
-            'name'                => ['required', 'array', translation_rule()],
-        ]);
-     
         $animal_specie = AnimalSpecie::create([
             'category_id'       => $request->category_id,
             'animal_type_id'    => $request->animal_type_id,
@@ -175,14 +168,8 @@ class AnimalSpecieController extends Controller
      * )
      * )
     */
-    public function update(Request $request, AnimalSpecie $animal_specie)
+    public function update(AnimalSpecieRequest $request, AnimalSpecie $animal_specie)
     {
-        $request->validate([
-            'category_id'       => ['required', 'integer', 'exists:categories,id'],
-            'animal_type_id'    => ['required', 'integer', 'exists:animal_types,id'],
-            'name'              => ['required', 'array', translation_rule()],
-        ]);
-
         $animal_specie->update([
             'category_id'       => $request->category_id,
             'animal_type_id'    => $request->animal_type_id,

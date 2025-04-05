@@ -4,11 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GetRequest;
+use App\Http\Requests\PetMarkRequest;
 use App\Http\Resources\PetMarkResource;
 use App\Models\PetMark;
 use App\Services\PetMarkService;
-use Illuminate\Http\Request;
-use Mosab\Translation\Models\Translation;
 
 class PetMarkController extends Controller
 {
@@ -86,12 +85,8 @@ class PetMarkController extends Controller
      * )
      * )
     */
-    public function store(Request $request)
+    public function store(PetMarkRequest $request)
     {
-        $request->validate([
-            'name'           => ['required', 'array', translation_rule()],
-        ]);
-     
         $pet_mark = PetMark::create([
             'name'          => $request->name,
         ]);
@@ -154,12 +149,8 @@ class PetMarkController extends Controller
      * )
      * )
     */
-    public function update(Request $request,PetMark $pet_mark)
+    public function update(PetMarkRequest $request, PetMark $pet_mark)
     {
-        $request->validate([
-            'name'           => ['required', 'array', translation_rule()],
-        ]);
-
         $pet_mark->update([
             'name'          => $request->name,
         ]);

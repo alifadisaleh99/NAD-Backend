@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
 use App\Http\Requests\GetRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Services\CategoryService;
-use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class CategoryController extends Controller
@@ -89,14 +89,8 @@ class CategoryController extends Controller
      * )
      * )
     */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $request->validate([
-            'name'           => ['required', 'array', translation_rule()],
-            'description'           => ['required', 'array', translation_rule()],
-            'image'             => ['required', 'image']
-        ]);
-
         $image = upload_file($request->image, 'categories', 'category');
      
         $category = Category::create([
@@ -168,14 +162,8 @@ class CategoryController extends Controller
      * )
      * )
     */
-    public function update(Request $request, Category $category)
+    public function update(CategoryRequest $request, Category $category)
     {
-        $request->validate([
-            'name'              => ['required', 'array', translation_rule()],
-            'description'       => ['required', 'array', translation_rule()],
-            'image'             => ['required'],
-        ]);
-
         $image = null;
         if($request->image){
             if($request->image == $category->image){

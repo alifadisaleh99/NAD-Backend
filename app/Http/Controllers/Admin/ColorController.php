@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ColorRequest;
 use App\Http\Requests\GetRequest;
 use App\Http\Resources\ColorResource;
 use App\Models\Color;
 use App\Services\ColorService;
-use Illuminate\Http\Request;
-use Mosab\Translation\Models\Translation;
 
 class ColorController extends Controller
 {
@@ -86,12 +85,8 @@ class ColorController extends Controller
      * )
      * )
     */
-    public function store(Request $request)
+    public function store(ColorRequest $request)
     {
-        $request->validate([
-            'name'           => ['required', 'array', translation_rule()],
-        ]);
-     
         $color = Color::create([
             'name'          => $request->name,
         ]);
@@ -154,12 +149,8 @@ class ColorController extends Controller
      * )
      * )
     */
-    public function update(Request $request, Color $color)
+    public function update(ColorRequest $request, Color $color)
     {
-        $request->validate([
-            'name'           => ['required', 'array', translation_rule()],
-        ]);
-
         $color->update([
             'name'          => $request->name,
         ]);

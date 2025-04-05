@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PermissionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
@@ -130,15 +131,10 @@ class PermissionController extends Controller
      * )
      */
 
-    public function set_permissions(Request $request, Role $role)
+    public function set_permissions(PermissionRequest $request, Role $role)
     {
-        $request->validate([
-            'permissions' => ['array'],
-            'permissions.*' => ['string', 'exists:permissions,name'],
-        ]);
-
         if ($role->name_en == 'admin' || $role->name_en == 'user' || $role->name_en == 'poet')
-            throw new BadRequestHttpException(__('error_messages.Sorry, You can not modify this role'));
+            throw new BadRequestHttpException(__('error_messages.can_not_modify_role'));
 
 
         $permissionNames = $request->input('permissions', []);
