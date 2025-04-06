@@ -6,7 +6,6 @@ use App\Http\Requests\GetRequest;
 use App\Http\Resources\AnimalBreedResource;
 use App\Models\AnimalBreed;
 use App\Services\AnimalBreedService;
-use Illuminate\Http\Request;
 
 class AnimalBreedController extends Controller
 {
@@ -67,7 +66,7 @@ class AnimalBreedController extends Controller
     */
     public function index(GetRequest $request)
     {
-           $animal_breeds = $this->animalBreedService->getAllAnimalBreeds($request);
+        $animal_breeds = $this->animalBreedService->getAllAnimalBreeds($request);
 
         return AnimalBreedResource::collection($animal_breeds);
     }
@@ -93,7 +92,8 @@ class AnimalBreedController extends Controller
     */
     public function show(AnimalBreed $animal_breed)
     {
-          $animal_breed->load(['category', 'animal_type', 'animal_specie']);
+        $animal_breed->load(['category', 'animal_type', 'animal_specie']);
+
         return response()->json(new AnimalBreedResource($animal_breed), 200);
     }
 }

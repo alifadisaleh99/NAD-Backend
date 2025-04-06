@@ -71,10 +71,10 @@ class AnimalBreedController extends Controller
      *     description="Success",
      *  )
      *  )
-    */
+     */
     public function index(GetRequest $request)
-    {   
-              $animal_breeds = $this->animalBreedService->getAllAnimalBreeds($request);
+    {
+        $animal_breeds = $this->animalBreedService->getAllAnimalBreeds($request);
 
         return AnimalBreedResource::collection($animal_breeds);
     }
@@ -105,15 +105,10 @@ class AnimalBreedController extends Controller
      *     ),
      * )
      * )
-    */
+     */
     public function store(AnimalBreedRequest $request)
     {
-        $animal_breed = AnimalBreed::create([
-            'category_id'       => $request->category_id,
-            'animal_type_id'    => $request->animal_type_id,
-            'animal_specie_id'  => $request->animal_specie_id,
-            'name'              => $request->name,
-        ]);
+        $animal_breed = $this->animalBreedService->create($request);
 
         return response()->json(new AnimalBreedResource($animal_breed), 200);
     }
@@ -141,6 +136,7 @@ class AnimalBreedController extends Controller
     public function show(AnimalBreed $animal_breed)
     {
         $animal_breed->load(['category', 'animal_type', 'animal_specie']);
+
         return response()->json(new AnimalBreedResource($animal_breed), 200);
     }
 
@@ -176,15 +172,10 @@ class AnimalBreedController extends Controller
      *     ),
      * )
      * )
-    */
+     */
     public function update(AnimalBreedRequest $request, AnimalBreed $animal_breed)
     {
-        $animal_breed->update([
-            'category_id'       => $request->category_id,
-            'animal_type_id'    => $request->animal_type_id,
-            'animal_specie_id'  => $request->animal_specie_id,
-            'name'              => $request->name,
-        ]);
+        $this->animalBreedService->update($request, $animal_breed);
 
         return response()->json(new AnimalBreedResource($animal_breed), 200);
     }
@@ -204,7 +195,7 @@ class AnimalBreedController extends Controller
      * tags={"Admin - Animal Breeds"},
      * security={{"bearer_token":{}}},
      * @OA\Response(
-     *    response=200,
+     *    response=204,
      *    description="successful operation"
      * ),
      * )
@@ -213,6 +204,7 @@ class AnimalBreedController extends Controller
     public function destroy(AnimalBreed $animal_breed)
     {
         $animal_breed->delete();
+
         return response()->json(null, 204);
     }
 }

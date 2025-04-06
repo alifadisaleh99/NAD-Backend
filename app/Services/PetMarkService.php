@@ -34,4 +34,20 @@ class PetMarkService
 
         return $pet_marks;
     }
+
+    public function create($request)
+    {
+        $pet_mark = PetMark::create([
+            'name'          => $request->name,
+        ]);
+
+        return $pet_mark;
+    }
+
+    public function update($request, PetMark $pet_mark)
+    {
+        $pet_mark->update([
+            'name'          => $request->name,
+        ]);
+    }
 }

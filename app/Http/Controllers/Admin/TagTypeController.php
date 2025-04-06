@@ -8,7 +8,6 @@ use App\Http\Requests\TagTypeRequest;
 use App\Http\Resources\TagTypeResource;
 use App\Models\TagType;
 use App\Services\TagTypeService;
-use Illuminate\Http\Request;
 
 class TagTypeController extends Controller
 {
@@ -177,7 +176,7 @@ class TagTypeController extends Controller
      * tags={"Admin - Tag Types"},
      * security={{"bearer_token":{}}},
      * @OA\Response(
-     *    response=200,
+     *    response=204,
      *    description="successful operation"
      * ),
      * )

@@ -242,7 +242,7 @@ class UserController extends Controller
             if ($entity->used_branches == 0)
                 throw new BadRequestHttpException(__('error_messages.entity_no_branches'));
 
-            $entity->used_users = $entity->used_users - 1;
+            $entity->used_users = $entity->used_users + 1;
             $entity->save();
         }
 
@@ -311,6 +311,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         $user->load(['nationality', 'phone_country', 'entity', 'branch']);
+
         return response()->json(new UserResource($user));
     }
 
@@ -433,7 +434,7 @@ class UserController extends Controller
      *   tags={"Admin - Users"},
      *   security={{"bearer_token": {} }},
      *   @OA\Response(
-     *     response=200,
+     *     response=204,
      *     description="Success"
      *   )
      * )
@@ -481,6 +482,7 @@ class UserController extends Controller
             'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
         $user->update(['password'  => Hash::make($request->password),]);
+
         return response()->json(new UserResource($user), 200);
     }
 
@@ -509,6 +511,7 @@ class UserController extends Controller
             DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->delete();
 
         $user->update(['status' => !$user->status]);
+        
         return response()->json(new UserResource($user), 200);
     }
 }

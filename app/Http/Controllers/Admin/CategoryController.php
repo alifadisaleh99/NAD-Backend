@@ -8,7 +8,6 @@ use App\Http\Requests\GetRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Services\CategoryService;
-use Illuminate\Validation\ValidationException;
 
 class CategoryController extends Controller
 {
@@ -57,7 +56,7 @@ class CategoryController extends Controller
     */
     public function index(GetRequest $request)
     {
-          $categories = $this->categoryService->getAllCategories($request);
+        $categories = $this->categoryService->getAllCategories($request);
 
         return CategoryResource::collection($categories);
     }
@@ -91,13 +90,7 @@ class CategoryController extends Controller
     */
     public function store(CategoryRequest $request)
     {
-        $image = upload_file($request->image, 'categories', 'category');
-     
-        $category = Category::create([
-            'name'          => $request->name,
-            'description'   => $request->description,
-            'image'         => $image,
-        ]);
+        $category = $this->categoryService->create($request);
 
         return response()->json(new CategoryResource($category), 200);
     }
@@ -164,22 +157,7 @@ class CategoryController extends Controller
     */
     public function update(CategoryRequest $request, Category $category)
     {
-        $image = null;
-        if($request->image){
-            if($request->image == $category->image){
-                $image = $category->image;
-            }else{
-                if(!is_file($request->image))
-                    throw ValidationException::withMessages(['image' => __('error_messages.Image should be a file')]);
-                $image = upload_file($request->image, 'categories', 'category');
-            }
-        }
-
-        $category->update([
-            'name'          => $request->name,
-            'description'   => $request->description,
-            'image'         => $image,
-        ]);
+        $this->categoryService->update($request, $category);
 
         return response()->json(new CategoryResource($category), 200);
     }
@@ -199,7 +177,7 @@ class CategoryController extends Controller
      * tags={"Admin - Categories"},
      * security={{"bearer_token":{}}},
      * @OA\Response(
-     *    response=200,
+     *    response=204,
      *    description="successful operation"
      * ),
      * )
@@ -208,6 +186,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
+        
         return response()->json(null, 204); 
     }
 }

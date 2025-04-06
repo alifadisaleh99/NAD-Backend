@@ -38,4 +38,24 @@ class AnimalSpecieService
 
         return $animal_species;
     }
+
+    public function create($request)
+    {
+        $animal_specie = AnimalSpecie::create([
+            'category_id'       => $request->category_id,
+            'animal_type_id'    => $request->animal_type_id,
+            'name'              => $request->name,
+        ]);
+
+        return $animal_specie;
+    }
+
+    public function update($request, AnimalSpecie $animal_specie)
+    {
+        $animal_specie->update([
+            'category_id'       => $request->category_id,
+            'animal_type_id'    => $request->animal_type_id,
+            'name'              => $request->name,
+        ]);
+    }
 }

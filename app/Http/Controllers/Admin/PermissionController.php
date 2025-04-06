@@ -72,6 +72,7 @@ class PermissionController extends Controller
     {
         $user = to_user(Auth::user());
         $permissions = $user->getPermissionsViaRoles();
+
         return PermissionResource::collection($permissions);
     }
 

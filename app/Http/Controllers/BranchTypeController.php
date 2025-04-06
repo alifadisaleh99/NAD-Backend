@@ -5,11 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GetRequest;
 use App\Http\Resources\BranchTypeResource;
 use App\Models\BranchType;
-use Illuminate\Http\Request;
-use Mosab\Translation\Models\Translation;
+use App\Services\BranchTypeService;
 
 class BranchTypeController extends Controller
 {
+    public $branchTypeService;
+
+    public function __construct(BranchTypeService $branchTypeService)
+    {
+        $this->branchTypeService = $branchTypeService;
+    }
+
     /**
      * @OA\Get(
      * path="/branch-types",
@@ -42,30 +48,11 @@ class BranchTypeController extends Controller
      */
     public function index(GetRequest $request)
     {
-        $q = BranchType::query()->latest();
-
-        if ($request->q) {
-            $branch_types_ids = Translation::where('translatable_type', BranchType::class)
-                ->where('attribute', 'name')
-                ->where('value', 'LIKE', '%' . $request->q . '%')
-                ->groupBy('translatable_id')
-                ->pluck('translatable_id');
-
-            $q->where(function ($query) use ($request, $branch_types_ids) {
-                if (is_numeric($request->q))
-                    $query->where('id', $request->q);
-
-                $query->orWhereIn('id', $branch_types_ids);
-            });
-        }
-
-        if ($request->with_paginate === '0')
-            $branch_types = $q->get();
-        else
-            $branch_types = $q->paginate($request->per_page ?? 10);
+        $branch_types = $this->branchTypeService->getAllBranchTypes($request);
 
         return BranchTypeResource::collection($branch_types);
     }
+
     /**
      * @OA\Get(
      * path="/branch-types/{id}",

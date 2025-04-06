@@ -56,7 +56,7 @@ class ColorController extends Controller
     */
     public function index(GetRequest $request)
     {
-          $colors = $this->colorService->getAllColors($request);
+        $colors = $this->colorService->getAllColors($request);
 
         return ColorResource::collection($colors);
     }
@@ -87,9 +87,7 @@ class ColorController extends Controller
     */
     public function store(ColorRequest $request)
     {
-        $color = Color::create([
-            'name'          => $request->name,
-        ]);
+        $color = $this->colorService->create($request);
 
         return response()->json(new ColorResource($color), 200);
     }
@@ -151,9 +149,7 @@ class ColorController extends Controller
     */
     public function update(ColorRequest $request, Color $color)
     {
-        $color->update([
-            'name'          => $request->name,
-        ]);
+        $this->colorService->update($request, $color);
 
         return response()->json(new ColorResource($color), 200);
     }
@@ -173,7 +169,7 @@ class ColorController extends Controller
      * tags={"Admin - Colors"},
      * security={{"bearer_token":{}}},
      * @OA\Response(
-     *    response=200,
+     *    response=204,
      *    description="successful operation"
      * ),
      * )
@@ -182,6 +178,7 @@ class ColorController extends Controller
     public function destroy(Color $color)
     {
         $color->delete();
+
         return response()->json(null, 204); 
     }
 }

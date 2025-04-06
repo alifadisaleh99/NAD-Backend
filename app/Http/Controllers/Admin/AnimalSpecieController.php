@@ -101,11 +101,7 @@ class AnimalSpecieController extends Controller
     */
     public function store(AnimalSpecieRequest $request)
     {
-        $animal_specie = AnimalSpecie::create([
-            'category_id'       => $request->category_id,
-            'animal_type_id'    => $request->animal_type_id,
-            'name'              => $request->name,
-        ]);
+        $animal_specie =  $this->animalSpecieService->create($request);
 
         return response()->json(new AnimalSpecieResource($animal_specie), 200);
     }
@@ -133,6 +129,7 @@ class AnimalSpecieController extends Controller
     public function show(AnimalSpecie $animal_specie)
     {
         $animal_specie->load(['category', 'animal_type']);
+
         return response()->json(new AnimalSpecieResource($animal_specie), 200);
     }
 
@@ -170,11 +167,7 @@ class AnimalSpecieController extends Controller
     */
     public function update(AnimalSpecieRequest $request, AnimalSpecie $animal_specie)
     {
-        $animal_specie->update([
-            'category_id'       => $request->category_id,
-            'animal_type_id'    => $request->animal_type_id,
-            'name'              => $request->name,
-        ]);
+        $this->animalSpecieService->update($request, $animal_specie);
 
         return response()->json(new AnimalSpecieResource($animal_specie), 200);
     }
@@ -194,7 +187,7 @@ class AnimalSpecieController extends Controller
      * tags={"Admin - Animal Species"},
      * security={{"bearer_token":{}}},
      * @OA\Response(
-     *    response=200,
+     *    response=204,
      *    description="successful operation"
      * ),
      * )
@@ -203,6 +196,7 @@ class AnimalSpecieController extends Controller
     public function destroy(AnimalSpecie $animal_specie)
     {
         $animal_specie->delete();
+
         return response()->json(null, 204);
     }
 }

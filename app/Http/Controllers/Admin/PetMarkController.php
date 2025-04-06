@@ -87,9 +87,7 @@ class PetMarkController extends Controller
     */
     public function store(PetMarkRequest $request)
     {
-        $pet_mark = PetMark::create([
-            'name'          => $request->name,
-        ]);
+        $pet_mark = $this->petMarkService->create($request);
 
         return response()->json(new PetMarkResource($pet_mark), 200);
     }
@@ -151,9 +149,7 @@ class PetMarkController extends Controller
     */
     public function update(PetMarkRequest $request, PetMark $pet_mark)
     {
-        $pet_mark->update([
-            'name'          => $request->name,
-        ]);
+        $this->petMarkService->update($request, $pet_mark);
 
         return response()->json(new PetMarkResource($pet_mark), 200);
     }
@@ -173,7 +169,7 @@ class PetMarkController extends Controller
      * tags={"Admin - Pet Marks"},
      * security={{"bearer_token":{}}},
      * @OA\Response(
-     *    response=200,
+     *    response=204,
      *    description="successful operation"
      * ),
      * )
@@ -182,6 +178,7 @@ class PetMarkController extends Controller
     public function destroy(PetMark $pet_mark)
     {
         $pet_mark->delete();
+
         return response()->json(null, 204); 
     }
 }

@@ -34,4 +34,20 @@ class ColorService
 
         return $colors;
     }
+
+    public function create($request)
+    {
+        $color = Color::create([
+            'name'          => $request->name,
+        ]);
+
+        return $color;
+    }
+
+    public function update($request, Color $color)
+    {
+        $color->update([
+            'name'          => $request->name,
+        ]);
+    }
 }

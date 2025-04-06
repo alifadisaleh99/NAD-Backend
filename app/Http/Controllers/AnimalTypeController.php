@@ -6,7 +6,6 @@ use App\Http\Requests\GetRequest;
 use App\Http\Resources\AnimalTypeResource;
 use App\Models\AnimalType;
 use App\Services\AnimalTypeService;
-use Illuminate\Http\Request;
 
 class AnimalTypeController extends Controller
 {
@@ -81,6 +80,7 @@ class AnimalTypeController extends Controller
     public function show(AnimalType $animal_type)
     {
         $animal_type->load(['category']);
+
         return response()->json(new AnimalTypeResource($animal_type), 200);
     }
 }

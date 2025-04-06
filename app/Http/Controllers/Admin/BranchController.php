@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BranchRequest;
 use App\Http\Requests\GetRequest;
 use App\Http\Resources\BranchResource;
 use App\Models\Branch;
-use App\Models\Entity;
 use App\Services\BranchService;
-use Illuminate\Http\Request;
-use Mosab\Translation\Models\Translation;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class BranchController extends Controller
 {
@@ -65,7 +62,7 @@ class BranchController extends Controller
     */
     public function index(GetRequest $request)
     {
-            $branches = $this->branchService->getAllBranches($request);
+        $branches = $this->branchService->getAllBranches($request);
 
         return BranchResource::collection($branches);
     }
@@ -94,25 +91,9 @@ class BranchController extends Controller
      * )
      * )
     */
-    public function store(Request $request)
+    public function store(BranchRequest $request)
     {
-        $request->validate([
-            'entity_id'         => ['required', 'integer', 'exists:entities,id'],
-            'address'           => ['required', 'string'],
-        ]);
-
-        $entity = Entity::find($request->entity_id);
-
-        if($entity->used_branches == $entity->allowed_branches)
-            throw new BadRequestHttpException(__('error_messages.branches_limit_reached'));
-     
-        $branch = Branch::create([
-            'entity_id'         => $request->entity_id,
-            'address'           => $request->address,
-        ]);
-
-        $entity->used_branches = $entity->used_branches -1;
-        $entity->save();
+        $branch  = $this->branchService->create($request);
 
         return response()->json(new BranchResource($branch), 200);
     }
@@ -139,7 +120,7 @@ class BranchController extends Controller
     */
     public function show(Branch $branch)
     {
-          $branch->load('entity');
+        $branch->load('entity');
 
         return response()->json(new BranchResource($branch), 200);
     }
@@ -173,15 +154,9 @@ class BranchController extends Controller
      * )
      * )
     */
-    public function update(Request $request, Branch $branch)
+    public function update(BranchRequest $request, Branch $branch)
     {
-        $request->validate([
-            'address'           => ['required', 'string'],
-        ]);
-
-        $branch->update([
-            'address'           => $request->address,
-        ]);
+        $this->branchService->update($request, $branch);
 
         return response()->json(new BranchResource($branch), 200);
     }
@@ -201,7 +176,7 @@ class BranchController extends Controller
      * tags={"Admin - Branches"},
      * security={{"bearer_token":{}}},
      * @OA\Response(
-     *    response=200,
+     *    response=204,
      *    description="successful operation"
      * ),
      * )
@@ -210,6 +185,7 @@ class BranchController extends Controller
     public function destroy(Branch $branch)
     {
         $branch->delete();
+
         return response()->json(null, 204);
     }
 }

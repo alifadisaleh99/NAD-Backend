@@ -6,7 +6,6 @@ use App\Http\Requests\GetRequest;
 use App\Http\Resources\EntityResource;
 use App\Models\Entity;
 use App\Services\EntityService;
-use Illuminate\Http\Request;
 
 class EntityController extends Controller
 {

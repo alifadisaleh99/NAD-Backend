@@ -37,4 +37,22 @@ class AnimalTypeService
 
         return $animal_types;
     }
+
+    public function create($request)
+    {
+        $animal_type = AnimalType::create([
+            'category_id'   => $request->category_id,
+            'name'          => $request->name,
+        ]);
+
+        return $animal_type;
+    }
+
+    public function update($request, AnimalType $animal_type)
+    {
+        $animal_type->update([
+            'category_id' => $request->category_id,
+            'name'         => $request->name,
+        ]);
+    }
 }

@@ -3,7 +3,10 @@
 namespace App\Services;
 
 use App\Models\Branch;
+use App\Models\Entity;
 use Mosab\Translation\Models\Translation;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+
 
 class BranchService
 {
@@ -35,5 +38,30 @@ class BranchService
             $branches = $q->paginate($request->per_page ?? 10);
 
         return $branches;
+    }
+
+    public function create($request)
+    {
+        $entity = Entity::find($request->entity_id);
+
+        if($entity->used_branches == $entity->allowed_branches)
+            throw new BadRequestHttpException(__('error_messages.branches_limit_reached'));
+     
+        $branch = Branch::create([
+            'entity_id'         => $request->entity_id,
+            'address'           => $request->address,
+        ]);
+
+        $entity->used_branches = $entity->used_branches + 1;
+        $entity->save();
+
+        return $branch;
+    }
+
+    public function update($request, Branch $branch)
+    {
+        $branch->update([
+            'address'           => $request->address,
+        ]);
     }
 }
