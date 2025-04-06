@@ -137,5 +137,11 @@ class Animal extends TranslatableModel
     {
         return $this->hasMany(AnimalLostReport::class, 'animal_id');
     }
+
+    public function latest_lost_report()
+    {
+        return $this->hasOne(AnimalLostReport::class, 'animal_id')
+                ->latestOfMany('created_at');
+    }
 }
  

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Animal;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -36,7 +37,7 @@ class AnimalResource extends JsonResource
             'pet_marks'          => PetMarkResource::collection($this->whenLoaded('pet_marks')),
             'primary_color'     => new ColorResource($this->whenLoaded('primary_color')),
             'secondary_color'   => new ColorResource($this->whenLoaded('secondary_color')),
-           'tertiary_color'    => new ColorResource($this->whenLoaded('tertiary_color')),
+            'tertiary_color'    => new ColorResource($this->whenLoaded('tertiary_color')),
             'age' => $this->age,
             'gender' => $this->gender,
             'size'  => $this->size,
@@ -46,6 +47,7 @@ class AnimalResource extends JsonResource
             'created_by'   => new UserResource($this->whenLoaded('user_create')),
             'uaid'         => $this->uaid,
             'pet_status'   => $this->pet_status,
+            'latest_lost_report' =>  $this->pet_status == 'lost' ? new LostReportResource($this->latest_lost_report) : null,
             'translations' => $this->translations,
         ];
     }
