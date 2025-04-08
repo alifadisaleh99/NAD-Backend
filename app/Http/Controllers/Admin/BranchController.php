@@ -78,7 +78,7 @@ class BranchController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"address"},
+     *              required={"address", "entity_id"},
      *              @OA\Property(property="entity_id", type="integer"),
      *              @OA\Property(property="address", type="string"),
      *          )

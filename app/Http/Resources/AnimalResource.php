@@ -47,7 +47,7 @@ class AnimalResource extends JsonResource
             'created_by'   => new UserResource($this->whenLoaded('user_create')),
             'uaid'         => $this->uaid,
             'pet_status'   => $this->pet_status,
-            'latest_lost_report' =>  $this->pet_status == 'lost' ? new LostReportResource($this->latest_lost_report) : null,
+            'latest_lost_report' =>  $this->pet_status == 'lost' ? new LostReportResource($this->whenLoaded('latest_lost_report')) : null,
             'translations' => $this->translations,
         ];
     }

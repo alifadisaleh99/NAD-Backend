@@ -83,7 +83,7 @@ class EntityController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"name[ar]"},
+     *              required={"name[ar]", "address", "email", "contact_number", "founding_date", "price_per_pet", "allowed_branches", "allowed_users", "branch_type_id"},
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="address", type="string"),

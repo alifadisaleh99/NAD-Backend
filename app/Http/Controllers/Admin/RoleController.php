@@ -148,9 +148,9 @@ class RoleController extends Controller
      *       mediaType="multipart/form-data",
      *       @OA\Schema(
      *         required={"name_en", "name_ar"},
-     *              @OA\Property(property="name_en", type="string"),
-     *              @OA\Property(property="name_ar", type="string"),
-     *              @OA\Property(property="_method", type="string", format="string", example="PUT"),
+     *         @OA\Property(property="name_en", type="string"),
+     *         @OA\Property(property="name_ar", type="string"),
+     *         @OA\Property(property="_method", type="string", format="string", example="PUT"),
      *       )
      *     )
      *   ),

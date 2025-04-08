@@ -4,10 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TagTypeRequest extends FormRequest
+class AdminStoreAnimalRequest extends BaseAnimalRequest
 {
-    public $method_post;
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -23,10 +21,14 @@ class TagTypeRequest extends FormRequest
      */
     public function rules(): array
     {
-       
-        return [
-            'name'           => ['required', 'array', translation_rule()],
-            'icon'           => request()->isMethod('post') ? ['image'] : [''],
-        ];
+        return array_merge(
+            parent::rules(),
+            [
+                'owner_type' => ['required', 'in:user,entity'],
+                'owner_id'   => ['required', 'integer', 'exists:users,id'],
+                'photos'     => ['required', 'array'],
+                'photos.*'   => ['image'],
+            ]
+        );
     }
 }

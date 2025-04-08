@@ -59,7 +59,7 @@ class LogoController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"type", "logo"},
+     *              required={"mobile_light_logo", "mobile_dark_logo", "light_logo", "dark_logo"},
      *              @OA\Property(property="mobile_light_logo", type="file"),
      *              @OA\Property(property="mobile_dark_logo", type="file"),
      *              @OA\Property(property="light_logo", type="file"),

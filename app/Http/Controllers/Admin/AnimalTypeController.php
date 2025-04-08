@@ -78,7 +78,7 @@ class AnimalTypeController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"name[ar]"},
+     *              required={"name[ar]", "category_id"},
      *              @OA\Property(property="category_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),

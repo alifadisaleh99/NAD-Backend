@@ -72,7 +72,7 @@ class CategoryController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"name[ar]"},
+     *              required={"name[ar]", "description[ar]", "image"},
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="description[en]", type="string"),

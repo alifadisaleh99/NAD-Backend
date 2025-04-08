@@ -113,7 +113,7 @@ class AnimalController extends Controller
      */
     public function index(GetRequest $request)
     {
-           $animals = $this->animalService->getAllAnimals($request);
+         $animals = $this->animalService->getAllAnimals($request, false);
 
          return AnimalResource::collection($animals);
     }

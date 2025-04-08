@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminStoreAnimalRequest;
+use App\Http\Requests\AdminUpdateAnimalRequest;
 use App\Http\Requests\GetRequest;
 use App\Http\Resources\AnimalResource;
 use App\Http\Resources\OwnershipRecordResource;
@@ -117,55 +119,8 @@ class AnimalController extends Controller
      */
     public function index(GetRequest $request)
     {
-        $q = Animal::query()->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch'])->latest();
-
-        if ($request->category_id)
-            $q->where('category_id', $request->category_id);
-        if ($request->animal_type_id)
-            $q->where('animal_type_id', $request->animal_type_id);
-        if ($request->animal_specie_id)
-            $q->where('animal_specie_id', $request->animal_specie_id);
-        if ($request->animal_breed_id)
-            $q->where('animal_breed_id', $request->animal_breed_id);
-        if ($request->owner_id)
-            $q->where('user_id', $request->owner_id);
-        if ($request->branch_id)
-            $q->where('branch_id', $request->branch_id);
-
-        if ($request->uaid)
-            $q->where('uaid', $request->uaid);
-
-        if ($request->tag_number) {
-            $q->whereHas('tags', function ($query) use ($request) {
-                return $query->where('number', $request->tag_number);
-            });
-        }
-
-        if ($request->pet_status)
-        {
-            $q->where('pet_status', $request->pet_status);
-        }
+        $animals = $this->animalService->getAllAnimals($request, false);
         
-        if ($request->q) {
-            $animals_ids = Translation::where('translatable_type', Animal::class)
-                ->where('attribute', 'name')
-                ->where('value', 'LIKE', '%' . $request->q . '%')
-                ->groupBy('translatable_id')
-                ->pluck('translatable_id');
-
-            $q->where(function ($query) use ($request, $animals_ids) {
-                if (is_numeric($request->q))
-                    $query->where('id', $request->q);
-
-                $query->orWhereIn('id', $animals_ids);
-            });
-        }
-
-        if ($request->with_paginate === '0')
-            $animals = $q->get();
-        else
-            $animals = $q->paginate($request->per_page ?? 10);
-
         return AnimalResource::collection($animals);
     }
 
@@ -180,7 +135,7 @@ class AnimalController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"name[ar]", "description[ar]", "owner_type" , "owner_id"},
+     *              required={"name[ar]", "description[ar]", "owner_type" , "owner_id", "photos[0]", "category_id", "animal_type_id", "primary_color_id", "secondary_color_id", "birth_date", "gender", "size", "status"},
      *              @OA\Property(property="owner_type", type="string", enum={"user", "entity"}),
      *              @OA\Property(property="owner_id", type="integer"),
      *              @OA\Property(property="branch_id", type="integer"),
@@ -221,39 +176,8 @@ class AnimalController extends Controller
      * ),
      * )
      */
-    public function store(Request $request)
+    public function store(AdminStoreAnimalRequest $request)
     {
-        $request->validate([
-            'name'           => ['required', 'array', translation_rule()],
-            'description'    => ['required', 'array', translation_rule()],
-            'like'    => ['array', translation_rule()],
-            'deslike'    => ['array', translation_rule()],
-            'good_with'    => ['array', translation_rule()],
-            'bad_with'    => ['array', translation_rule()],
-            'sensitivities' => ['array'],
-            'sensitivities.*' => ['string'],
-            'photos'         => ['required', 'array'],
-            'photos.*'       => ['image'],
-            'owner_type'     => ['required', 'in:user,entity'],
-            'owner_id'         => ['required', 'integer', 'exists:users,id'],
-            'branch_id'         => ['required_if:owner_type,entity', 'integer', 'exists:branches,id'],
-            'category_id'         => ['required', 'integer', 'exists:categories,id'],
-            'animal_type_id'      => ['required', 'integer', 'exists:animal_types,id'],
-            'animal_specie_id'    => ['integer', 'exists:animal_species,id'],
-            'animal_breed_id'     => ['integer', 'exists:animal_breeds,id'],
-            'pet_mark_ids'           => ['array'],
-            'pet_mark_ids.*'         => ['integer', 'exists:pet_marks,id'],
-            'primary_color_id'    => ['required', 'integer', 'exists:colors,id'],
-            'secondary_color_id'  => ['required', 'integer', 'exists:colors,id'],
-            'tertiary_color_id'   => ['required', 'integer', 'exists:colors,id'],
-            'age' => ['in:young,adult,senior'],
-            'gender' => ['required', 'in:male,female'],
-            'size' => ['required', 'in:small,medium,large'],
-            'link' => ['string'],
-            'status' => ['required', 'in:1,0'],
-            'birth_date' => ['required', 'date']
-        ]);
-
         /*  if ($request->user_id) {
             $user = User::with(['animals'])->find($request->user_id);
             $subscription = $user->subscriptions()->where('is_active', 1)->first();
@@ -271,57 +195,8 @@ class AnimalController extends Controller
                 return response()->json(['message' => __('error_messages.user_must_have_plan')], 422);
         }
         */
-
-
-        $animal = Animal::create([
-            'name'          => $request->name,
-            'description'   => $request->description,
-            'like'  => $request->like,
-            'deslike' => $request->deslike,
-            'good_with' => $request->good_with,
-            'bad_with'  => $request->bad_with,
-            'owner_type'     => $request->owner_type,
-            'user_id'         => $request->owner_id,
-            'branch_id'           => $request->branch_id ?? null,
-            'category_id'         => $request->category_id,
-            'animal_type_id'      => $request->animal_type_id,
-            'animal_specie_id'    => $request->animal_specie_id,
-            'animal_breed_id'     => $request->animal_breed_id,
-            'primary_color_id'    => $request->primary_color_id,
-            'secondary_color_id'  => $request->secondary_color_id,
-            'tertiary_color_id'   => $request->tertiary_color_id,
-            'age' => $request->age ?? null,
-            'gender' => $request->gender,
-            'size' => $request->size,
-            'link' => $request->link ?? null,
-            'status' => $request->status,
-            'birth_date' => $request->birth_date,
-            'user_create_id' => auth()->id(),
-            'uaid' => Str::random(15),
-        ]);
-
-        if ($request->photos) {
-            foreach ($request->photos as $photo) {
-                $uploadedphoto = upload_file($photo, 'animals', 'animal');
-                $mediaData[] = ['link' => $uploadedphoto];
-            }
-
-            $animal->media()->createMany($mediaData);
-        }
-
-        if ($request->pet_mark_ids) {
-            foreach ($request->pet_mark_ids as $pet_mark_id) {
-                $animal->animal_pet_marks()->create(['pet_mark_id' => $pet_mark_id]);
-            }
-        }
-
-        if ($request->sensitivities) {
-            foreach ($request->sensitivities as $sensitivity) {
-                $animal->sensitivities()->create(['name' => $sensitivity]);
-            }
-        }
-
-        $this->animalService->createOwnershipRecord($animal);
+        
+        $animal = $this->animalService->create($request, false);
 
         return response()->json(new AnimalResource($animal), 200);
     }
@@ -348,7 +223,7 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch']);
+        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch', 'latest_lost_report']);
 
         return response()->json(new AnimalResource($animal), 200);
     }
@@ -414,44 +289,8 @@ class AnimalController extends Controller
      *     ),
      * )
      */
-    public function update(Request $request, Animal $animal)
+    public function update(AdminUpdateAnimalRequest $request, Animal $animal)
     {
-        $request->validate([
-            'name'           => ['required', 'array', translation_rule()],
-            'description'    => ['required', 'array', translation_rule()],
-            'like'    => ['array', translation_rule()],
-            'deslike'    => ['array', translation_rule()],
-            'good_with'    => ['array', translation_rule()],
-            'bad_with'    => ['array', translation_rule()],
-            'sensitivities' => ['array'],
-            'sensitivities.*' => ['string'],
-            'deleted_sensitivity_ids' => ['array'],
-            'deleted_sensitivity_ids.*' => ['integer', 'exists:animal_sensitivities,id'],
-            'owner_type'     => ['in:user,entity'],
-            'owner_id'         => ['integer', 'exists:users,id'],
-            'branch_id'         => ['required_if:owner_type,entity', 'integer', 'exists:branches,id'],
-            'category_id'         => ['required', 'integer', 'exists:categories,id'],
-            'animal_type_id'      => ['required', 'integer', 'exists:animal_types,id'],
-            'animal_specie_id'    => ['integer', 'exists:animal_species,id'],
-            'animal_breed_id'     => ['integer', 'exists:animal_breeds,id'],
-            'pet_mark_ids'         => ['array'],
-            'deleted_pet_mark_ids'  => ['array'],
-            'pet_mark_ids.*'     => ['integer', 'exists:pet_marks,id'],
-            'deleted_pet_mark_ids.*'     => ['integer', 'exists:pet_marks,id'],
-            'primary_color_id'    => ['required', 'integer', 'exists:colors,id'],
-            'secondary_color_id'  => ['required', 'integer', 'exists:colors,id'],
-            'tertiary_color_id'   => ['required', 'integer', 'exists:colors,id'],
-            'age' => ['in:young,adult,senior'],
-            'birth_date' => ['required', 'date'],
-            'gender' => ['required', 'in:male,female'],
-            'size' => ['required', 'in:small,medium,large'],
-            'link' => ['string'],
-            'status' => ['required', 'in:1,0'],
-            'deleted_media_ids' => ['array'],
-            'deleted_media_ids.*' => ['integer', 'exists:media,id'],
-            'photos' => ['required','array'],
-            'photos.*' => ['required'],
-        ]);
 
         $old_owner_id = $animal->user_id;
 
@@ -510,7 +349,7 @@ class AnimalController extends Controller
 
         if ($request->owner_id && $request->owner_id != $old_owner_id) {
             $ownership_record = OwnershipRecord::where('animal_id', $animal->id)
-                ->where('user_id', $old_owner_id)->first();
+                ->where('user_id', $old_owner_id)->where('end_date', null)->first();
 
             $this->animalService->updateOwnershipRecord($ownership_record);
             $this->animalService->createOwnershipRecord($animal);

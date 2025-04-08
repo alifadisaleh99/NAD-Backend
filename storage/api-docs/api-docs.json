@@ -97,7 +97,10 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "name[ar]"
+                                    "name[ar]",
+                                    "category_id",
+                                    "animal_type_id",
+                                    "animal_specie_id"
                                 ],
                                 "properties": {
                                     "category_id": {
@@ -394,7 +397,16 @@
                                     "name[ar]",
                                     "description[ar]",
                                     "owner_type",
-                                    "owner_id"
+                                    "owner_id",
+                                    "photos[0]",
+                                    "category_id",
+                                    "animal_type_id",
+                                    "primary_color_id",
+                                    "secondary_color_id",
+                                    "birth_date",
+                                    "gender",
+                                    "size",
+                                    "status"
                                 ],
                                 "properties": {
                                     "owner_type": {
@@ -924,7 +936,9 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "name[ar]"
+                                    "name[ar]",
+                                    "category_id",
+                                    "animal_type_id"
                                 ],
                                 "properties": {
                                     "category_id": {
@@ -1376,7 +1390,8 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "name[ar]"
+                                    "name[ar]",
+                                    "category_id"
                                 ],
                                 "properties": {
                                     "category_id": {
@@ -1589,7 +1604,8 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "address"
+                                    "address",
+                                    "entity_id"
                                 ],
                                 "properties": {
                                     "entity_id": {
@@ -1984,7 +2000,9 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "name[ar]"
+                                    "name[ar]",
+                                    "description[ar]",
+                                    "image"
                                 ],
                                 "properties": {
                                     "name[en]": {
@@ -2408,7 +2426,15 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "name[ar]"
+                                    "name[ar]",
+                                    "address",
+                                    "email",
+                                    "contact_number",
+                                    "founding_date",
+                                    "price_per_pet",
+                                    "allowed_branches",
+                                    "allowed_users",
+                                    "branch_type_id"
                                 ],
                                 "properties": {
                                     "name[en]": {
@@ -2636,8 +2662,10 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "type",
-                                    "logo"
+                                    "mobile_light_logo",
+                                    "mobile_dark_logo",
+                                    "light_logo",
+                                    "dark_logo"
                                 ],
                                 "properties": {
                                     "mobile_light_logo": {
@@ -5601,7 +5629,15 @@
                                 "required": [
                                     "name[ar]",
                                     "description[ar]",
-                                    "photos[0]"
+                                    "photos[0]",
+                                    "category_id",
+                                    "animal_type_id",
+                                    "primary_color_id",
+                                    "secondary_color_id",
+                                    "birth_date",
+                                    "gender",
+                                    "size",
+                                    "status"
                                 ],
                                 "properties": {
                                     "branch_id": {
