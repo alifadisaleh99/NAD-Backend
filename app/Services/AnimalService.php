@@ -239,6 +239,132 @@ class AnimalService
         return $animal;
     }
 
+    public function update($request, Animal $animal, bool $to_owner)
+    {
+        if ($to_owner) {
+            $owner_id = $animal->user_id;
+            $owner_type = $animal->owner_type;
+        } else {
+            $old_owner_id = $animal->user_id;
+            $owner_id = $request->owner_id;
+            $owner_type = $request->owner_type;
+        }
+
+        if ($request->deleted_media_ids) {
+            $photos = $animal->media()->whereIn('id', $request->deleted_media_ids)->get();
+
+            foreach ($photos as $photo) {
+                delete_file_if_exist($photo->link);
+            }
+
+            $animal->media()->whereIn('id', $request->deleted_media_ids)->delete();
+        }
+
+        foreach ($request->photos as $photo) {
+
+            $media = $animal->media()->where('link', $photo)->first();
+
+            if ($media) {
+                $media->link = $photo;
+                $media->save();
+            } else {
+                if (is_file($photo)) {
+                    $uploadedphoto = upload_file($photo, 'animals', 'animal');
+                    $animal->media()->create([
+                        'link' => $uploadedphoto,
+                    ]);
+                } else
+                    throw ValidationException::withMessages(['image' => __('error_messages.Image should be a file')]);
+            }
+        }
+
+        $animal->update([
+            'name'          => $request->name,
+            'description'   => $request->description,
+            'like' =>  $request->like,
+            'deslike' => $request->deslike,
+            'good_with' => $request->good_with,
+            'bad_with' => $request->bad_with,
+            'owner_type'     => $owner_type,
+            'user_id'         => $owner_id,
+            'branch_id'       => $request->branch_id ?? $animal->branch_id,
+            'category_id'         => $request->category_id,
+            'animal_type_id'      => $request->animal_type_id,
+            'animal_specie_id'    => $request->animal_specie_id,
+            'animal_breed_id'     => $request->animal_breed_id,
+            'primary_color_id'    => $request->primary_color_id,
+            'secondary_color_id'  => $request->secondary_color_id,
+            'tertiary_color_id'   => $request->tertiary_color_id,
+            'age' => $request->age,
+            'gender' => $request->gender,
+            'size' => $request->size,
+            'link' => $request->link,
+            'status' => $request->status,
+            'birth_date' => $request->birth_date,
+        ]);
+
+        if (!$to_owner) {
+            if ($owner_id && $owner_id != $old_owner_id) {
+                $ownership_record = OwnershipRecord::where('animal_id', $animal->id)
+                    ->where('user_id', $old_owner_id)->where('end_date', null)->first();
+
+                $this->updateOwnershipRecord($ownership_record);
+                $this->createOwnershipRecord($animal);
+            }
+        }
+
+        if ($request->deleted_pet_mark_ids) {
+            $animal->animal_pet_marks()->whereIn('pet_mark_id', $request->deleted_pet_mark_ids)->delete();
+        }
+
+        if ($request->pet_mark_ids) {
+            foreach ($request->pet_mark_ids as $pet_mark_id) {
+                $is_exists = $animal->animal_pet_marks()->where('pet_mark_id', $pet_mark_id)->exists();
+
+                if (!$is_exists) {
+                    $animal->animal_pet_marks()->create(['pet_mark_id' => $pet_mark_id]);
+                }
+            }
+        }
+
+        if ($request->deleted_sensitivity_ids) {
+            $animal->sensitivities()->whereIn('id', $request->deleted_sensitivity_ids)->delete();
+        }
+
+        if ($request->sensitivities) {
+            foreach ($request->sensitivities as $sensitivity) {
+                $is_exists = $animal->sensitivities()->where('name', $sensitivity)->exists();
+
+                if (!$is_exists)
+                    $animal->sensitivities()->create(['name' => $sensitivity]);
+            }
+        }
+    }
+
+    public function show(Animal $animal)
+    {
+        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch', 'latest_lost_report']);
+    }
+
+    public function delete(Animal $animal)
+    {
+        $photos = $animal->media()->get();
+
+        foreach ($photos as $photo) {
+            delete_file_if_exist($photo->link);
+        }
+        
+        $animal->lost_reports()->delete();
+        $animal->transfers()->delete();
+        $animal->animal_status()->delete();
+        $animal->ownership_records()->delete();
+        $animal->sensitivities()->delete();
+        $animal->tags()->delete();
+        $animal->animal_pet_marks()->delete();
+        $animal->media()->delete();
+        $animal->delete();
+    }
+    
     public function reportLost($request, Animal $animal)
     {
         $animal->lost_reports()->create([

@@ -24,8 +24,8 @@ class AdminUpdateAnimalRequest extends BaseAnimalRequest
         return array_merge(
             parent::rules(),
             [
-                'owner_type' => ['in:user,entity'],
-                'owner_id'   => ['integer', 'exists:users,id'],
+                'owner_type' => ['required', 'in:user,entity'],
+                'owner_id'   => ['required', 'integer', 'exists:users,id'],
                 'deleted_sensitivity_ids' => ['array'],
                 'deleted_sensitivity_ids.*' => ['integer', 'exists:animal_sensitivities,id'],
                 'deleted_pet_mark_ids' => ['array'],

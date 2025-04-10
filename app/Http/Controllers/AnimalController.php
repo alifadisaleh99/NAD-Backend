@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GetRequest;
 use App\Http\Resources\AnimalResource;
 use App\Services\AnimalService;
-use Illuminate\Http\Request;
 
 class AnimalController extends Controller
 {

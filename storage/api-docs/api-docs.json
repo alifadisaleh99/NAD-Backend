@@ -774,35 +774,6 @@
                 ]
             }
         },
-        "/admin/animals/{id}/generate-token": {
-            "post": {
-                "tags": [
-                    "Admin - Animals"
-                ],
-                "description": "Generate token.",
-                "operationId": "a75868e0b9db613b026a47e13675233c",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer_token": []
-                    }
-                ]
-            }
-        },
         "/admin/animals/{id}/ownership-records": {
             "get": {
                 "tags": [

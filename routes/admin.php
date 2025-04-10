@@ -56,16 +56,13 @@ Route::apiResource('animal-breeds', AnimalBreedController::class);
 Route::apiResource('colors', ColorController::class);
 Route::apiResource('pet-marks', PetMarkController::class);
 
+
+// animal
 Route::name('admin.')->group(function () {
     Route::apiResource('animals',AnimalController::class);
 });
-
-
-// animal
-Route::apiResource('animals', AnimalController::class);
 Route::apiResource('animal-statuses', AnimalStatusController::class);
 Route::get('animals/{animal}/ownership-records', [AnimalController::class, 'ownershipRecords']); 
-Route::post('animals/{animal}/generate-token', [AnimalController::class, 'generateTransferToken']);
 
 //plan
 Route::apiResource('plans', PlanController::class);

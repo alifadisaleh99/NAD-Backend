@@ -119,7 +119,7 @@ class UserController extends Controller
      */
     public function index(GetRequest $request)
     {
-        $q = User::with(['entity', 'branch']);
+        $q = User::with(['entity', 'branch'])->latest();
 
         if ($request->status === '0') {
             $q->where('status', false);

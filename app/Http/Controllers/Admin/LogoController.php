@@ -5,16 +5,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LogoRequest;
 use App\Http\Resources\LogoResource;
-use App\Models\Logo;
-use Illuminate\Validation\ValidationException;
+use App\Services\LogoService;
 
 class LogoController extends Controller
 {
-    public function __construct()
+    public $logoService;
+
+    public function __construct(LogoService $logoService)
     {
         $this->middleware('auth:sanctum');
         $this->middleware('permission:logo.read|logo.write')->only('show');
         $this->middleware('permission:logo.write')->only('update');
+
+        $this->logoService = $logoService;
     }
     
     /**
@@ -33,17 +36,7 @@ class LogoController extends Controller
     */
     public function show()
     {
-        $logo = Logo::first(); 
-
-        if(!$logo)
-        {
-            $logo = Logo::create([
-                'mobile_light_logo' => null,
-                'mobile_dark_logo' =>  null,
-                'light_logo' =>  null,
-                'dark_logo' =>  null,    
-            ]);
-        }
+        $logo = $this->logoService->show(); 
 
         return response()->json(new LogoResource($logo), 200);
     }
@@ -77,40 +70,7 @@ class LogoController extends Controller
     */
     public function update(LogoRequest $request)
     {
-        $logo = Logo::first();
-
-        if(!$logo)
-        {
-            $logo = Logo::create([
-                'mobile_light_logo' => null,
-                'mobile_dark_logo' =>  null,
-                'light_logo' =>  null,
-                'dark_logo' =>  null,    
-            ]);
-        }
-
-        $logos = [
-            'mobile_light_logo' => null,
-            'mobile_dark_logo' => null,
-            'light_logo' => null,
-            'dark_logo' => null,
-        ];
-
-        foreach ($logos as $key => $value)
-        {
-          if($request->$key){
-             if($request->$key == $logo->$key){
-                $logos[$key] = $logo->$key;
-            }else{
-                if(!is_file($request->$key))
-                    throw ValidationException::withMessages([$key => __('error_messages.Logo should be a file')]);
-
-                delete_file_if_exist($logo->$key);
-                $logos[$key] = upload_file($request->$key, 'logos', 'logo');
-            }
-        }
-    }
-        $logo->update($logos);
+        $logo = $this->logoService->update($request);
 
         return response()->json(new LogoResource($logo), 200);
     }
