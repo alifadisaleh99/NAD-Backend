@@ -23,7 +23,7 @@ class BaseAnimalRequest extends FormRequest
     {
         return [
             'name'           => ['required', 'array', translation_rule()],
-            'description'    => ['required', 'array', translation_rule()],
+            'description'    => ['array', translation_rule()],
             'like'           => ['array', translation_rule()],
             'deslike'        => ['array', translation_rule()],
             'good_with'      => ['array', translation_rule()],
@@ -33,7 +33,7 @@ class BaseAnimalRequest extends FormRequest
 
             'branch_id'      => ['required_if:owner_type,entity', 'integer', 'exists:branches,id'],
             'category_id'    => ['required', 'integer', 'exists:categories,id'],
-            'animal_type_id' => ['required', 'integer', 'exists:animal_types,id'],
+            'animal_type_id' => ['integer', 'exists:animal_types,id'],
             'animal_specie_id' => ['integer', 'exists:animal_species,id'],
             'animal_breed_id' => ['integer', 'exists:animal_breeds,id'],
 
@@ -45,8 +45,9 @@ class BaseAnimalRequest extends FormRequest
             'tertiary_color_id'  => ['integer', 'exists:colors,id'],
 
             'age'    => ['in:young,adult,senior'],
+            "weight" => ['min:0', 'numeric'],
             'gender' => ['required', 'in:male,female'],
-            'size'   => ['required', 'in:small,medium,large'],
+            'size'   => ['in:small,medium,large'],
             'link'   => ['string'],
             'status' => ['required', 'in:1,0'],
             'birth_date' => ['required', 'date'],

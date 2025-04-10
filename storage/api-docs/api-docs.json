@@ -401,7 +401,6 @@
                             "schema": {
                                 "required": [
                                     "name[ar]",
-                                    "description[ar]",
                                     "owner_type",
                                     "owner_id",
                                     "photos[0]",
@@ -410,7 +409,6 @@
                                     "secondary_color_id",
                                     "birth_date",
                                     "gender",
-                                    "size",
                                     "status"
                                 ],
                                 "properties": {
@@ -521,6 +519,10 @@
                                             "male",
                                             "female"
                                         ]
+                                    },
+                                    "weight": {
+                                        "type": "number",
+                                        "format": "float"
                                     },
                                     "size": {
                                         "type": "string",
@@ -714,6 +716,10 @@
                                             "male",
                                             "female"
                                         ]
+                                    },
+                                    "weight": {
+                                        "type": "number",
+                                        "format": "float"
                                     },
                                     "size": {
                                         "type": "string",
@@ -5616,14 +5622,12 @@
                             "schema": {
                                 "required": [
                                     "name[ar]",
-                                    "description[ar]",
                                     "photos[0]",
                                     "category_id",
                                     "primary_color_id",
                                     "secondary_color_id",
                                     "birth_date",
                                     "gender",
-                                    "size",
                                     "status"
                                 ],
                                 "properties": {
@@ -5717,6 +5721,10 @@
                                     "birth_date": {
                                         "type": "string",
                                         "format": "date"
+                                    },
+                                    "weight": {
+                                        "type": "number",
+                                        "format": "float"
                                     },
                                     "gender": {
                                         "type": "string",
@@ -5907,6 +5915,10 @@
                                             "male",
                                             "female"
                                         ]
+                                    },
+                                    "weight": {
+                                        "type": "number",
+                                        "format": "float"
                                     },
                                     "size": {
                                         "type": "string",

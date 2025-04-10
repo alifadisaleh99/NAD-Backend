@@ -49,7 +49,7 @@ class AnimalTypeService
         $animal_type = AnimalType::create([
             'category_id'   => $request->category_id,
             'name'          => $request->name,
-            'image'         => $request->image,
+            'image'         => $image,
         ]);
 
         return $animal_type;

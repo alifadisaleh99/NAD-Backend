@@ -32,6 +32,7 @@ class Animal extends TranslatableModel
         'branch_id',
         'uaid',
         'pet_status',
+        'weight',
     ];
 
     protected $translatable = [
