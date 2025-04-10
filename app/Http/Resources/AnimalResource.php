@@ -43,6 +43,7 @@ class AnimalResource extends JsonResource
             'gender' => $this->gender,
             'size'  => $this->size,
             'birth_date' => $this->birth_date,
+            'age_now' => $this->calculateAge($this->birth_date),
             'tags'            => TagResource::collection($this->whenLoaded('tags')),
             'created_at'   => $this->created_at,
             'created_by'   => new UserResource($this->whenLoaded('user_create')),

@@ -369,6 +369,7 @@ class AnimalService
     
     public function reportLost($request, Animal $animal)
     {
+       if($animal->pet_status != 'lost') {
         $animal->lost_reports()->create([
             'seen_at' => $request->seen_at,
             'address' => $request->address,
@@ -378,6 +379,7 @@ class AnimalService
         $animal->update([
             'pet_status' => 'lost',
         ]);
+      }
     }
 
     public function markAsFound(Animal $animal)

@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Mosab\Translation\Database\TranslatableModel;
-use Illuminate\Support\Str;
 
 
 class Animal extends TranslatableModel
@@ -142,7 +142,27 @@ class Animal extends TranslatableModel
     public function latest_lost_report()
     {
         return $this->hasOne(AnimalLostReport::class, 'animal_id')
-                ->latestOfMany('created_at');
+            ->latestOfMany('created_at');
+    }
+
+    public function calculateAge($birth_date)
+    {
+        if (!is_null($birth_date)) {
+            $diff = Carbon::parse($birth_date)->diff(Carbon::now());
+            $years = $diff->y;
+            $months = $diff->m;
+            $days = $diff->d;
+        } else {
+            $years = 0;
+            $months = 0;
+            $days = 0;
+        }
+        $age = [
+            'years' => $years,
+            'months' => $months,
+            'days' => $days,
+        ];
+
+        return $age;
     }
 }
- 

@@ -50,7 +50,7 @@ class BaseAnimalRequest extends FormRequest
             'size'   => ['in:small,medium,large'],
             'link'   => ['string'],
             'status' => ['required', 'in:1,0'],
-            'birth_date' => ['required', 'date'],
+            'birth_date' => ['required', 'date', 'before_or_equal:today'],
         ];
     }
 }

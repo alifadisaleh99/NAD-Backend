@@ -22,7 +22,7 @@ class LostReportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'seen_at' => ['required', 'date_format:Y-m-d'],
+            'seen_at' => ['required', 'date_format:Y-m-d', 'before_or_equal:today'],
             'mark_as_public' => ['required', 'integer', 'in:1,0'],
             'address' => ['required', 'string'],
         ];
