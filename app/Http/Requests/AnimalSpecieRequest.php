@@ -25,6 +25,7 @@ class AnimalSpecieRequest extends FormRequest
             'category_id'       => ['required', 'integer', 'exists:categories,id'],
             'animal_type_id'    => ['required', 'integer', 'exists:animal_types,id'],
             'name'              => ['required', 'array', translation_rule()],
+            'image'           => request()->isMethod('post') ? ['image'] : [''],
         ];
     }
 }

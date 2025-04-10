@@ -24,6 +24,7 @@ class AnimalTypeRequest extends FormRequest
         return [
             'category_id'    => ['required', 'integer', 'exists:categories,id'],
             'name'           => ['required', 'array', translation_rule()],
+            'image'           => request()->isMethod('post') ? ['image'] : [''],
         ];
     }
 }

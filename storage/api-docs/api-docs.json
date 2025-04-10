@@ -117,6 +117,9 @@
                                     },
                                     "name[ar]": {
                                         "type": "string"
+                                    },
+                                    "image": {
+                                        "type": "file"
                                     }
                                 },
                                 "type": "object"
@@ -200,6 +203,9 @@
                                     },
                                     "name[ar]": {
                                         "type": "string"
+                                    },
+                                    "image": {
+                                        "type": "file"
                                     },
                                     "_method": {
                                         "type": "string",
@@ -400,7 +406,6 @@
                                     "owner_id",
                                     "photos[0]",
                                     "category_id",
-                                    "animal_type_id",
                                     "primary_color_id",
                                     "secondary_color_id",
                                     "birth_date",
@@ -923,6 +928,9 @@
                                     },
                                     "name[ar]": {
                                         "type": "string"
+                                    },
+                                    "image": {
+                                        "type": "file"
                                     }
                                 },
                                 "type": "object"
@@ -1003,6 +1011,9 @@
                                     },
                                     "name[ar]": {
                                         "type": "string"
+                                    },
+                                    "image": {
+                                        "type": "file"
                                     },
                                     "_method": {
                                         "type": "string",
@@ -1373,6 +1384,9 @@
                                     },
                                     "name[ar]": {
                                         "type": "string"
+                                    },
+                                    "image": {
+                                        "type": "file"
                                     }
                                 },
                                 "type": "object"
@@ -1450,6 +1464,9 @@
                                     },
                                     "name[ar]": {
                                         "type": "string"
+                                    },
+                                    "image": {
+                                        "type": "file"
                                     },
                                     "_method": {
                                         "type": "string",
@@ -5602,7 +5619,6 @@
                                     "description[ar]",
                                     "photos[0]",
                                     "category_id",
-                                    "animal_type_id",
                                     "primary_color_id",
                                     "secondary_color_id",
                                     "birth_date",

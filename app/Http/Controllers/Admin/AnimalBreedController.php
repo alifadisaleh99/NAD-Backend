@@ -96,6 +96,7 @@ class AnimalBreedController extends Controller
      *              @OA\Property(property="animal_specie_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
+     *              @OA\Property(property="image", type="file"),
      *          )
      *       )
      *   ),
@@ -162,6 +163,7 @@ class AnimalBreedController extends Controller
      *              @OA\Property(property="animal_specie_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
+     *              @OA\Property(property="image", type="file"),
      *              @OA\Property(property="_method", type="string", format="string", example="PUT"),
      *           )
      *       )

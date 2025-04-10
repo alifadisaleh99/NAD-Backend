@@ -14,6 +14,7 @@ class AnimalBreed extends TranslatableModel
         'category_id',
         'animal_type_id',
         'animal_specie_id',
+        'image',
     ];
 
     protected $translatable = [
@@ -32,6 +33,6 @@ class AnimalBreed extends TranslatableModel
 
     public function animal_specie()
     {
-        return $this->BelongsTo(AnimalSpecie::class);
+        return $this->belongsTo(AnimalSpecie::class);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\AnimalType;
 use Mosab\Translation\Models\Translation;
+use Illuminate\Validation\ValidationException;
 
 class AnimalTypeService
 {
@@ -40,9 +41,15 @@ class AnimalTypeService
 
     public function create($request)
     {
+        $image = null;
+
+        if ($request->image)
+           $image = upload_file($request->image, 'animalTypes', 'animalType');
+
         $animal_type = AnimalType::create([
             'category_id'   => $request->category_id,
             'name'          => $request->name,
+            'image'         => $request->image,
         ]);
 
         return $animal_type;
@@ -50,9 +57,22 @@ class AnimalTypeService
 
     public function update($request, AnimalType $animal_type)
     {
+        $image = null;
+        if ($request->image) {
+            if ($request->image == $animal_type->image) {
+                $image = $animal_type->image;
+            } else {
+                if (!is_file($request->image))
+                    throw ValidationException::withMessages(['image' => __('error_messages.Image should be a file')]);
+                delete_file_if_exist($animal_type->image);
+                $image = upload_file($request->image, 'animalTypes', 'animalType');
+            }
+        }
+
         $animal_type->update([
             'category_id' => $request->category_id,
-            'name'         => $request->name,
+            'name'        => $request->name,
+            'image'       => $image,
         ]);
     }
 }

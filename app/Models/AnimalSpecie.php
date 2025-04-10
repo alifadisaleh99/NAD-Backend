@@ -13,6 +13,7 @@ class AnimalSpecie extends TranslatableModel
     protected $fillable = [
         'category_id',
         'animal_type_id',
+        'image',
     ];
 
     protected $translatable = [
