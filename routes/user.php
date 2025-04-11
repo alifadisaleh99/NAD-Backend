@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\User\AnimalController;
+use App\Http\Controllers\User\CategoryController;
 use App\Http\Controllers\User\TagController;
 use App\Http\Controllers\User\TagTypeController;
 use Illuminate\Support\Facades\Route;
@@ -34,4 +35,7 @@ Route::get('tag-types/{tag_type}', [TagTypeController::class, 'show']);
 //tag
 Route::put('tags', [TagController::class, 'update']);  
 
+//categories
+Route::get('categories', [CategoryController::class, 'index'])->name('user.categories.index');
+Route::get('categories/{category}'  , [CategoryController::class, 'show'])->name('user.categories.show');
 

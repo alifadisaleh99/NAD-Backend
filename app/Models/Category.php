@@ -28,4 +28,15 @@ class Category extends TranslatableModel
     {
         return $this->hasMany(Animal::class);
     }
+
+    public function count_animals()
+    {
+        if(request()->routeIs(['user.categories.index', 'user.categories.show']))
+        {
+            return $this->animals()->where('user_id', auth()->id())->count();
+        }
+
+        else
+             return $this->animals->count();
+    }
 }
