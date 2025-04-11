@@ -200,23 +200,33 @@ class AuthController extends Controller
     */
     public function login(Request $request)
     {
-        $request->validate( [
+        $request->validate([
             'email'    => ['required'],
-            'password' => ['required','min:6'],
+            'password' => ['required', 'min:6'],
         ]);
 
-        //TODO: check if the user verified or not 
-
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember??false)) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember ?? false)) {
             $user = to_user(Auth::user());
             $token = $user->createToken('Sanctum', [])->plainTextToken;
-            
+
             $user->load(['entity', 'branch']);
+
+            // Set cookie parameters
+            $cookie = cookie(
+                'auth_token',         // Name
+                $token,               // Value
+                60 * 24 * 7,          // Expiration in minutes (7 days)
+                '/',                  // Path
+                '.gaduid.com',        // Domain (All gaduid subdomains)
+                true,                 // Secure (true if using HTTPS)
+                true,                 // HttpOnly
+                false,                // Raw
+                'Strict'              // SameSite ('Strict' or 'Lax' or 'None')
+            );
 
             return response()->json([
                 'user' => new UserResource($user),
-                'token' => $token,
-            ], 200);
+            ], 200)->withCookie($cookie);
         }
 
         return response()->json([
