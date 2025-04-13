@@ -11,12 +11,10 @@ class AnimalBreedService
 
     public function getAllAnimalBreeds($request)
     {
-        $q = AnimalBreed::query()->with(['category', 'animal_type', 'animal_specie'])->latest();
+        $q = AnimalBreed::query()->with(['category', 'animal_specie'])->latest();
 
         if($request->category_id)
            $q->where('category_id', $request->category_id);
-        if($request->animal_type_id)
-           $q->where('animal_type_id', $request->animal_type_id);
         if($request->animal_specie_id)
            $q->where('animal_specie_id', $request->animal_specie_id);
 
@@ -52,7 +50,6 @@ class AnimalBreedService
 
         $animal_breed = AnimalBreed::create([
             'category_id'       => $request->category_id,
-            'animal_type_id'    => $request->animal_type_id,
             'animal_specie_id'  => $request->animal_specie_id,
             'name'              => $request->name,
             'image'             => $image,
@@ -77,7 +74,6 @@ class AnimalBreedService
 
         $animal_breed->update([
             'category_id'       => $request->category_id,
-            'animal_type_id'    => $request->animal_type_id,
             'animal_specie_id'  => $request->animal_specie_id,
             'name'              => $request->name,
             'image'             => $image,

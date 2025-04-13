@@ -42,12 +42,6 @@ class AnimalBreedController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
-     *    name="animal_type_id",
-     *    required=false,
-     *    @OA\Schema(type="integer"),
-     * ),
-     * @OA\Parameter(
-     *    in="query",
      *    name="animal_specie_id",
      *    required=false,
      *    @OA\Schema(type="integer"),
@@ -92,7 +86,7 @@ class AnimalBreedController extends Controller
     */
     public function show(AnimalBreed $animal_breed)
     {
-        $animal_breed->load(['category', 'animal_type', 'animal_specie']);
+        $animal_breed->load(['category', 'animal_specie']);
 
         return response()->json(new AnimalBreedResource($animal_breed), 200);
     }

@@ -12,7 +12,6 @@ class AnimalBreed extends TranslatableModel
 
     protected $fillable = [
         'category_id',
-        'animal_type_id',
         'animal_specie_id',
         'image',
     ];
@@ -26,11 +25,6 @@ class AnimalBreed extends TranslatableModel
         return $this->belongsTo(Category::class);
     }
     
-    public function animal_type()
-    {
-        return $this->belongsTo(AnimalType::class);
-    }
-
     public function animal_specie()
     {
         return $this->belongsTo(AnimalSpecie::class);

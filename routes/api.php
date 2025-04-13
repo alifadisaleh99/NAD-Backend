@@ -3,7 +3,6 @@
 use App\Http\Controllers\AnimalBreedController;
 use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\AnimalSpecieController;
-use App\Http\Controllers\AnimalTypeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BranchController;
@@ -35,6 +34,7 @@ Route::post('logout', [AuthController::class, 'logout']);
 Route::put('user', [AuthController::class, 'edit_profile']);
 Route::get('user', [AuthController::class, 'get_profile']);
 Route::delete('user/delete_account', [AuthController::class, 'delete_user']);
+Route::post('user/forget_password', [AuthController::class, 'forgetUserPassword']);
 
 //branch_types
 Route::get('branch-types'  , [BranchTypeController::class, 'index']);
@@ -54,10 +54,6 @@ Route::get('categories/{category}'  , [CategoryController::class, 'show']);
 //colors
 Route::get('colors'  , [ColorController::class, 'index']);
 Route::get('colors/{color}'  , [ColorController::class, 'show']);
-
-//animal-types
-Route::get('animal-types'  , [AnimalTypeController::class, 'index']);
-Route::get('animal-types/{animal_type}'  , [AnimalTypeController::class, 'show']);
 
 //animal-species
 Route::get('animal-species'  , [AnimalSpecieController::class, 'index']);

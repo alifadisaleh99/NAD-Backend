@@ -33,7 +33,6 @@ class BaseAnimalRequest extends FormRequest
 
             'branch_id'      => ['integer', 'exists:branches,id'],
             'category_id'    => ['required', 'integer', 'exists:categories,id'],
-            'animal_type_id' => ['integer', 'exists:animal_types,id'],
             'animal_specie_id' => ['integer', 'exists:animal_species,id'],
             'animal_breed_id' => ['integer', 'exists:animal_breeds,id'],
 

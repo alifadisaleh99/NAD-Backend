@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Admin\AnimalBreedController;
 use App\Http\Controllers\Admin\AnimalController;
-use App\Http\Controllers\Admin\AnimalTypeController;
 use App\Http\Controllers\Admin\AnimalSpecieController;
 use App\Http\Controllers\Admin\AnimalStatusController;
 use App\Http\Controllers\Admin\BranchController;
@@ -50,7 +49,6 @@ Route::apiResource('branches', BranchController::class);
 
 // animal resources
 Route::apiResource('categories', CategoryController::class);
-Route::apiResource('animal-types', AnimalTypeController::class);
 Route::apiResource('animal-species', AnimalSpecieController::class)->parameters(['animal-species' => 'animal_specie']);
 Route::apiResource('animal-breeds', AnimalBreedController::class);
 Route::apiResource('colors', ColorController::class);

@@ -10,12 +10,10 @@ class AnimalSpecieService
 {
     public function getAllAnimalSpecies($request)
     {
-        $q = AnimalSpecie::query()->with(['category', 'animal_type'])->latest();
+        $q = AnimalSpecie::query()->with(['category'])->latest();
 
         if ($request->category_id)
             $q->where('category_id', $request->category_id);
-        if ($request->animal_type_id)
-            $q->where('animal_type_id', $request->animal_type_id);
 
         if ($request->q) {
             $animal_species_ids = Translation::where('translatable_type', AnimalSpecie::class)
@@ -48,7 +46,6 @@ class AnimalSpecieService
 
         $animal_specie = AnimalSpecie::create([
             'category_id'       => $request->category_id,
-            'animal_type_id'    => $request->animal_type_id,
             'name'              => $request->name,
             'image'             => $image,
         ]);
@@ -72,7 +69,6 @@ class AnimalSpecieService
 
         $animal_specie->update([
             'category_id'       => $request->category_id,
-            'animal_type_id'    => $request->animal_type_id,
             'name'              => $request->name,
             'image'             => $image,
         ]);

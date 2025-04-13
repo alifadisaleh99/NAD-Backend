@@ -31,7 +31,6 @@ class GetRequest extends FormRequest
             'uaid'                 => ['string', 'exists:animals,uaid'],
             'tag_number'           => ['string', 'exists:tags,number'],
             'category_id'        => ['integer', 'exists:categories,id'],
-            'animal_type_id'     => ['integer', 'exists:animal_types,id'],
             'animal_specie_id'   => ['integer', 'exists:animal_species,id'],
             'animal_breed_id'    =>  ['integer', 'exists:animal_breeds,id'],
             'branch_id'            =>  ['integer', 'exists:branches,id'],

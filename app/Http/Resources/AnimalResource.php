@@ -31,7 +31,6 @@ class AnimalResource extends JsonResource
             'sensitivities'     => AnimalSensitivityResource::collection($this->whenLoaded('sensitivities')),
             'photos'            => MediaResource::collection($this->whenLoaded('media')),
             'category'          => new CategoryResource($this->whenLoaded('category')),
-            'animal_type'       => new AnimalTypeResource($this->whenLoaded('animal_type')),
             'animal_specie'     => new AnimalSpecieResource($this->whenLoaded('animal_specie')),
             'animal_breed'      => new AnimalBreedResource($this->whenLoaded('animal_breed')),
             'pet_marks'          => PetMarkResource::collection($this->whenLoaded('pet_marks')),

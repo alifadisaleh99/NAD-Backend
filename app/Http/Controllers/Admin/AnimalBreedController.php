@@ -50,12 +50,6 @@ class AnimalBreedController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
-     *    name="animal_type_id",
-     *    required=false,
-     *    @OA\Schema(type="integer"),
-     * ),
-     * @OA\Parameter(
-     *    in="query",
      *    name="animal_specie_id",
      *    required=false,
      *    @OA\Schema(type="integer"),
@@ -90,9 +84,8 @@ class AnimalBreedController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"name[ar]", "category_id", "animal_type_id", "animal_specie_id"},
+     *              required={"name[ar]", "category_id", "animal_specie_id"},
      *              @OA\Property(property="category_id", type="integer"),
-     *              @OA\Property(property="animal_type_id", type="integer"),
      *              @OA\Property(property="animal_specie_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
@@ -136,7 +129,7 @@ class AnimalBreedController extends Controller
     */
     public function show(AnimalBreed $animal_breed)
     {
-        $animal_breed->load(['category', 'animal_type', 'animal_specie']);
+        $animal_breed->load(['category', 'animal_specie']);
 
         return response()->json(new AnimalBreedResource($animal_breed), 200);
     }
@@ -159,7 +152,6 @@ class AnimalBreedController extends Controller
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
      *              @OA\Property(property="category_id", type="integer"),
-     *              @OA\Property(property="animal_type_id", type="integer"),
      *              @OA\Property(property="animal_specie_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),

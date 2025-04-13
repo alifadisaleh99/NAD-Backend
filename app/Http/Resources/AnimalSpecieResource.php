@@ -19,7 +19,6 @@ class AnimalSpecieResource extends JsonResource
             'name'              => $this->name, 
             'image'             => $this->image,
             'category'          => new CategoryResource($this->whenLoaded('category')),
-            'animal_type'       => new AnimalTypeResource($this->whenLoaded('animal_type')),
             'translations'      => $this->translations,
         ];
     }

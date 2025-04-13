@@ -52,12 +52,7 @@ class AnimalController extends Controller
      *    required=false,
      *    @OA\Schema(type="integer"),
      * ),
-     * @OA\Parameter(
-     *    in="query",
-     *    name="animal_type_id",
-     *    required=false,
-     *    @OA\Schema(type="integer"),
-     * ),
+
      * @OA\Parameter(
      *    in="query",
      *    name="animal_specie_id",
@@ -151,7 +146,6 @@ class AnimalController extends Controller
      *              @OA\Property(property="status", type="boolean", enum={0, 1}),
      *              @OA\Property(property="photos[0]", type="file"),
      *              @OA\Property(property="category_id", type="integer"),
-     *              @OA\Property(property="animal_type_id", type="integer"),
      *              @OA\Property(property="animal_specie_id", type="integer"),
      *              @OA\Property(property="animal_breed_id", type="integer"),
      *              @OA\Property(property="pet_mark_ids[0]", type="integer"),
@@ -266,7 +260,6 @@ class AnimalController extends Controller
      *              @OA\Property(property="photos[0]", type="file"),
      *              @OA\Property(property="deleted_media_ids[0]", type="integer"),
      *              @OA\Property(property="category_id", type="integer"),
-     *              @OA\Property(property="animal_type_id", type="integer"),
      *              @OA\Property(property="animal_specie_id", type="integer"),
      *              @OA\Property(property="animal_breed_id", type="integer"),
      *              @OA\Property(property="pet_mark_ids[0]", type="integer"),

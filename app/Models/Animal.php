@@ -18,7 +18,6 @@ class Animal extends TranslatableModel
         'status',
         'link',
         'category_id',
-        'animal_type_id',
         'animal_specie_id',
         'animal_breed_id',
         'primary_color_id',
@@ -55,11 +54,6 @@ class Animal extends TranslatableModel
     public function category()
     {
         return $this->belongsTo(Category::class);
-    }
-
-    public function animal_type()
-    {
-        return $this->belongsTo(AnimalType::class);
     }
 
     public function animal_specie()

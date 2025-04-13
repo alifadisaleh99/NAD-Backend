@@ -38,12 +38,7 @@ class AnimalController extends Controller
      *    required=false,
      *    @OA\Schema(type="integer"),
      * ),
-     * @OA\Parameter(
-     *    in="query",
-     *    name="animal_type_id",
-     *    required=false,
-     *    @OA\Schema(type="integer"),
-     * ),
+
      * @OA\Parameter(
      *    in="query",
      *    name="animal_specie_id",

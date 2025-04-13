@@ -50,12 +50,6 @@ class AnimalSpecieController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
-     *    name="animal_type_id",
-     *    required=false,
-     *    @OA\Schema(type="integer"),
-     * ),
-     * @OA\Parameter(
-     *    in="query",
      *    name="q",
      *    required=false,
      *    @OA\Schema(type="string"),
@@ -84,9 +78,8 @@ class AnimalSpecieController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"name[ar]", "category_id", "animal_type_id"},
+     *              required={"name[ar]", "category_id"},
      *              @OA\Property(property="category_id", type="integer"),
-     *              @OA\Property(property="animal_type_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="image", type="file"),
@@ -129,7 +122,7 @@ class AnimalSpecieController extends Controller
     */
     public function show(AnimalSpecie $animal_specie)
     {
-        $animal_specie->load(['category', 'animal_type']);
+        $animal_specie->load(['category']);
 
         return response()->json(new AnimalSpecieResource($animal_specie), 200);
     }
@@ -152,7 +145,6 @@ class AnimalSpecieController extends Controller
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
      *              @OA\Property(property="category_id", type="integer"),
-     *              @OA\Property(property="animal_type_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="image", type="file"),

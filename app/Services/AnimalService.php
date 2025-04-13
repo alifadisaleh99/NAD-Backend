@@ -120,7 +120,7 @@ class AnimalService
         } else
             $q = Animal::query();
 
-        $q->with(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch', 'latest_lost_report'])->latest();
+        $q->with(['category', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch', 'latest_lost_report'])->latest();
 
         if ($request->category_id)
             $q->where('category_id', $request->category_id);
@@ -132,8 +132,6 @@ class AnimalService
             $q->where('tertiary_color_id', $request->tertiary_color_id);
         if ($request->gender)
             $q->where('gender', $request->gender);
-        if ($request->animal_type_id)
-            $q->where('animal_type_id', $request->animal_type_id);
         if ($request->animal_specie_id)
             $q->where('animal_specie_id', $request->animal_specie_id);
         if ($request->animal_breed_id)
@@ -197,7 +195,6 @@ class AnimalService
             'user_id'         => $owner_id,
             'branch_id'           => $request->branch_id,
             'category_id'         => $request->category_id,
-            'animal_type_id'      => $request->animal_type_id,
             'animal_specie_id'    => $request->animal_specie_id,
             'animal_breed_id'     => $request->animal_breed_id,
             'primary_color_id'    => $request->primary_color_id,
@@ -293,7 +290,6 @@ class AnimalService
             'user_id'         => $owner_id,
             'branch_id'       => $request->branch_id ?? $animal->branch_id,
             'category_id'         => $request->category_id,
-            'animal_type_id'      => $request->animal_type_id,
             'animal_specie_id'    => $request->animal_specie_id,
             'animal_breed_id'     => $request->animal_breed_id,
             'primary_color_id'    => $request->primary_color_id,
@@ -351,7 +347,7 @@ class AnimalService
 
     public function show(Animal $animal)
     {
-        $animal->load(['category', 'animal_type', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch', 'latest_lost_report']);
+        $animal->load(['category', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch', 'latest_lost_report']);
     }
 
     public function delete(Animal $animal)
