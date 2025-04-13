@@ -211,17 +211,16 @@ class AuthController extends Controller
 
             $user->load(['entity', 'branch']);
 
-            // Set cookie parameters
             $cookie = cookie(
-                'auth_token',         // Name
-                $token,               // Value
-                60 * 24 * 7,          // Expiration in minutes (7 days)
-                '/',                  // Path
-                '.gaduid.com',        // Domain (All gaduid subdomains)
-                true,                 // Secure (true if using HTTPS)
-                true,                 // HttpOnly
-                false,                // Raw
-                'Strict'              // SameSite ('Strict' or 'Lax' or 'None')
+                'auth_token',
+                $token,
+                60 * 24 * 7,
+                '/',
+                '.gaduid.com',
+                true,
+                true,
+                false,
+                'None'
             );
 
             return response()->json([

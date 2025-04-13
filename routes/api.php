@@ -24,6 +24,20 @@ use App\Http\Controllers\PetMarkController;
 |
 */
 
+// Route::get('/userTest', function (Request $request) {
+//     $token = $request->token;    
+//     $accessToken = PersonalAccessToken::findToken($token);
+
+//     if (!$accessToken) {
+//         return response()->json(['message' => 'Invalid token'], 401);
+//     }
+
+//     return response()->json([
+//         'user'  => $accessToken->tokenable,
+//         'token' => $token,
+//     ]);
+// });
+
 //Auth
 Route::post('login'  , [AuthController::class, 'login']);
 Route::post('register' , [AuthController::class, 'register']);
