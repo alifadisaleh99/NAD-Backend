@@ -119,7 +119,7 @@ class AnimalController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"name[ar]", "photos[0]", "category_id", "primary_color_id", "secondary_color_id", "birth_date", "gender", "status"},
+     *              required={"name[ar]", "photos[0]", "category_id", "primary_color_id", "birth_date", "gender", "status"},
      *              @OA\Property(property="branch_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
@@ -149,7 +149,10 @@ class AnimalController extends Controller
      *              @OA\Property(property="birth_date", type="date"),
      *              @OA\Property(property="weight", type="float"),
      *              @OA\Property(property="gender", type="string", enum={"male", "female"}),
-     *              @OA\Property(property="size", type="string", enum={"small", "medium", "large"})
+     *              @OA\Property(property="size", type="string", enum={"small", "medium", "large"}),
+     *              @OA\Property(property="digital_link", type="string"),
+     *              @OA\Property(property="generate_public", type="boolean", enum={0, 1}),
+     *              @OA\Property(property="ownership_date", type="date"),
      *          )
      *       )
      * ),
@@ -261,6 +264,9 @@ class AnimalController extends Controller
      *              @OA\Property(property="gender", type="string", enum={"male", "female"}),
      *              @OA\Property(property="weight", type="float"),
      *              @OA\Property(property="size", type="string", enum={"small", "medium", "large"}),
+     *              @OA\Property(property="digital_link", type="string"),
+     *              @OA\Property(property="generate_public", type="boolean", enum={0, 1}),
+     *              @OA\Property(property="ownership_date", type="date"),
      *              @OA\Property(property="_method", type="string", format="string", example="PUT")
      *           )
      *       )

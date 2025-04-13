@@ -212,6 +212,9 @@ class AnimalService
             'birth_date' => $request->birth_date,
             'user_create_id' => auth()->id(),
             'uaid' => Str::random(15),
+            'digital_link' => $request->digital_link, 
+            'generate_public' => $request->generate_public, 
+            'ownership_date' => $request->ownership_date,
         ]);
 
         if ($request->photos) {
@@ -303,6 +306,9 @@ class AnimalService
             'link' => $request->link,
             'status' => $request->status,
             'birth_date' => $request->birth_date,
+            'digital_link' => $request->digital_link, 
+            'generate_public' => $request->generate_public, 
+            'ownership_date' => $request->ownership_date,
         ]);
 
         if (!$to_owner) {

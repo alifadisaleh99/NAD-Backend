@@ -406,7 +406,6 @@
                                     "photos[0]",
                                     "category_id",
                                     "primary_color_id",
-                                    "secondary_color_id",
                                     "birth_date",
                                     "gender",
                                     "status"
@@ -531,6 +530,20 @@
                                             "medium",
                                             "large"
                                         ]
+                                    },
+                                    "digital_link": {
+                                        "type": "string"
+                                    },
+                                    "generate_public": {
+                                        "type": "boolean",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "ownership_date": {
+                                        "type": "string",
+                                        "format": "date"
                                     }
                                 },
                                 "type": "object"
@@ -733,6 +746,20 @@
                                         "type": "string",
                                         "format": "string",
                                         "example": "PUT"
+                                    },
+                                    "digital_link": {
+                                        "type": "string"
+                                    },
+                                    "generate_public": {
+                                        "type": "boolean",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "ownership_date": {
+                                        "type": "string",
+                                        "format": "date"
                                     }
                                 },
                                 "type": "object"
@@ -4962,6 +4989,43 @@
                 ]
             }
         },
+        "/user/forget_password": {
+            "post": {
+                "tags": [
+                    "User - Auth"
+                ],
+                "description": "forget my password.",
+                "operationId": "964f4d5dbd37668380f3f40f0c11c930",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/logout": {
             "post": {
                 "tags": [
@@ -5625,7 +5689,6 @@
                                     "photos[0]",
                                     "category_id",
                                     "primary_color_id",
-                                    "secondary_color_id",
                                     "birth_date",
                                     "gender",
                                     "status"
@@ -5740,6 +5803,20 @@
                                             "medium",
                                             "large"
                                         ]
+                                    },
+                                    "digital_link": {
+                                        "type": "string"
+                                    },
+                                    "generate_public": {
+                                        "type": "boolean",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "ownership_date": {
+                                        "type": "string",
+                                        "format": "date"
                                     }
                                 },
                                 "type": "object"
@@ -5927,6 +6004,20 @@
                                             "medium",
                                             "large"
                                         ]
+                                    },
+                                    "digital_link": {
+                                        "type": "string"
+                                    },
+                                    "generate_public": {
+                                        "type": "boolean",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "ownership_date": {
+                                        "type": "string",
+                                        "format": "date"
                                     },
                                     "_method": {
                                         "type": "string",

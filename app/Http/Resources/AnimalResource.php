@@ -50,6 +50,9 @@ class AnimalResource extends JsonResource
             'uaid'         => $this->uaid,
             'pet_status'   => $this->pet_status,
             'latest_lost_report' =>  $this->pet_status == 'lost' ? new LostReportResource($this->whenLoaded('latest_lost_report')) : null,
+            'digital_link' => $this->digital_link, 
+            'generate_public' => $this->generate_public, 
+            'ownership_date' => $this->ownership_date,
             'translations' => $this->translations,
         ];
     }

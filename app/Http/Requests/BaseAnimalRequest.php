@@ -31,7 +31,7 @@ class BaseAnimalRequest extends FormRequest
             'sensitivities'  => ['array'],
             'sensitivities.*' => ['string'],
 
-            'branch_id'      => ['required_if:owner_type,entity', 'integer', 'exists:branches,id'],
+            'branch_id'      => ['integer', 'exists:branches,id'],
             'category_id'    => ['required', 'integer', 'exists:categories,id'],
             'animal_type_id' => ['integer', 'exists:animal_types,id'],
             'animal_specie_id' => ['integer', 'exists:animal_species,id'],
@@ -41,7 +41,7 @@ class BaseAnimalRequest extends FormRequest
             'pet_mark_ids.*'     => ['integer', 'exists:pet_marks,id'],
 
             'primary_color_id'   => ['required', 'integer', 'exists:colors,id'],
-            'secondary_color_id' => ['required', 'integer', 'exists:colors,id'],
+            'secondary_color_id' => ['integer', 'exists:colors,id'],
             'tertiary_color_id'  => ['integer', 'exists:colors,id'],
 
             'age'    => ['in:young,adult,senior'],
@@ -51,6 +51,9 @@ class BaseAnimalRequest extends FormRequest
             'link'   => ['string'],
             'status' => ['required', 'in:1,0'],
             'birth_date' => ['required', 'date', 'before_or_equal:today'],
+            'digital_link' => ['string'], 
+            'generate_public' => ['in:1,0'], 
+            'ownership_date' => ['date', 'before_or_equal:today'],
         ];
     }
 }

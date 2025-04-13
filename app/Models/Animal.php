@@ -33,6 +33,9 @@ class Animal extends TranslatableModel
         'uaid',
         'pet_status',
         'weight',
+        'digital_link', 
+        'generate_public', 
+        'ownership_date',
     ];
 
     protected $translatable = [
