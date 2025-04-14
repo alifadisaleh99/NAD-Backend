@@ -22,17 +22,17 @@ class TagRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'animal_id'      => ['required', 'integer', 'exists:animals,id'],
+            'animal_id'         => ['required', 'integer', 'exists:animals,id'],
 
-            'deleted_tag_ids' => ['array'],
+            'deleted_tag_ids'   => ['array'],
             'deleted_tag_ids.*' => ['integer', 'exists:tags,id'],
 
-            'tags'  => ['array'],
-            'tags.*.id'     => ['integer', 'exists:tags,id'],
-            'tags.*.tag_type_id'   => ['integer', 'exists:tag_types,id'],                   
+            'tags'              => ['array'],
+            'tags.*.id'         => ['integer', 'exists:tags,id'],
+            'tags.*.tag_type_id'   => ['required','integer', 'exists:tag_types,id'],                   
             'tags.*.factory_number'      => ['string'],
-            'tags.*.number'      => ['string'],
-            'tags.*.status'      => ['in:0,1'],
+            'tags.*.number'      => ['required', 'string'],
+            'tags.*.status'      => ['required', 'in:0,1'],
         ];
     }
 }
