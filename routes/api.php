@@ -49,6 +49,7 @@ Route::put('user', [AuthController::class, 'edit_profile']);
 Route::get('user', [AuthController::class, 'get_profile']);
 Route::delete('user/delete_account', [AuthController::class, 'delete_user']);
 Route::post('user/forget_password', [AuthController::class, 'forgetUserPassword']);
+Route::post('user/reset-user-pass', [AuthController::class , 'resetUserPass']);
 
 //branch_types
 Route::get('branch-types'  , [BranchTypeController::class, 'index']);

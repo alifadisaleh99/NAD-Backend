@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-
-use App\Models\VerificationCode;
+use Illuminate\Validation\ValidationException;
 use App\Models\User;
 
 use App\Http\Resources\UserResource;
+use App\Mail\ForgetPass;
 use App\Models\Entity;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
@@ -20,7 +24,7 @@ class AuthController extends Controller
     {
         $this->middleware('auth:sanctum')->only(['logout','get_profile','update_my_profile','delete_user']);
     }
-    
+
     /**
      * @OA\Post(
      * path="/register",
@@ -51,7 +55,7 @@ class AuthController extends Controller
      *     description="successful operation",
      *  ),
      *  )
-    */
+     */
     public function register(Request $request)
     {
         $request->validate([
@@ -88,8 +92,6 @@ class AuthController extends Controller
             'user' => new UserResource($user),
             'token' => $token,
         ], 200);
-
-        return response()->json(null, 200);
     }
 
     /**
@@ -124,7 +126,7 @@ class AuthController extends Controller
      *     description="successful operation",
      *  ),
      *  )
-    */
+     */
     public function entity_register(Request $request)
     {
         $request->validate([
@@ -142,7 +144,7 @@ class AuthController extends Controller
 
         $image = null;
         if($request->image)
-             $image = upload_file($request->image, 'entities', 'entity');
+            $image = upload_file($request->image, 'entities', 'entity');
 
         $entity = Entity::create([
             'name'              => $request->name,
@@ -171,8 +173,6 @@ class AuthController extends Controller
             'user' => new UserResource($user),
             'token' => $token,
         ], 200);
-
-        return response()->json(null, 200);
     }
 
     /**
@@ -197,7 +197,7 @@ class AuthController extends Controller
      *     description="successful operation",
      *  ),
      *  )
-    */
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -249,7 +249,7 @@ class AuthController extends Controller
      *     description="Success",
      *  ),
      *  )
-    */
+     */
     public function get_profile(Request $request)
     {
         $user = to_user(Auth::user());
@@ -285,7 +285,7 @@ class AuthController extends Controller
      *    description="Success"
      *     ),
      * )
-    */
+     */
 
     public function edit_profile(Request $request){
         $user = to_user(Auth::user());
@@ -301,11 +301,11 @@ class AuthController extends Controller
             'national_id'   => ['string', 'min:3', 'unique:users'],
             // 'email'               => ['required', 'string', 'email', Rule::unique('users', 'email')->ignore($user->id)],
         ]);
-        
+
         $image = null;
         if($request->image)
             $image = upload_file($request->image, 'users', 'user');
-        
+
         $user->name = $request->name;
         $user->phone_country_id = $request->phone_country_id;
         $user->phone = $request->phone;
@@ -321,6 +321,52 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
+     * path="/user/forget_password",
+     * description="forget my password.",
+     * tags={"User - Auth"},
+     * security={{"bearer_token": {} }},
+     *   @OA\RequestBody(
+     *     required=true,
+     *     @OA\MediaType(
+     *       mediaType="multipart/form-data",
+     *       @OA\Schema(
+     *              required={"email"},
+     *              @OA\Property(property="email", type="string"),
+     *       )
+     *     )
+     *   ),
+     * @OA\Response(
+     *    response=200,
+     *    description="successful operation",
+     *     ),
+     * )
+     * )
+     */
+    public function forgetUserPassword(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email', 'exists:users,email,deleted_at,NULL'],
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        $code = rand(100000, 999999);
+        $user->saveCode($user->email, $code);
+
+        try {
+            Mail::to($user->email)->send(new ForgetPass($code, $user));
+        } catch (\Throwable $th) {
+            Log::error('حدث خطأ: ' . $th->getMessage());
+
+            return response()->json([
+                'message' => __('error_messages.failed_to_send_email'), 
+            ], 500);
+        }
+
+        return response()->json(null, 200);
+    }
+    /**
+     * @OA\Post(
      * path="/logout",
      * description="Logout authorized user",
      * operationId="authLogout",
@@ -331,7 +377,7 @@ class AuthController extends Controller
      *    description="successful operation"
      *     ),
      * )
-    */
+     */
 
     public function logout(Request $request)
     {
@@ -339,7 +385,7 @@ class AuthController extends Controller
         to_token($user->currentAccessToken())->delete();
     }
 
-    
+
     /**
      * @OA\Delete(
      * path="/users/delete_account",
@@ -352,11 +398,75 @@ class AuthController extends Controller
      *    description="Success"
      * )
      *)
-    */
+     */
     public function delete_user()
     {
         $user = to_user(Auth::user());
         $user->delete();
         return response()->json(null, 204);
+    }
+
+    /**
+     * @OA\Post(
+     * path="/user/reset-user-pass",
+     * description="reset my password.",
+     * tags={"User - Auth"},
+     * security={{"bearer_token": {} }},
+     *   @OA\RequestBody(
+     *     required=true,
+     *     @OA\MediaType(
+     *       mediaType="multipart/form-data",
+     *       @OA\Schema(
+     *              required={"password", "password_confirmation", "code"},
+     *              @OA\Property(property="code", type="string"),
+     *              @OA\Property(property="password", type="string"),
+     *              @OA\Property(property="password_confirmation", type="string"),
+     *       )
+     *     )
+     *   ),
+     * @OA\Response(
+     *    response=200,
+     *    description="successful operation",
+     *     ),
+     * )
+     * )
+     */
+    public function resetUserPass(Request $request)
+    {
+        $request->validate([
+            'password'          => ['required', 'string', 'min:6', 'confirmed'],
+            'code'             => ['required'],
+        ]);
+
+        $codeData = DB::table('password_reset_tokens')
+            ->where('token', $request->code)->first();
+
+        if (!$codeData)
+            return response()->json([
+                __('error_messages.invalid_verification_code')
+            ], 403);
+
+        if (Carbon::parse($codeData->created_at)->addHours(48) < now()) {
+
+                throw ValidationException::withMessages([
+                    'code' => __('error_messages.expired_verification_code')
+                ]);    
+        }
+        $user = User::where('email', $codeData->email)->first();
+
+        if (!$user)
+            return response()->json([
+                'message' => __('error_messages.email_not_found')
+        ], 403);
+
+
+        $password = Hash::make($request->password);
+        $user->password = $password;
+        $user->update();
+
+        DB::table('password_reset_tokens')->where('email', $user->email)
+            ->delete();
+
+        return response()->json(null, 200);
     }
 }

@@ -89,4 +89,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Animal::class);
     }
+
+    public function ownership_records()
+    {
+        $this->hasMany(OwnershipRecord::class);
+    }
+
+    public function saveCode($email, $code)
+    {
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $email],
+            ['email' => $email, 'token' => $code, 'created_at' => now()]
+        );
+    }
 }

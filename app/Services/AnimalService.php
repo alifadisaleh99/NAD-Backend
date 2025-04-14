@@ -36,7 +36,7 @@ class AnimalService
             $transfer->delete();
 
             throw ValidationException::withMessages([
-                'token' => __('error_messages.transfer_tokin_expired')
+                'token' => __('error_messages.tokin_expired')
             ]);
         }
 
