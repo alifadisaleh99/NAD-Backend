@@ -65,6 +65,7 @@ class AnimalService
             'owner_type' => $owner_type,
             'branch_id'  => $branch_id,
             'user_id' => auth()->id(),
+            'ownership_date' => now()->toDateString(),
         ]);
 
         $this->createOwnershipRecord($transfer->animal);
@@ -85,14 +86,14 @@ class AnimalService
         OwnershipRecord::create([
             'animal_id' => $animal->id,
             'user_id' => $animal->user_id,
-            'start_date' => now(),
+            'start_date' => $animal->ownership_date,
         ]);
     }
 
     public function updateOwnershipRecord(OwnershipRecord $ownership_record)
     {
         $ownership_record->update([
-            'end_date'  => now(),
+            'end_date' => now()->toDateString(),
             'duration' => now()->diffInDays($ownership_record->start_date),
         ]);
     }
@@ -115,8 +116,9 @@ class AnimalService
     public function getAllAnimals($request, bool $to_owner)
     {
         if ($to_owner) {
-            $user = to_user(Auth::user());
-            $q = $user->animals();
+            $q = Animal::whereHas('ownership_records', function ($q) {
+                $q->where('user_id', auth()->id());
+            });
         } else
             $q = Animal::query();
 
@@ -304,13 +306,24 @@ class AnimalService
             'birth_date' => $request->birth_date,
             'digital_link' => $request->digital_link, 
             'generate_public' => $request->generate_public, 
-            'ownership_date' => $request->ownership_date,
         ]);
-
-        if (!$to_owner) {
+    
+        if ($request->ownership_date) {
+            if ($animal->ownership_records->count() == 1 && $request->ownership_date != $animal->ownership_date) {
+                $animal->ownership_date = $request->ownership_date;
+                $animal->save();
+        
+                $ownership_record = $animal->ownership_records()->first();
+                $ownership_record->start_date = $request->ownership_date;
+                $ownership_record->save();
+            }
+        } if (!$to_owner) {
             if ($owner_id && $owner_id != $old_owner_id) {
                 $ownership_record = OwnershipRecord::where('animal_id', $animal->id)
                     ->where('user_id', $old_owner_id)->where('end_date', null)->first();
+
+                $animal->ownership_date = now()->toDateString();               
+                $animal->save();
 
                 $this->updateOwnershipRecord($ownership_record);
                 $this->createOwnershipRecord($animal);

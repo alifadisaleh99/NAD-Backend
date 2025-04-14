@@ -52,6 +52,7 @@ class AnimalResource extends JsonResource
             'digital_link' => $this->digital_link, 
             'generate_public' => $this->generate_public, 
             'ownership_date' => $this->ownership_date,
+            'is_previous' => $this->user_id == auth()->id() ? 0 : 1,
             'translations' => $this->translations,
         ];
     }
