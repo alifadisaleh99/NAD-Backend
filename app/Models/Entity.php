@@ -23,6 +23,7 @@ class Entity extends TranslatableModel
         'image',
         'branch_type_id',
         'branch_type_name',
+        'phone_country_id'
     ];
 
     protected $translatable = [
@@ -42,5 +43,10 @@ class Entity extends TranslatableModel
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    public function phone_country()
+    {
+        return $this->hasOne(Country::class, 'id', 'phone_country_id');
     }
 }

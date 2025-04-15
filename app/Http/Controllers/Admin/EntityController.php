@@ -83,12 +83,13 @@ class EntityController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"name[ar]", "address", "email", "contact_number", "founding_date", "price_per_pet", "allowed_branches", "allowed_users", "branch_type_id"},
+     *              required={"name[ar]", "address", "email", "contact_number", "price_per_pet", "allowed_branches", "allowed_users", "branch_type_id"},
      *              @OA\Property(property="name[en]", type="string"),
      *              @OA\Property(property="name[ar]", type="string"),
      *              @OA\Property(property="address", type="string"),
      *              @OA\Property(property="email", type="string"),
      *              @OA\Property(property="contact_number", type="string"),
+     *              @OA\Property(property="phone_country_id", type="integer"),
      *              @OA\Property(property="founding_date", type="date"),
      *              @OA\Property(property="national_id", type="string"),
      *              @OA\Property(property="price_per_pet", type="float"),
@@ -113,7 +114,8 @@ class EntityController extends Controller
             'address'           => ['required', 'string'],
             'email'             => ['required', 'string', 'unique:users,email'],
             'contact_number'    => ['required', 'string'],
-            'founding_date'     => ['required', 'date_format:Y-m-d'],
+            'founding_date'     => ['date_format:Y-m-d'],
+            'phone_country_id'  => ['integer', 'exists:countries,id'],
             'price_per_pet'     => ['required', 'numeric'],
             'allowed_branches'  => ['required', 'integer'],
             'allowed_users'     => ['required', 'integer'],
@@ -131,6 +133,7 @@ class EntityController extends Controller
             'address'           => $request->address,
             'email'             => $request->email,
             'contact_number'    => $request->contact_number,
+            'phone_country_id'  => $request->phone_country_id,
             'founding_date'     => $request->founding_date,
             'price_per_pet'     => $request->price_per_pet,
             'allowed_branches'  => $request->allowed_branches,
@@ -144,6 +147,7 @@ class EntityController extends Controller
             'name'               => $request->name['ar'],
             'email'              => $request->email,
             'phone'              => $request->contact_number,
+            'phone_country_id'   => $request->phone_country_id,
             'password'           => Hash::make('admin@123'),
             'is_owner'           => 1,
             'national_id'       => $request->national_id,
@@ -175,7 +179,7 @@ class EntityController extends Controller
      */
     public function show(Entity $entity)
     {
-        $entity->load(['branches', 'branch_type']);
+        $entity->load(['branches', 'branch_type', 'phone_country']);
         return response()->json(new EntityResource($entity), 200);
     }
 
@@ -201,6 +205,7 @@ class EntityController extends Controller
      *              @OA\Property(property="address", type="string"),
      *              @OA\Property(property="email", type="string"),
      *              @OA\Property(property="contact_number", type="string"),
+     *              @OA\Property(property="phone_country_id", type="integer"),
      *              @OA\Property(property="founding_date", type="string"),
      *              @OA\Property(property="price_per_pet", type="string"),
      *              @OA\Property(property="allowed_branches", type="string"),
@@ -225,7 +230,8 @@ class EntityController extends Controller
             'address'           => ['required', 'string'],
             'email'             => ['required', 'string'],
             'contact_number'    => ['required', 'string'],
-            'founding_date'     => ['required', 'date_format:Y-m-d'],
+            'phone_country_id'  => ['integer', 'exists:countries,id'],
+            'founding_date'     => ['date_format:Y-m-d'],
             'price_per_pet'     => ['required', 'numeric'],
             'allowed_branches'  => ['required', 'integer'],
             'allowed_users'     => ['required', 'integer'],
@@ -250,6 +256,7 @@ class EntityController extends Controller
             'address'           => $request->address,
             'email'             => $request->email,
             'contact_number'    => $request->contact_number,
+            'phone_country_id'  => $request->phone_country_id,
             'founding_date'     => $request->founding_date,
             'price_per_pet'     => $request->price_per_pet,
             'allowed_branches'  => $request->allowed_branches,

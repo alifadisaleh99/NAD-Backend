@@ -79,7 +79,7 @@ class EntityController extends Controller
      */
     public function show(Entity $entity)
     {
-        $entity->load(['branches', 'branch_type']);
+        $entity->load(['branches', 'branch_type', 'phone_country']);
 
         return response()->json(new EntityResource($entity), 200);
     }

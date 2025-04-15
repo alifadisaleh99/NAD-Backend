@@ -9,7 +9,7 @@ class EntityService
 {
     public function getAllEntities($request)
     {
-        $q =  Entity::query()->with(['branches', 'branch_type'])->latest();
+        $q =  Entity::query()->with(['branches', 'branch_type', 'phone_country'])->latest();
 
         if ($request->branch_type_id)
             $q->where('branch_type_id', $request->branch_type_id);

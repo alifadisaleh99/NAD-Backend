@@ -2187,7 +2187,6 @@
                                     "address",
                                     "email",
                                     "contact_number",
-                                    "founding_date",
                                     "price_per_pet",
                                     "allowed_branches",
                                     "allowed_users",
@@ -2208,6 +2207,9 @@
                                     },
                                     "contact_number": {
                                         "type": "string"
+                                    },
+                                    "phone_country_id": {
+                                        "type": "integer"
                                     },
                                     "founding_date": {
                                         "type": "string",
@@ -2314,6 +2316,9 @@
                                     },
                                     "contact_number": {
                                         "type": "string"
+                                    },
+                                    "phone_country_id": {
+                                        "type": "integer"
                                     },
                                     "founding_date": {
                                         "type": "string"
@@ -4459,8 +4464,7 @@
                                     "email",
                                     "password",
                                     "address",
-                                    "contact_number",
-                                    "founding_date"
+                                    "contact_number"
                                 ],
                                 "properties": {
                                     "name[en]": {
@@ -4478,6 +4482,9 @@
                                     },
                                     "contact_number": {
                                         "type": "string"
+                                    },
+                                    "phone_country_id": {
+                                        "type": "integer"
                                     },
                                     "founding_date": {
                                         "type": "string",

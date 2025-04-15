@@ -119,7 +119,7 @@ class UserController extends Controller
      */
     public function index(GetRequest $request)
     {
-        $q = User::with(['entity', 'branch'])->latest();
+        $q = User::with(['entity', 'branch', 'phone_country'])->latest();
 
         if ($request->status === '0') {
             $q->where('status', false);
@@ -225,7 +225,7 @@ class UserController extends Controller
             'name'              => ['required', 'string'],
             'email'             => ['required', 'string', 'email', 'unique:users'],
             'phone_country_id'  => ['integer', 'exists:countries,id'],
-            'phone'             => ['required', 'size:8', 'unique:users'],
+            'phone'             => ['required', 'min:6', 'unique:users'],
             'password'          => ['required', 'string', 'min:6', 'confirmed'],
             'country_id'        => ['integer', 'exists:countries,id'],
             'summary'           => ['string'],
@@ -360,7 +360,7 @@ class UserController extends Controller
             'name'                  => ['required', 'string'],
             'email'                 => ['required', 'string', 'email', Rule::unique('users', 'email')->ignore($user->id)],
             'phone_country_id'      => ['integer', 'exists:countries,id'],
-            'phone'                 => ['required', 'size:8', Rule::unique('users', 'phone')->ignore($user->id)],
+            'phone'                 => ['required', 'min:6', Rule::unique('users', 'phone')->ignore($user->id)],
             'country_id'            => ['integer', 'exists:countries,id'],
             'summary'               => ['string'],
             'image'                 => [''],

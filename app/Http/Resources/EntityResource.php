@@ -20,6 +20,7 @@ class EntityResource extends JsonResource
             'address'           => $this->address,
             'email'             => $this->email,
             'contact_number'    => $this->contact_number,
+            'phone_country'     => new CountryResource($this->whenLoaded('phone_country')), 
             'founding_date'     => $this->founding_date,
             'price_per_pet'     => $this->price_per_pet,
             'allowed_branches'  => $this->allowed_branches,
