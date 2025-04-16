@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AnimalService
 {
+    protected $tagService;
+
+    public function __construct(TagService $tagService)
+    {
+        $this->tagService = $tagService;
+    }
 
     public function generateTransferToken(Animal $animal)
     {
@@ -216,6 +222,10 @@ class AnimalService
             'ownership_date' => $request->ownership_date,
         ]);
 
+        if($request->tags){
+            $this->tagService->update($animal, $request->tags, []);
+        }
+
         if ($request->vaccinations) {
             $this->updateVaccinations($animal, $request->vaccinations, []);
         }
@@ -259,6 +269,13 @@ class AnimalService
             $old_owner_id = $animal->user_id;
             $owner_id = $request->owner_id;
             $owner_type = $request->owner_type;
+        }
+
+        if($request->deleted_tag_ids){
+            $this->tagService->update($animal, [], $request->deleted_tag_ids);
+        }
+        if($request->tags){
+            $this->tagService->update($animal, $request->tags, []);
         }
 
         if($request->deleted_vaccination_ids)

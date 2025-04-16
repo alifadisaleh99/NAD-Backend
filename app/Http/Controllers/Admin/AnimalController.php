@@ -110,7 +110,7 @@ class AnimalController extends Controller
     public function index(GetRequest $request)
     {
         $animals = $this->animalService->getAllAnimals($request, false);
-        
+
         return AnimalResource::collection($animals);
     }
 
@@ -157,6 +157,10 @@ class AnimalController extends Controller
      *              @OA\Property(property="vaccinations[0][vaccination_date]", type="date"),
      *              @OA\Property(property="vaccinations[0][duration]", type="integer"),
      *              @OA\Property(property="vaccinations[0][is_expired]", type="integer", enum={"1", "0"}),
+     *              @OA\Property(property="tags[0][tag_type_id]", type="integer"),
+     *              @OA\Property(property="tags[0][factory_number]", type="string"),
+     *              @OA\Property(property="tags[0][number]", type="string"),
+     *              @OA\Property(property="tags[0][status]", type="integer", enum={"0"," 1"}),
      *              @OA\Property(property="primary_color_id", type="integer"),
      *              @OA\Property(property="secondary_color_id", type="integer"),
      *              @OA\Property(property="tertiary_color_id", type="integer"),
@@ -196,7 +200,7 @@ class AnimalController extends Controller
                 return response()->json(['message' => __('error_messages.user_must_have_plan')], 422);
         }
         */
-        
+
         $animal = $this->animalService->create($request, false);
 
         return response()->json(new AnimalResource($animal), 200);
@@ -225,7 +229,7 @@ class AnimalController extends Controller
     public function show(Animal $animal)
     {
         $this->animalService->show($animal);
-        
+
         return response()->json(new AnimalResource($animal), 200);
     }
 
@@ -279,6 +283,12 @@ class AnimalController extends Controller
      *              @OA\Property(property="vaccinations[0][vaccination_date]", type="date"),
      *              @OA\Property(property="vaccinations[0][duration]", type="integer"),
      *              @OA\Property(property="vaccinations[0][is_expired]", type="integer", enum={"1", "0"}),
+     *              @OA\Property(property="deleted_tag_ids[0]",type="integer"),
+     *              @OA\Property(property="tags[0][id]", type="integer"),
+     *              @OA\Property(property="tags[0][tag_type_id]", type="integer"),
+     *              @OA\Property(property="tags[0][factory_number]", type="string"),
+     *              @OA\Property(property="tags[0][number]", type="string"),
+     *              @OA\Property(property="tags[0][status]", type="integer", enum={"0"," 1"}),
      *              @OA\Property(property="category_id", type="integer"),
      *              @OA\Property(property="animal_specie_id", type="integer"),
      *              @OA\Property(property="animal_breed_id", type="integer"),
@@ -336,7 +346,7 @@ class AnimalController extends Controller
     public function destroy(Animal $animal)
     {
         $this->animalService->delete($animal);
-       
+
         return response()->json(null, 204);
     }
 

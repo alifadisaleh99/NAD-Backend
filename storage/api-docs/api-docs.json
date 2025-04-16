@@ -494,6 +494,22 @@
                                             "0"
                                         ]
                                     },
+                                    "tags[0][tag_type_id]": {
+                                        "type": "integer"
+                                    },
+                                    "tags[0][factory_number]": {
+                                        "type": "string"
+                                    },
+                                    "tags[0][number]": {
+                                        "type": "string"
+                                    },
+                                    "tags[0][status]": {
+                                        "type": "integer",
+                                        "enum": [
+                                            "0",
+                                            " 1"
+                                        ]
+                                    },
                                     "primary_color_id": {
                                         "type": "integer"
                                     },
@@ -727,6 +743,28 @@
                                         "enum": [
                                             "1",
                                             "0"
+                                        ]
+                                    },
+                                    "deleted_tag_ids[0]": {
+                                        "type": "integer"
+                                    },
+                                    "tags[0][id]": {
+                                        "type": "integer"
+                                    },
+                                    "tags[0][tag_type_id]": {
+                                        "type": "integer"
+                                    },
+                                    "tags[0][factory_number]": {
+                                        "type": "string"
+                                    },
+                                    "tags[0][number]": {
+                                        "type": "string"
+                                    },
+                                    "tags[0][status]": {
+                                        "type": "integer",
+                                        "enum": [
+                                            "0",
+                                            " 1"
                                         ]
                                     },
                                     "category_id": {
@@ -3475,66 +3513,6 @@
                 ]
             }
         },
-        "/admin/tags": {
-            "post": {
-                "tags": [
-                    "Admin - Tags"
-                ],
-                "description": "Edit tags for animal.",
-                "operationId": "f04bd52de35edd94b48ad875ffbec10a",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "tags[0][id]": {
-                                        "type": "integer"
-                                    },
-                                    "tags[0][tag_type_id]": {
-                                        "type": "integer"
-                                    },
-                                    "tags[0][factory_number]": {
-                                        "type": "string"
-                                    },
-                                    "tags[0][number]": {
-                                        "type": "string"
-                                    },
-                                    "tags[0][status]": {
-                                        "type": "integer",
-                                        "enum": [
-                                            "0",
-                                            " 1"
-                                        ]
-                                    },
-                                    "deleted_tag_ids[0]": {
-                                        "type": "integer"
-                                    },
-                                    "animal_id": {
-                                        "type": "integer"
-                                    },
-                                    "_method": {
-                                        "type": "string",
-                                        "example": "PUT"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer_token": []
-                    }
-                ]
-            }
-        },
         "/admin/tag-types": {
             "get": {
                 "tags": [
@@ -5550,6 +5528,22 @@
                                             "0"
                                         ]
                                     },
+                                    "tags[0][tag_type_id]": {
+                                        "type": "integer"
+                                    },
+                                    "tags[0][factory_number]": {
+                                        "type": "string"
+                                    },
+                                    "tags[0][number]": {
+                                        "type": "string"
+                                    },
+                                    "tags[0][status]": {
+                                        "type": "integer",
+                                        "enum": [
+                                            "0",
+                                            " 1"
+                                        ]
+                                    },
                                     "primary_color_id": {
                                         "type": "integer"
                                     },
@@ -5788,6 +5782,28 @@
                                         "enum": [
                                             "1",
                                             "0"
+                                        ]
+                                    },
+                                    "deleted_tag_ids[0]": {
+                                        "type": "integer"
+                                    },
+                                    "tags[0][id]": {
+                                        "type": "integer"
+                                    },
+                                    "tags[0][tag_type_id]": {
+                                        "type": "integer"
+                                    },
+                                    "tags[0][factory_number]": {
+                                        "type": "string"
+                                    },
+                                    "tags[0][number]": {
+                                        "type": "string"
+                                    },
+                                    "tags[0][status]": {
+                                        "type": "integer",
+                                        "enum": [
+                                            "0",
+                                            " 1"
                                         ]
                                     },
                                     "primary_color_id": {
@@ -6389,10 +6405,6 @@
         {
             "name": "Admin - Statistics",
             "description": "Admin - Statistics"
-        },
-        {
-            "name": "Admin - Tags",
-            "description": "Admin - Tags"
         },
         {
             "name": "Admin - Tag Types",

@@ -64,6 +64,12 @@ class BaseAnimalRequest extends FormRequest
             'vaccinations.*.vaccinations_date' => ['date'],
             'vaccinations.*.duration' => ['integer'],
             'vaccinations.*.is_expired' => ['in:0,1'],
+
+            'tags'              => ['array'],
+            'tags.*.tag_type_id'   => ['required','integer', 'exists:tag_types,id'],                   
+            'tags.*.factory_number'      => ['string'],
+            'tags.*.number'      => ['required', 'string'],
+            'tags.*.status'      => ['required', 'in:0,1'],
         ];
     }
 }

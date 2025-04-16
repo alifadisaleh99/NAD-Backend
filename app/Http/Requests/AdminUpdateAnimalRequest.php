@@ -40,6 +40,10 @@ class AdminUpdateAnimalRequest extends BaseAnimalRequest
                 'vaccinations.*.id' => ['integer', 'exists:vaccinations,id'],
                 'deleted_vaccination_ids' => ['array'],
                 'deleted_vaccination_ids.*' => ['integer', 'exists:vaccinations,id'],
+                'tags.*.id'         => ['integer', 'exists:tags,id'],
+                'deleted_tag_ids'   => ['array'],
+                'deleted_tag_ids.*' => ['integer', 'exists:tags,id'],
+
             ]
         );
     }
