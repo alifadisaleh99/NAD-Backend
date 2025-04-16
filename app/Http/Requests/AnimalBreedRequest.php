@@ -23,7 +23,7 @@ class AnimalBreedRequest extends FormRequest
     {
         return [
             'category_id'         => ['required', 'integer', 'exists:categories,id'],
-            'animal_specie_id'    => ['required', 'integer', 'exists:animal_species,id'],
+            'animal_specie_id'    => ['integer', 'exists:animal_species,id'],
             'name'                => ['required', 'array', translation_rule()],
             'image'           => request()->isMethod('post') ? ['image'] : [''],
         ];

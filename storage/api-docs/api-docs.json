@@ -90,8 +90,7 @@
                             "schema": {
                                 "required": [
                                     "name[ar]",
-                                    "category_id",
-                                    "animal_specie_id"
+                                    "category_id"
                                 ],
                                 "properties": {
                                     "category_id": {
@@ -4535,12 +4534,20 @@
                             "schema": {
                                 "required": [
                                     "email",
-                                    "password"
+                                    "password",
+                                    "role"
                                 ],
                                 "properties": {
                                     "email": {
                                         "type": "string",
                                         "format": "email"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "admin",
+                                            "user"
+                                        ]
                                     },
                                     "password": {
                                         "type": "password"

@@ -84,7 +84,7 @@ class AnimalBreedController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"name[ar]", "category_id", "animal_specie_id"},
+     *              required={"name[ar]", "category_id"},
      *              @OA\Property(property="category_id", type="integer"),
      *              @OA\Property(property="animal_specie_id", type="integer"),
      *              @OA\Property(property="name[en]", type="string"),
