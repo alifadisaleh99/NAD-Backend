@@ -464,6 +464,36 @@
                                     "pet_mark_ids[0]": {
                                         "type": "integer"
                                     },
+                                    "attachments[0][name]": {
+                                        "type": "string"
+                                    },
+                                    "attachments[0][source]": {
+                                        "type": "string"
+                                    },
+                                    "attachments[0][attachment_date]": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "attachments[0][file]": {
+                                        "type": "file"
+                                    },
+                                    "vaccinations[0][name]": {
+                                        "type": "string"
+                                    },
+                                    "vaccinations[0][vaccination_date]": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "vaccinations[0][duration]": {
+                                        "type": "integer"
+                                    },
+                                    "vaccinations[0][is_expired]": {
+                                        "type": "integer",
+                                        "enum": [
+                                            "1",
+                                            "0"
+                                        ]
+                                    },
                                     "primary_color_id": {
                                         "type": "integer"
                                     },
@@ -656,6 +686,48 @@
                                     },
                                     "deleted_media_ids[0]": {
                                         "type": "integer"
+                                    },
+                                    "deleted_attachment_ids[0]": {
+                                        "type": "integer"
+                                    },
+                                    "attachments[0][id]": {
+                                        "type": "integer"
+                                    },
+                                    "attachments[0][name]": {
+                                        "type": "string"
+                                    },
+                                    "attachments[0][source]": {
+                                        "type": "string"
+                                    },
+                                    "attachments[0][attachment_date]": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "attachments[0][file]": {
+                                        "type": "file"
+                                    },
+                                    "deleted_vaccination_ids[0]": {
+                                        "type": "integer"
+                                    },
+                                    "vaccinations[0][id]": {
+                                        "type": "integer"
+                                    },
+                                    "vaccinations[0][name]": {
+                                        "type": "string"
+                                    },
+                                    "vaccinations[0][vaccination_date]": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "vaccinations[0][duration]": {
+                                        "type": "integer"
+                                    },
+                                    "vaccinations[0][is_expired]": {
+                                        "type": "integer",
+                                        "enum": [
+                                            "1",
+                                            "0"
+                                        ]
                                     },
                                     "category_id": {
                                         "type": "integer"
@@ -5448,6 +5520,36 @@
                                     "pet_mark_ids[0]": {
                                         "type": "integer"
                                     },
+                                    "attachments[0][name]": {
+                                        "type": "string"
+                                    },
+                                    "attachments[0][source]": {
+                                        "type": "string"
+                                    },
+                                    "attachments[0][attachment_date]": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "attachments[0][file]": {
+                                        "type": "file"
+                                    },
+                                    "vaccinations[0][name]": {
+                                        "type": "string"
+                                    },
+                                    "vaccinations[0][vaccination_date]": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "vaccinations[0][duration]": {
+                                        "type": "integer"
+                                    },
+                                    "vaccinations[0][is_expired]": {
+                                        "type": "integer",
+                                        "enum": [
+                                            "1",
+                                            "0"
+                                        ]
+                                    },
                                     "primary_color_id": {
                                         "type": "integer"
                                     },
@@ -5645,6 +5747,48 @@
                                     },
                                     "deleted_pet_mark_ids[0]": {
                                         "type": "integer"
+                                    },
+                                    "deleted_attachment_ids[0]": {
+                                        "type": "integer"
+                                    },
+                                    "attachments[0][id]": {
+                                        "type": "integer"
+                                    },
+                                    "attachments[0][name]": {
+                                        "type": "string"
+                                    },
+                                    "attachments[0][source]": {
+                                        "type": "string"
+                                    },
+                                    "attachments[0][attachment_date]": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "attachments[0][file]": {
+                                        "type": "file"
+                                    },
+                                    "deleted_vaccination_ids[0]": {
+                                        "type": "integer"
+                                    },
+                                    "vaccinations[0][id]": {
+                                        "type": "integer"
+                                    },
+                                    "vaccinations[0][name]": {
+                                        "type": "string"
+                                    },
+                                    "vaccinations[0][vaccination_date]": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "vaccinations[0][duration]": {
+                                        "type": "integer"
+                                    },
+                                    "vaccinations[0][is_expired]": {
+                                        "type": "integer",
+                                        "enum": [
+                                            "1",
+                                            "0"
+                                        ]
                                     },
                                     "primary_color_id": {
                                         "type": "integer"

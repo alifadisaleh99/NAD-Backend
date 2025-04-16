@@ -32,6 +32,12 @@ class UserUpdateAnimalRequest extends BaseAnimalRequest
                 'deleted_media_ids.*' => ['integer', 'exists:media,id'],
                 'photos' => ['required', 'array'],
                 'photos.*' => ['required'],
+                'attachments.*.id' => ['integer', 'exists:attachments,id'],
+                'deleted_attachment_ids' => ['array'],
+                'deleted_attachment_ids' => ['integer', 'exists:attachments,id'],
+                'vaccinations.*.id' => ['integer', 'exists:vaccinations,id'],
+                'deleted_vaccination_ids' => ['array'],
+                'deleted_vaccination_ids.*' => ['integer', 'exists:vaccinations,id'],
             ]
         );
     }

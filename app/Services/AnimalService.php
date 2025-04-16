@@ -86,7 +86,7 @@ class AnimalService
         OwnershipRecord::create([
             'animal_id' => $animal->id,
             'user_id' => $animal->user_id,
-            'start_date' => $animal->ownership_date,
+            'start_date' => $animal->ownership_date ?? now(),
         ]);
     }
 
@@ -122,7 +122,7 @@ class AnimalService
         } else
             $q = Animal::query();
 
-        $q->with(['category', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch', 'latest_lost_report'])->latest();
+        $q->with(['category', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch', 'latest_lost_report', 'attachments', 'vaccinations'])->latest();
 
         if ($request->category_id)
             $q->where('category_id', $request->category_id);
@@ -211,10 +211,18 @@ class AnimalService
             'birth_date' => $request->birth_date,
             'user_create_id' => auth()->id(),
             'uaid' => Str::random(15),
-            'digital_link' => $request->digital_link, 
-            'generate_public' => $request->generate_public, 
+            'digital_link' => $request->digital_link,
+            'generate_public' => $request->generate_public,
             'ownership_date' => $request->ownership_date,
         ]);
+
+        if ($request->vaccinations) {
+            $this->updateVaccinations($animal, $request->vaccinations, []);
+        }
+
+        if ($request->attachments) {
+            $this->updateAttachments($animal, $request->attachments, []);
+        }
 
         if ($request->photos) {
             foreach ($request->photos as $photo) {
@@ -252,6 +260,16 @@ class AnimalService
             $owner_id = $request->owner_id;
             $owner_type = $request->owner_type;
         }
+
+        if($request->deleted_vaccination_ids)
+            $this->updateVaccinations($animal, [], $request->deleted_vaccination_ids);
+        if($request->vaccinations)
+            $this->updateVaccinations($animal, $request->vaccinations, []);
+
+        if ($request->deleted_attachment_ids)
+            $this->updateAttachments($animal, [], $request->deleted_attachment_ids);
+        if ($request->attachments)
+            $this->updateAttachments($animal, $request->attachments, []);
 
         if ($request->deleted_media_ids) {
             $photos = $animal->media()->whereIn('id', $request->deleted_media_ids)->get();
@@ -304,15 +322,15 @@ class AnimalService
             'link' => $request->link,
             'status' => $request->status,
             'birth_date' => $request->birth_date,
-            'digital_link' => $request->digital_link, 
-            'generate_public' => $request->generate_public, 
+            'digital_link' => $request->digital_link,
+            'generate_public' => $request->generate_public,
         ]);
-    
+
         if ($request->ownership_date) {
             if ($animal->ownership_records->count() == 1 && $request->ownership_date != $animal->ownership_date) {
                 $animal->ownership_date = $request->ownership_date;
                 $animal->save();
-        
+
                 $ownership_record = $animal->ownership_records()->first();
                 $ownership_record->start_date = $request->ownership_date;
                 $ownership_record->save();
@@ -322,7 +340,7 @@ class AnimalService
                 $ownership_record = OwnershipRecord::where('animal_id', $animal->id)
                     ->where('user_id', $old_owner_id)->where('end_date', null)->first();
 
-                $animal->ownership_date = now()->toDateString();               
+                $animal->ownership_date = now()->toDateString();
                 $animal->save();
 
                 $this->updateOwnershipRecord($ownership_record);
@@ -360,17 +378,23 @@ class AnimalService
 
     public function show(Animal $animal)
     {
-        $animal->load(['category', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch', 'latest_lost_report']);
+        $animal->load(['category', 'animal_specie', 'animal_breed', 'pet_marks', 'user', 'media', 'primary_color', 'secondary_color', 'tertiary_color', 'user_create', 'tags', 'sensitivities', 'branch', 'latest_lost_report', 'attachments', 'vaccinations']);
     }
 
     public function delete(Animal $animal)
     {
         $photos = $animal->media()->get();
+        $attachments = $animal->attachments()->get();
 
+        foreach ($attachments as $attachment) {
+            delete_file_if_exist($attachment->file);
+        }
         foreach ($photos as $photo) {
             delete_file_if_exist($photo->link);
         }
-        
+
+        $animal->attachments()->delete();
+        $animal->vaccinations()->delete();
         $animal->lost_reports()->delete();
         $animal->transfers()->delete();
         $animal->animal_status()->delete();
@@ -381,20 +405,20 @@ class AnimalService
         $animal->media()->delete();
         $animal->delete();
     }
-    
+
     public function reportLost($request, Animal $animal)
     {
-       if($animal->pet_status != 'lost') {
-        $animal->lost_reports()->create([
-            'seen_at' => $request->seen_at,
-            'address' => $request->address,
-            'mark_as_public' => $request->mark_as_public,
-        ]);
+        if($animal->pet_status != 'lost') {
+            $animal->lost_reports()->create([
+                'seen_at' => $request->seen_at,
+                'address' => $request->address,
+                'mark_as_public' => $request->mark_as_public,
+            ]);
 
-        $animal->update([
-            'pet_status' => 'lost',
-        ]);
-      }
+            $animal->update([
+                'pet_status' => 'lost',
+            ]);
+        }
     }
 
     public function markAsFound(Animal $animal)
@@ -402,5 +426,85 @@ class AnimalService
         $animal->update([
             'pet_status' => null,
         ]);
+    }
+
+    public function updateAttachments(Animal $animal,  $attachments, $deleted_attachment_ids)
+    {
+        if (!empty($deleted_attachment_ids)) {
+            $deleted_attachments = $animal->attachments()->whereIn('id', $deleted_attachment_ids)->get();
+
+            foreach ($deleted_attachments as $deleted_attachment) {
+                delete_file_if_exist($deleted_attachment->file);
+            }
+
+            $animal->attachments()->whereIn('id', $deleted_attachment_ids)->delete();
+        }
+
+        if (!empty($attachments)) {
+            foreach ($attachments as $attachment) {
+                if (isset($attachment['id'])) {
+                    $animal_attachment = $animal->attachments()->find($attachment['id']);
+                    if ($animal_attachment) {
+                        $attachment_file = null;
+                        if (isset($attachment['file'])) {
+                            if ($animal_attachment->file == $attachment['file']) {
+                                $attachment_file = $attachment['file'];
+                            } else {
+                                if (!is_file($attachment['file']))
+                                    throw ValidationException::withMessages(['file' => __('error_messages.Should be a file')]);
+                                delete_file_if_exist($attachment['file']);
+                                $attachment_file = upload_file($attachment['file'], 'animalAttachments', 'animalAttachment');
+                            }
+                        }
+                        $animal_attachment->update([
+                            'name' => $attachment['name'] ?? null,
+                            'source' => $attachment['source'] ?? null,
+                            'attachment_date' => $attachment['attachment_date'] ?? null,
+                            'file' => $attachment_file,
+                        ]);
+                    }
+                } else {
+                    $uploadedfile = null;
+                    if (isset($attachment['file']))
+                        $uploadedfile = upload_file($attachment['file'], 'animalAttachments', 'animalAttachment');
+
+                    $animal->attachments()->create([
+                        'name' => $attachment['name'] ?? null,
+                        'source' => $attachment['source'] ?? null,
+                        'attachment_date' => $attachment['attachment_date'] ?? null,
+                        'file' => $uploadedfile,
+                    ]);
+                }
+            }
+        }
+    }
+
+    public function updateVaccinations(Animal $animal,  $vaccinations, $deleted_vaccination_ids)
+    {
+        if (!empty($deleted_vaccination_ids))
+            $animal->vaccinations()->whereIn('id', $deleted_vaccination_ids)->delete();
+
+        if (!empty($vaccinations)) {
+            foreach ($vaccinations as $vaccination) {
+                if (isset($vaccination['id'])) {
+                    $animal_vaccination = $animal->vaccinations()->find($vaccination['id']);
+                    if ($animal_vaccination) {
+                        $animal_vaccination->update([
+                            'name' => $vaccination['name'] ?? null,
+                            'vaccination_date' => $vaccination['vaccination_date'] ?? null,
+                            'duration' => $vaccination['duration'] ?? null,
+                            'is_expired' => isset($vaccination['is_expired']) ?? null,
+                        ]);
+                    }
+                } else {
+                    $animal->vaccinations()->create([
+                        'name' => $vaccination['name'] ?? null,
+                        'vaccination_date' => $vaccination['vaccination_date'] ?? null,
+                        'duration' => $vaccination['duration'] ?? null,
+                        'is_expired' => isset($vaccination['is_expired']) ?? null,
+                    ]);
+                }
+            }
+        }
     }
 }

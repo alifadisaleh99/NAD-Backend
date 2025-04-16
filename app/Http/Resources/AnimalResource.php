@@ -37,6 +37,8 @@ class AnimalResource extends JsonResource
             'primary_color'     => new ColorResource($this->whenLoaded('primary_color')),
             'secondary_color'   => new ColorResource($this->whenLoaded('secondary_color')),
             'tertiary_color'    => new ColorResource($this->whenLoaded('tertiary_color')),
+            'attachments'       => AttachmentResource::collection($this->whenLoaded('attachments')),
+            'vaccinations'       => VaccinationResource::collection($this->whenLoaded('vaccinations')),
             'age' => $this->age,
             'weight' => $this->weight,
             'gender' => $this->gender,

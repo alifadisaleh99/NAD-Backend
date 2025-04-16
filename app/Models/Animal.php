@@ -32,8 +32,8 @@ class Animal extends TranslatableModel
         'uaid',
         'pet_status',
         'weight',
-        'digital_link', 
-        'generate_public', 
+        'digital_link',
+        'generate_public',
         'ownership_date',
     ];
 
@@ -140,6 +140,16 @@ class Animal extends TranslatableModel
     {
         return $this->hasOne(AnimalLostReport::class, 'animal_id')
             ->latestOfMany('created_at');
+    }
+
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class);
+    }
+
+    public function vaccinations()
+    {
+        return $this->hasMany(Vaccination::class);
     }
 
     public function calculateAge($birth_date)

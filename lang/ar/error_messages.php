@@ -4,6 +4,7 @@ return [
     'Image should be a file' => 'صيغه الصوره غير صحيحه',
     'Icon should be a file'  => 'صيغة الأيقونة غير صحيحه',
     'Logo should be a file'  => 'صيغة الشعار غير صحيحه',
+    'Should be a file'       => 'صيغة الملف غير صحيحة',
     'max_animals_reached' => 'وصل المستخدم إلى الحد الأقصى المسموح به من الحيوانات في الخطة',
     'user_must_have_plan' => 'لا يملك المستخدم خطة اشتراك',
     'number_used' =>  'الرقم :number مستخدم بالفعل',

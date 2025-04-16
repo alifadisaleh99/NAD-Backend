@@ -4,6 +4,7 @@ return [
     'Image should be a file' => 'Image should be a file',
     'Icon should be a file'  => 'Icon should be a file',
     'Logo should be a file'  => 'Logo should be a file',
+    'Should be a file'       => 'should be a file',
     'max_animals_reached' => 'User has reached the maximum number of animals allowed in the plan',
     'user_must_have_plan' => 'User does not have a subscription plan',
     'number_used' => 'number :number already used',  

@@ -53,6 +53,17 @@ class BaseAnimalRequest extends FormRequest
             'digital_link' => ['string'], 
             'generate_public' => ['in:1,0'], 
             'ownership_date' => ['date', 'before_or_equal:today'],
+
+            'attachments' => ['array'],
+            'attachments.*.name' => ['string'],
+            'attachments.*.attachments_date' => ['date'],
+            'attachments.*.source' => ['string'],
+
+            'vaccinations' => ['array'],
+            'vaccinations.*.name' => ['string'],
+            'vaccinations.*.vaccinations_date' => ['date'],
+            'vaccinations.*.duration' => ['integer'],
+            'vaccinations.*.is_expired' => ['in:0,1'],
         ];
     }
 }

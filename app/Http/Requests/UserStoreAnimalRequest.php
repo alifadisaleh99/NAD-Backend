@@ -26,6 +26,7 @@ class UserStoreAnimalRequest extends BaseAnimalRequest
             [
                 'photos'   => ['required', 'array'],
                 'photos.*' => ['image'],
+                'attachments.*.file' => ['file'],
             ]
         );
     }

@@ -28,6 +28,7 @@ class AdminStoreAnimalRequest extends BaseAnimalRequest
                 'owner_id'   => ['required', 'integer', 'exists:users,id'],
                 'photos'     => ['required', 'array'],
                 'photos.*'   => ['image'],
+                'attachments.*.file' => ['file'],
             ]
         );
     }
