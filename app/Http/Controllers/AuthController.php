@@ -190,8 +190,9 @@ class AuthController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"email","password"},
+     *              required={"email","password", "role"},
      *              @OA\Property(property="email", format="email" ,type="string"),
+     *              @OA\Property(property="role" ,type="string", enum={"admin", "user"}),
      *              @OA\Property(property="password", type="password"),
      *           )
      *       )
@@ -205,9 +206,18 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email'    => ['required'],
+            'role'     => ['required', 'in:user,admin'],
+            'email'    => ['required', 'exists:users,email'],
             'password' => ['required', 'min:6'],
         ]);
+
+        $role = $request->role == 'admin' ? 'مشرف' : 'مستخدم';
+        $user = User::where('email', $request->email)->first();
+
+        if(!$user->hasRole($role))
+        {
+            throw ValidationException::withMessages(['role' => __('error_messages.incorrect_role')]);
+        }
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember ?? false)) {
             $user = to_user(Auth::user());
