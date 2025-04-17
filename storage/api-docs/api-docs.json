@@ -379,7 +379,6 @@
                                     "name[ar]",
                                     "owner_type",
                                     "owner_id",
-                                    "photos[0]",
                                     "category_id",
                                     "primary_color_id",
                                     "birth_date",
@@ -563,6 +562,12 @@
                                     "ownership_date": {
                                         "type": "string",
                                         "format": "date"
+                                    },
+                                    "cover_image": {
+                                        "type": "file"
+                                    },
+                                    "file_image": {
+                                        "type": "file"
                                     }
                                 },
                                 "type": "object"
@@ -840,6 +845,12 @@
                                     "ownership_date": {
                                         "type": "string",
                                         "format": "date"
+                                    },
+                                    "cover_image": {
+                                        "type": "file"
+                                    },
+                                    "file_image": {
+                                        "type": "file"
                                     }
                                 },
                                 "type": "object"
@@ -5423,7 +5434,6 @@
                             "schema": {
                                 "required": [
                                     "name[ar]",
-                                    "photos[0]",
                                     "category_id",
                                     "primary_color_id",
                                     "birth_date",
@@ -5593,6 +5603,12 @@
                                             0,
                                             1
                                         ]
+                                    },
+                                    "cover_image": {
+                                        "type": "file"
+                                    },
+                                    "file_image": {
+                                        "type": "file"
                                     },
                                     "ownership_date": {
                                         "type": "string",
@@ -5859,6 +5875,12 @@
                                     "ownership_date": {
                                         "type": "string",
                                         "format": "date"
+                                    },
+                                    "cover_image": {
+                                        "type": "file"
+                                    },
+                                    "file_image": {
+                                        "type": "file"
                                     },
                                     "_method": {
                                         "type": "string",

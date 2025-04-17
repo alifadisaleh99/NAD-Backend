@@ -125,7 +125,7 @@ class AnimalController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"name[ar]", "owner_type" , "owner_id", "photos[0]", "category_id", "primary_color_id", "birth_date", "gender", "status"},
+     *              required={"name[ar]", "owner_type" , "owner_id", "category_id", "primary_color_id", "birth_date", "gender", "status"},
      *              @OA\Property(property="owner_type", type="string", enum={"user", "entity"}),
      *              @OA\Property(property="owner_id", type="integer"),
      *              @OA\Property(property="branch_id", type="integer"),
@@ -172,6 +172,8 @@ class AnimalController extends Controller
      *              @OA\Property(property="digital_link", type="string"),
      *              @OA\Property(property="generate_public", type="boolean", enum={0, 1}),
      *              @OA\Property(property="ownership_date", type="date"),
+     *              @OA\Property(property="cover_image", type="file"),
+     *              @OA\Property(property="file_image", type="file"),
      *          )
      *       )
      * ),
@@ -306,6 +308,8 @@ class AnimalController extends Controller
      *              @OA\Property(property="digital_link", type="string"),
      *              @OA\Property(property="generate_public", type="boolean", enum={0, 1}),
      *              @OA\Property(property="ownership_date", type="date"),
+     *              @OA\Property(property="cover_image", type="file"),
+     *              @OA\Property(property="file_image", type="file"),
      *           )
      *       )
      *   ),

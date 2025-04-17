@@ -24,9 +24,10 @@ class UserStoreAnimalRequest extends BaseAnimalRequest
         return array_merge(
             parent::rules(),
             [
-                'photos'   => ['required', 'array'],
                 'photos.*' => ['image'],
                 'attachments.*.file' => ['file'],
+                'cover_image' => ['image'],
+                'file_image'  => ['image'],
             ]
         );
     }

@@ -192,6 +192,13 @@ class AnimalService
             $owner_type = $request->owner_type;
         }
 
+        $cover_image = null;
+        $file_image = null;
+        if($request->cover_image)
+            $cover_image = upload_file($request->cover_image, 'animals', 'animal');
+        if($request->file_image)
+            $file_image = upload_file($request->file_image, 'animals', 'animal');
+
         $animal = Animal::create([
             'name'          => $request->name,
             'description'   => $request->description,
@@ -220,6 +227,8 @@ class AnimalService
             'digital_link' => $request->digital_link,
             'generate_public' => $request->generate_public,
             'ownership_date' => $request->ownership_date,
+            'cover_image'  => $cover_image,
+            'file_image'   => $file_image,
         ]);
 
         if($request->tags){
@@ -271,6 +280,13 @@ class AnimalService
             $owner_type = $request->owner_type;
         }
 
+        $cover_image = $animal->cover_image;
+        $file_image = $animal->file_image;
+        if($request->cover_image)
+           $cover_image = $this->updateImage($animal, $request->cover_image, 'cover_image');
+        if($request->file_image)
+           $file_image = $this->updateImage($animal, $request->file_image, 'file_image');
+
         if($request->deleted_tag_ids){
             $this->tagService->update($animal, [], $request->deleted_tag_ids);
         }
@@ -290,7 +306,7 @@ class AnimalService
 
         if ($request->deleted_media_ids) {
             $photos = $animal->media()->whereIn('id', $request->deleted_media_ids)->get();
-
+      
             foreach ($photos as $photo) {
                 delete_file_if_exist($photo->link);
             }
@@ -298,6 +314,7 @@ class AnimalService
             $animal->media()->whereIn('id', $request->deleted_media_ids)->delete();
         }
 
+        if($request->photos){
         foreach ($request->photos as $photo) {
 
             $media = $animal->media()->where('link', $photo)->first();
@@ -315,6 +332,7 @@ class AnimalService
                     throw ValidationException::withMessages(['image' => __('error_messages.Image should be a file')]);
             }
         }
+     }
 
         $animal->update([
             'name'          => $request->name,
@@ -341,6 +359,8 @@ class AnimalService
             'birth_date' => $request->birth_date,
             'digital_link' => $request->digital_link,
             'generate_public' => $request->generate_public,
+            'cover_image' => $cover_image,
+            'file_image'   => $file_image,
         ]);
 
         if ($request->ownership_date) {
@@ -356,7 +376,7 @@ class AnimalService
             if ($owner_id && $owner_id != $old_owner_id) {
                 $ownership_record = OwnershipRecord::where('animal_id', $animal->id)
                     ->where('user_id', $old_owner_id)->where('end_date', null)->first();
-
+                    
                 $animal->ownership_date = now()->toDateString();
                 $animal->save();
 
@@ -409,6 +429,8 @@ class AnimalService
         foreach ($photos as $photo) {
             delete_file_if_exist($photo->link);
         }
+        delete_file_if_exist($animal->cover_image);
+        delete_file_if_exist($animal->file_image);
 
         $animal->attachments()->delete();
         $animal->vaccinations()->delete();
@@ -462,14 +484,14 @@ class AnimalService
                 if (isset($attachment['id'])) {
                     $animal_attachment = $animal->attachments()->find($attachment['id']);
                     if ($animal_attachment) {
-                        $attachment_file = null;
+                        $attachment_file = $animal_attachment->file;
                         if (isset($attachment['file'])) {
                             if ($animal_attachment->file == $attachment['file']) {
                                 $attachment_file = $attachment['file'];
                             } else {
                                 if (!is_file($attachment['file']))
                                     throw ValidationException::withMessages(['file' => __('error_messages.Should be a file')]);
-                                delete_file_if_exist($attachment['file']);
+                                delete_file_if_exist($animal_attachment->file);
                                 $attachment_file = upload_file($attachment['file'], 'animalAttachments', 'animalAttachment');
                             }
                         }
@@ -480,7 +502,7 @@ class AnimalService
                             'file' => $attachment_file,
                         ]);
                     }
-                } else {
+                } else { 
                     $uploadedfile = null;
                     if (isset($attachment['file']))
                         $uploadedfile = upload_file($attachment['file'], 'animalAttachments', 'animalAttachment');
@@ -524,4 +546,21 @@ class AnimalService
             }
         }
     }
-}
+
+    public function updateImage(Animal $animal, $request_image, $type)
+    {
+        if ($request_image == $animal->$type) {
+            $image = $animal->$type;
+        } else {
+            if (!is_file($request_image)) {
+                throw ValidationException::withMessages([
+                    $type => __('error_messages.Image should be a file')
+                ]);
+            }
+            delete_file_if_exist($animal->$type);
+            $image = upload_file($request_image, 'animals', 'animal');
+        }
+    
+        return $image;
+    }
+ }

@@ -70,6 +70,8 @@ class BaseAnimalRequest extends FormRequest
             'tags.*.factory_number'      => ['string'],
             'tags.*.number'      => ['required', 'string'],
             'tags.*.status'      => ['required', 'in:0,1'],
+
+            'photos' => ['array'],
         ];
     }
 }

@@ -55,6 +55,8 @@ class AnimalResource extends JsonResource
             'generate_public' => $this->generate_public, 
             'ownership_date' => $this->ownership_date,
             'is_previous' => $this->user_id == auth()->id() ? 0 : 1,
+            'cover_image' => $this->cover_image,
+            'file_image'  => $this->file_image,
             'translations' => $this->translations,
         ];
     }

@@ -35,6 +35,8 @@ class Animal extends TranslatableModel
         'digital_link',
         'generate_public',
         'ownership_date',
+        'cover_image',
+        'file_image',
     ];
 
     protected $translatable = [
