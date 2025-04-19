@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Tag;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BaseAnimalRequest extends FormRequest
@@ -50,8 +51,8 @@ class BaseAnimalRequest extends FormRequest
             'link'   => ['string'],
             'status' => ['required', 'in:1,0'],
             'birth_date' => ['required', 'date', 'before_or_equal:today'],
-            'digital_link' => ['string'], 
-            'generate_public' => ['in:1,0'], 
+            'digital_link' => ['string'],
+            'generate_public' => ['in:1,0'],
             'ownership_date' => ['date', 'before_or_equal:today'],
 
             'attachments' => ['array'],
@@ -66,12 +67,40 @@ class BaseAnimalRequest extends FormRequest
             'vaccinations.*.is_expired' => ['in:0,1'],
 
             'tags'              => ['array'],
-            'tags.*.tag_type_id'   => ['required','integer', 'exists:tag_types,id'],                   
+            'tags.*.tag_type_id'   => ['required','integer', 'exists:tag_types,id'],
             'tags.*.factory_number'      => ['string'],
             'tags.*.number'      => ['required', 'string'],
             'tags.*.status'      => ['required', 'in:0,1'],
 
             'photos' => ['array'],
         ];
+    }
+    
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $tags = $this->input('tags');
+            $deleted_tag_ids = $this->input('deleted_tag_ids', []);
+
+            if (!empty($tags)) {
+                foreach ($tags as $tag) {
+                    if (isset($tag['number'])) {
+                        $query = Tag::where('number', $tag['number']);
+
+                        if (!empty($deleted_tag_ids)) {
+                            $query->whereNotIn('id', $deleted_tag_ids);
+                        }
+
+                        if (isset($tag['id'])) {
+                            $query->where('id', '!=', $tag['id']);
+                        }
+
+                        if ($query->exists()) {
+                            $validator->errors()->add('number', __('error_messages.number_used', ['number' => $tag['number']]));
+                        }
+                    }
+                }
+            }
+        });
     }
 }

@@ -316,6 +316,18 @@
                         }
                     },
                     {
+                        "name": "ownership_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                "1",
+                                "0"
+                            ]
+                        }
+                    },
+                    {
                         "name": "uaid",
                         "in": "query",
                         "required": false,
@@ -847,10 +859,10 @@
                                         "format": "date"
                                     },
                                     "cover_image": {
-                                        "type": "file"
+                                        "type": "string"
                                     },
                                     "file_image": {
-                                        "type": "file"
+                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
@@ -5346,6 +5358,18 @@
                         "required": false,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ownership_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                "1",
+                                "0"
+                            ]
                         }
                     },
                     {

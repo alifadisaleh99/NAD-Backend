@@ -10,27 +10,6 @@ class TagService
 {
     public function update(Animal $animal, $tags, $deleted_tag_ids)
     {
-        if (!empty($tags)){
-            foreach ($tags as $tag) {
-                if (isset($tag['number'])) {
-                    $query = Tag::where('number', $tag['number']);
-
-                    if (!empty($deleted_tag_ids)) {
-                        $query->whereNotIn('id', $deleted_tag_ids);
-                    }
-                    if (isset($tag['id'])) {
-                        $query->where('id', '!=', $tag['id']);
-                    }
-
-                    if ($query->exists()) {
-                        throw ValidationException::withMessages([
-                            'number' => __('error_messages.number_used', ['number' => $tag['number']])
-                        ]);
-                    }
-                }
-            }
-        }
-
         if (!empty($deleted_tag_ids)) {
             $animal->tags()->whereIn('id', $deleted_tag_ids)->delete();
         }

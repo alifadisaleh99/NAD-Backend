@@ -48,6 +48,7 @@ class GetRequest extends FormRequest
             'secondary_color_id'       => ['integer', 'exists:colors,id'],
             'tertiary_color_id'       => ['integer', 'exists:colors,id'],          
              'gender'                => ['string', 'in:male,female'],
+             'ownership_date'        => ['in:1,0'],
         ];
     }
 }

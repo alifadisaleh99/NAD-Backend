@@ -49,6 +49,12 @@ class AnimalController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
+     *    name="ownership_date",
+     *    required=false,
+     *    @OA\Schema(type="integer", enum={"1", "0"}),
+     * ),
+     * @OA\Parameter(
+     *    in="query",
      *    name="category_id",
      *    required=false,
      *    @OA\Schema(type="integer"),
