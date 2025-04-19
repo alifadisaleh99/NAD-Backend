@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Http\Resources\OwnershipRecordResource;
 use App\Models\Animal;
 use App\Models\OwnershipRecord;
 use App\Models\Transfer;
@@ -288,13 +287,22 @@ class AnimalService
             $owner_type = $request->owner_type;
         }
 
-        $cover_image = $animal->cover_image;
-        $file_image = $animal->file_image;
+        $cover_image = null;
+        $file_image = null;
         if($request->cover_image)
             $cover_image = $this->updateImage($animal, $request->cover_image, 'cover_image');
+        else{
+            $is_exists = $animal->media()->where('link', $animal->cover_image)->exists();
+            if (!$is_exists)
+                 delete_file_if_exist($animal->cover_image);
+        }
         if($request->file_image)
             $file_image = $this->updateImage($animal, $request->file_image, 'file_image');
-
+        else{
+            $is_exists = $animal->media()->where('link', $animal->file_image)->exists();
+            if (!$is_exists)
+                delete_file_if_exist($animal->file_image);
+        }
         if($request->deleted_tag_ids){
             $this->tagService->update($animal, [], $request->deleted_tag_ids);
         }
@@ -316,7 +324,8 @@ class AnimalService
             $photos = $animal->media()->whereIn('id', $request->deleted_media_ids)->get();
 
             foreach ($photos as $photo) {
-                delete_file_if_exist($photo->link);
+                if($animal->cover_image != $photo->link && $animal->file_image != $photo->link)
+                     delete_file_if_exist($photo->link);
             }
 
             $animal->media()->whereIn('id', $request->deleted_media_ids)->delete();
@@ -557,15 +566,24 @@ class AnimalService
 
     public function updateImage(Animal $animal, $request_image, $type)
     {
-        if ($request_image == $animal->$type) { 
+        $photo = $animal->media()->where('link', $request_image)->first();
+        if ($request_image == $animal->$type) {
             $image = $animal->$type;
+        } else if ($photo) {
+            $is_exists = $animal->media()->where('link', $animal->$type)->exists();
+            if (!$is_exists)
+                delete_file_if_exist($animal->$type);
+
+            $image = $photo->link;
         } else {
             if (!is_file($request_image)) {
                 throw ValidationException::withMessages([
                     $type => __('error_messages.Image should be a file')
                 ]);
             }
-            delete_file_if_exist($animal->$type);
+            $is_exists = $animal->media()->where('link', $animal->$type)->exists();
+            if (!$is_exists)
+                delete_file_if_exist($animal->$type);
             $image = upload_file($request_image, 'animals', 'animal');
         }
 

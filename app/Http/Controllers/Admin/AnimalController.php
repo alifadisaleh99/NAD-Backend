@@ -314,8 +314,8 @@ class AnimalController extends Controller
      *              @OA\Property(property="digital_link", type="string"),
      *              @OA\Property(property="generate_public", type="boolean", enum={0, 1}),
      *              @OA\Property(property="ownership_date", type="date"),
-     *              @OA\Property(property="cover_image", type="file"),
-     *              @OA\Property(property="file_image", type="file"),
+     *              @OA\Property(property="cover_image", type="string"),
+     *              @OA\Property(property="file_image", type="string"),
      *           )
      *       )
      *   ),
