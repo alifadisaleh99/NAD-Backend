@@ -16,7 +16,7 @@ class VaccinationResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'animal_id' => $this->animal_id,
+            'animal' => new AnimalResource($this->whenLoaded('animal')),
             'name' => $this->name,
             'vaccination_date' => $this->vaccination_date,
             'duration' => $this->duration,

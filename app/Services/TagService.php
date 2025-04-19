@@ -4,10 +4,26 @@ namespace App\Services;
 
 use App\Models\Animal;
 use App\Models\Tag;
-use Illuminate\Validation\ValidationException;
 
 class TagService
 {
+    public function getAllTags($request)
+    {
+        $q = Tag::query()->with('animal', 'tag_type')->latest();
+
+        if($request->animal_id)
+           $q->where('animal_id', $request->animal_id);
+        if($request->tag_type_id)
+           $q->where('tag_type_id', $request->tag_type_id);
+        if($request->tag_number)
+           $q->where('number', $request->tag_number);
+        if($request->with_paginate === '0')
+          $tags = $q->get();
+        else
+          $tags = $q->paginate($request->per_page ?? 10);
+
+        return $tags;
+    }
     public function update(Animal $animal, $tags, $deleted_tag_ids)
     {
         if (!empty($deleted_tag_ids)) {

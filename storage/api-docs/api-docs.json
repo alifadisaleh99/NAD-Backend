@@ -859,10 +859,10 @@
                                         "format": "date"
                                     },
                                     "cover_image": {
-                                        "type": "string"
+                                        "type": "file"
                                     },
                                     "file_image": {
-                                        "type": "string"
+                                        "type": "file"
                                     }
                                 },
                                 "type": "object"
@@ -6174,6 +6174,92 @@
                 ]
             }
         },
+        "/user/attachments": {
+            "get": {
+                "tags": [
+                    "User - Attachments"
+                ],
+                "description": "Get all attachments",
+                "operationId": "get_all_animal_attachments",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "animal_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/user/attachments/{id}": {
+            "get": {
+                "tags": [
+                    "User - Attachments"
+                ],
+                "description": "Get attachment information.",
+                "operationId": "show_attachment",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/user/categories": {
             "get": {
                 "tags": [
@@ -6253,53 +6339,87 @@
             }
         },
         "/user/tags": {
-            "post": {
+            "get": {
                 "tags": [
                     "User - Tags"
                 ],
-                "description": "Edit tags for animal.",
-                "operationId": "582f363e8f7706ed4283809f616fa3f9",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "tags[0][id]": {
-                                        "type": "integer"
-                                    },
-                                    "tags[0][tag_type_id]": {
-                                        "type": "integer"
-                                    },
-                                    "tags[0][factory_number]": {
-                                        "type": "string"
-                                    },
-                                    "tags[0][number]": {
-                                        "type": "string"
-                                    },
-                                    "tags[0][status]": {
-                                        "type": "integer",
-                                        "enum": [
-                                            "0",
-                                            " 1"
-                                        ]
-                                    },
-                                    "deleted_tag_ids[0]": {
-                                        "type": "integer"
-                                    },
-                                    "animal_id": {
-                                        "type": "integer"
-                                    },
-                                    "_method": {
-                                        "type": "string",
-                                        "example": "PUT"
-                                    }
-                                },
-                                "type": "object"
-                            }
+                "description": "Get all tags",
+                "operationId": "get_all_animal_tags",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "animal_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "tag_number",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tag_type_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integerr"
                         }
                     }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
                 },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/user/tags/{id}": {
+            "get": {
+                "tags": [
+                    "User - Tags"
+                ],
+                "description": "Get tag information.",
+                "operationId": "show_tag",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation"
@@ -6368,6 +6488,92 @@
                 ],
                 "description": "Get tag type information.",
                 "operationId": "show_tag_type_for_user",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/user/vaccinations": {
+            "get": {
+                "tags": [
+                    "User - Vaccinations"
+                ],
+                "description": "Get all vaccinations",
+                "operationId": "get_all_animal_vaccinations",
+                "parameters": [
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "animal_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/user/vaccinations/{id}": {
+            "get": {
+                "tags": [
+                    "User - Vaccinations"
+                ],
+                "description": "Get vaccination information.",
+                "operationId": "show_vaccination",
                 "parameters": [
                     {
                         "name": "id",
@@ -6505,12 +6711,20 @@
             "description": "User - Pet Marks"
         },
         {
+            "name": "User - Attachments",
+            "description": "User - Attachments"
+        },
+        {
             "name": "User - Tags",
             "description": "User - Tags"
         },
         {
             "name": "User - Tag Types",
             "description": "User - Tag Types"
+        },
+        {
+            "name": "User - Vaccinations",
+            "description": "User - Vaccinations"
         }
     ],
     "components": {

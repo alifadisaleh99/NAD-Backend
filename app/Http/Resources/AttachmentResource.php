@@ -16,7 +16,7 @@ class AttachmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'aniaml_id' => $this->animal_id,
+            'animal' => new AnimalResource($this->whenLoaded('animal')),
             'name' => $this->name,
             'source' => $this->source,
             'attachment_date' => $this->attachment_date,

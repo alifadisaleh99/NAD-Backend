@@ -17,7 +17,7 @@ class TagResource extends JsonResource
         return [
             'id'                     => $this->id,
             'tag_type'               => new TagTypeResource($this->tag_type),
-            'animal_id'              => $this->animal_id,
+            'animal'                 => new AnimalResource($this->whenLoaded('animal')),
             'number'                 => $this->number,
             'factory_number'         => $this->factory_number,
             'status'                 => $this->status,

@@ -4,27 +4,27 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GetRequest;
-use App\Http\Resources\TagResource;
-use App\Models\Tag;
-use App\Services\TagService;
+use App\Http\Resources\VaccinationResource;
+use App\Models\Vaccination;
+use App\Services\VaccinationService;
 
-class TagController extends Controller
+class VaccinationController extends Controller
 {
-    protected $tagService;
+    protected $vaccinationService;
 
-    public function __construct(TagService $tagService)
+    public function __construct(VaccinationService $vaccinationService)
     {
         $this->middleware('auth:sanctum');
 
-        $this->tagService = $tagService;
+        $this->vaccinationService = $vaccinationService;
     }
 
     /**
      * @OA\Get(
-     * path="/user/tags",
-     * description="Get all tags",
-     * operationId="get_all_animal_tags",
-     * tags={"User - Tags"},
+     * path="/user/vaccinations",
+     * description="Get all vaccinations",
+     * operationId="get_all_animal_vaccinations",
+     * tags={"User - Vaccinations"},
      *   security={{"bearer_token": {} }},
      * @OA\Parameter(
      *     in="query",
@@ -46,15 +46,9 @@ class TagController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
-     *    name="tag_number",
+     *    name="q",
      *    required=false,
      *    @OA\Schema(type="string"),
-     * ),
-     * @OA\Parameter(
-     *    in="query",
-     *    name="tag_type_id",
-     *    required=false,
-     *    @OA\Schema(type="integerr"),
      * ),
      *   @OA\Response(
      *     response=200,
@@ -64,23 +58,23 @@ class TagController extends Controller
      */
     public function index(GetRequest $request)
     {
-        $tags = $this->tagService->getAllTags($request);
+        $vaccinations  = $this->vaccinationService->getAllVaccinations($request);
 
-        return TagResource::collection($tags);
+        return VaccinationResource::collection($vaccinations);
     }
 
    /**
      * @OA\Get(
-     * path="/user/tags/{id}",
-     * description="Get tag information.",
+     * path="/user/vaccinations/{id}",
+     * description="Get vaccination information.",
      *     @OA\Parameter(
      *         in="path",
      *         name="id",
      *         required=true,
      *         @OA\Schema(type="string"),
      *      ),
-     * operationId="show_tag",
-     * tags={"User - Tags"},
+     * operationId="show_vaccination",
+     * tags={"User - Vaccinations"},
      * security={{"bearer_token": {} }},
      * @OA\Response(
      *    response=200,
@@ -90,11 +84,10 @@ class TagController extends Controller
      *)
      */
 
-     public function show(Tag $tag)
+     public function show(Vaccination $vaccination)
      {
-        $tag->load(['animal', 'tag_type']);
+        $vaccination->load(['animal']);
 
-         return response()->json(new TagResource($tag), 200);
+         return response()->json(new VaccinationResource($vaccination), 200);
      } 
 }
-

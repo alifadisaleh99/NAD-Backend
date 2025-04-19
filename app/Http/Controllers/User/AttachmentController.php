@@ -4,27 +4,27 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GetRequest;
-use App\Http\Resources\TagResource;
-use App\Models\Tag;
-use App\Services\TagService;
+use App\Http\Resources\AttachmentResource;
+use App\Models\Attachment;
+use App\Services\AttachmentService;
 
-class TagController extends Controller
+class AttachmentController extends Controller
 {
-    protected $tagService;
+    protected $attachmentService;
 
-    public function __construct(TagService $tagService)
+    public function __construct(AttachmentService $attachmentService)
     {
         $this->middleware('auth:sanctum');
 
-        $this->tagService = $tagService;
+        $this->attachmentService = $attachmentService;
     }
 
     /**
      * @OA\Get(
-     * path="/user/tags",
-     * description="Get all tags",
-     * operationId="get_all_animal_tags",
-     * tags={"User - Tags"},
+     * path="/user/attachments",
+     * description="Get all attachments",
+     * operationId="get_all_animal_attachments",
+     * tags={"User - Attachments"},
      *   security={{"bearer_token": {} }},
      * @OA\Parameter(
      *     in="query",
@@ -46,15 +46,9 @@ class TagController extends Controller
      * ),
      * @OA\Parameter(
      *    in="query",
-     *    name="tag_number",
+     *    name="q",
      *    required=false,
      *    @OA\Schema(type="string"),
-     * ),
-     * @OA\Parameter(
-     *    in="query",
-     *    name="tag_type_id",
-     *    required=false,
-     *    @OA\Schema(type="integerr"),
      * ),
      *   @OA\Response(
      *     response=200,
@@ -64,23 +58,23 @@ class TagController extends Controller
      */
     public function index(GetRequest $request)
     {
-        $tags = $this->tagService->getAllTags($request);
+        $attachments = $this->attachmentService->getAllAttachments($request);
 
-        return TagResource::collection($tags);
+        return AttachmentResource::collection($attachments);
     }
 
    /**
      * @OA\Get(
-     * path="/user/tags/{id}",
-     * description="Get tag information.",
+     * path="/user/attachments/{id}",
+     * description="Get attachment information.",
      *     @OA\Parameter(
      *         in="path",
      *         name="id",
      *         required=true,
      *         @OA\Schema(type="string"),
      *      ),
-     * operationId="show_tag",
-     * tags={"User - Tags"},
+     * operationId="show_attachment",
+     * tags={"User - Attachments"},
      * security={{"bearer_token": {} }},
      * @OA\Response(
      *    response=200,
@@ -90,11 +84,10 @@ class TagController extends Controller
      *)
      */
 
-     public function show(Tag $tag)
+     public function show(Attachment $attachment)
      {
-        $tag->load(['animal', 'tag_type']);
+        $attachment->load(['animal']);
 
-         return response()->json(new TagResource($tag), 200);
+         return response()->json(new AttachmentResource($attachment), 200);
      } 
 }
-

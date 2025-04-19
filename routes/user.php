@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\User\AnimalController;
+use App\Http\Controllers\User\AttachmentController;
 use App\Http\Controllers\User\CategoryController;
+use App\Http\Controllers\User\TagController;
 use App\Http\Controllers\User\TagTypeController;
+use App\Http\Controllers\User\VaccinationController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -31,9 +34,18 @@ Route::name('user.')->group(function () {
 Route::get('tag-types', [TagTypeController::class, 'index']); 
 Route::get('tag-types/{tag_type}', [TagTypeController::class, 'show']); 
 
-
-
 //categories
 Route::get('categories', [CategoryController::class, 'index'])->name('user.categories.index');
 Route::get('categories/{category}'  , [CategoryController::class, 'show'])->name('user.categories.show');
 
+//tags
+Route::get('tags', [TagController::class, 'index']);
+Route::get('tags/{tag}'  , [TagController::class, 'show']);
+
+//vaccinations
+Route::get('vaccinations', [VaccinationController::class, 'index']);
+Route::get('vaccinations/{vaccination}'  , [VaccinationController::class, 'show']);
+
+//attachments
+Route::get('attachments', [AttachmentController::class, 'index']);
+Route::get('attachments/{attachment}'  , [AttachmentController::class, 'show']);
